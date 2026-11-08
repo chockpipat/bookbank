@@ -64,6 +64,7 @@ class AppTheme {
       colorScheme: ColorScheme.light(
         surface: AppColors.white,
         surfaceContainerHighest: AppColors.white,
+        surfaceDim: AppColors.grey,
         outlineVariant: AppColors.grey,
         outline: AppColors.mediumGrey,
         surfaceBright: AppColors.charcoal,
@@ -79,7 +80,8 @@ class AppTheme {
       colorScheme: ColorScheme.dark(
         surface: AppColors.charcoal, // card
         surfaceContainerHighest: AppColors.white,
-        outlineVariant: AppColors.black, // border
+        surfaceDim: AppColors.mediumGrey, // background in card
+        outlineVariant: AppColors.black, // border card
         outline: AppColors.mediumGrey, // line && description
         surfaceBright: AppColors.charcoal, // navigation bar
       ),

@@ -351,418 +351,428 @@ class _HomeScreenState extends State<HomeScreen> {
                     Header(),
                     SizedBox(height: 16.h),
 
-                    // ────────── Dashboard Summary ──────────
-                    DashboardSummary(
-                      totalBalance: _totalBalance,
-                      bankBalance: _bankBalance,
-                      cashBalance: _cashBalance,
-                      incomeTotal: _incomeTotal,
-                      expenseTotal: _expenseTotal,
-                      monthlyIncome: _monthlyIncome,
-                      monthlyExpense: _monthlyExpense,
-                      spots: _spots,
-                    ),
-                    SizedBox(height: 12.h),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // ────────── Dashboard Summary ──────────
+                            DashboardSummary(
+                              totalBalance: _totalBalance,
+                              bankBalance: _bankBalance,
+                              cashBalance: _cashBalance,
+                              incomeTotal: _incomeTotal,
+                              expenseTotal: _expenseTotal,
+                              monthlyIncome: _monthlyIncome,
+                              monthlyExpense: _monthlyExpense,
+                              spots: _spots,
+                            ),
+                            SizedBox(height: 12.h),
 
-                    // ────────── Menu Items ──────────
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MenuItems(
-                          late: 'Tang in',
-                          icon: LucideIcons.arrowDownToLine,
-                          onPressed: () {},
-                        ),
+                            // ────────── Menu Items ──────────
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MenuItems(
+                                  late: 'Tang in',
+                                  icon: LucideIcons.arrowDownToLine,
+                                  onPressed: () {},
+                                ),
 
-                        MenuItems(
-                          late: 'Tang out',
-                          icon: LucideIcons.arrowUpFromLine,
-                          onPressed: () {},
-                        ),
+                                MenuItems(
+                                  late: 'Tang out',
+                                  icon: LucideIcons.arrowUpFromLine,
+                                  onPressed: () {},
+                                ),
 
-                        MenuItems(
-                          late: 'Transfer',
-                          icon: LucideIcons.repeat,
-                          onPressed: () {},
-                        ),
+                                MenuItems(
+                                  late: 'Transfer',
+                                  icon: LucideIcons.repeat,
+                                  onPressed: () {},
+                                ),
 
-                        MenuItems(
-                          late: 'Scan',
-                          icon: LucideIcons.scan,
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 14.h),
+                                MenuItems(
+                                  late: 'Scan',
+                                  icon: LucideIcons.scan,
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 14.h),
 
-                    // ────────── Unallocated Summary ──────────
-                    Text(
-                      loc.cashBox,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: theme.colorScheme.outline,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
+                            // ────────── Unallocated Summary ──────────
+                            Text(
+                              loc.cashBox,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: theme.colorScheme.outline,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
 
-                    UnallocatedSummary(
-                      incomeTotal: _incomeTotal,
-                      totalBalance: _totalBalance,
-                      unallocatedAmount: _unallocatedAmount,
-                      group1Amount: _group1Amount,
-                      group2Amount: _group2Amount,
-                      group3Amount: _group3Amount,
-                      group4Amount: _group4Amount,
-                      group1Income: _group1Income,
-                      group2Income: _group2Income,
-                      group3Income: _group3Income,
-                      group4Income: _group4Income,
-                      group1Percentage: _group1Percentage,
-                      group2Percentage: _group2Percentage,
-                      group3Percentage: _group3Percentage,
-                      group4Percentage: _group4Percentage,
-                      unallocatedPercentage: _unallocatedPercentage,
+                            UnallocatedSummary(
+                              incomeTotal: _incomeTotal,
+                              totalBalance: _totalBalance,
+                              unallocatedAmount: _unallocatedAmount,
+                              group1Amount: _group1Amount,
+                              group2Amount: _group2Amount,
+                              group3Amount: _group3Amount,
+                              group4Amount: _group4Amount,
+                              group1Income: _group1Income,
+                              group2Income: _group2Income,
+                              group3Income: _group3Income,
+                              group4Income: _group4Income,
+                              group1Percentage: _group1Percentage,
+                              group2Percentage: _group2Percentage,
+                              group3Percentage: _group3Percentage,
+                              group4Percentage: _group4Percentage,
+                              unallocatedPercentage: _unallocatedPercentage,
 
-                      group1Color: _getGroupData(
-                        'Group1',
-                        theme.colorScheme.primary,
-                        groupSettings,
-                      ).groupColor,
-
-                      group2Color: _getGroupData(
-                        'Group2',
-                        theme.colorScheme.secondary,
-                        groupSettings,
-                      ).groupColor,
-
-                      group3Color: _getGroupData(
-                        'Group3',
-                        theme.colorScheme.tertiary,
-                        groupSettings,
-                      ).groupColor,
-
-                      group4Color: _getGroupData(
-                        'Group4',
-                        theme.colorScheme.error,
-                        groupSettings,
-                      ).groupColor,
-
-                      // Callback when a group is dropped onto the cash box
-                      onTransferDrop: (source) => _onTransferDrop(
-                        source,
-                        GroupData(
-                          groupId: 'CashBox',
-                          groupName: loc.cashBox,
-                          groupCount: 0,
-                          groupAmount: _unallocatedAmount,
-                          groupColor: Colors.amber,
-                          groupIcon: Icons.savings_rounded,
-                          percentage: _unallocatedPercentage,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-
-                    // ────────── Group Header ──────────
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          loc.group,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: theme.colorScheme.outline,
-                          ),
-                        ),
-
-                        // Edit Group Button
-                        FilledButton.icon(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  Dialog(child: EditGroupSgreen()),
-                            );
-                          },
-                          style: FilledButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            foregroundColor: theme.colorScheme.outline,
-                            padding: EdgeInsets.zero,
-                          ),
-                          label: Text(loc.editGroup),
-                          icon: Icon(LucideIcons.edit),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // ────────── Group1 ──────────
-                        Expanded(
-                          child: GroupCard(
-                            groupName: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).groupName,
-
-                            groupId: 'Group1',
-                            groupCount: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).groupCount,
-
-                            groupAmount: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).groupAmount,
-
-                            groupColor: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).groupColor,
-
-                            groupIcon: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).groupIcon,
-                            transactions: _transactions,
-
-                            percentage: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).percentage,
-
-                            savingsGoalEnabled: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).savingsGoalEnabled,
-
-                            savingsGoalAmount: _getGroupData(
-                              'Group1',
-                              theme.colorScheme.primary,
-                              groupSettings,
-                            ).savingsGoalAmount,
-
-                            onTransferDrop: (source) => _onTransferDrop(
-                              source,
-                              _getGroupData(
+                              group1Color: _getGroupData(
                                 'Group1',
                                 theme.colorScheme.primary,
                                 groupSettings,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 12.w),
+                              ).groupColor,
 
-                        // ────────── Group2 ──────────
-                        Expanded(
-                          child: GroupCard(
-                            groupName: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).groupName,
-
-                            groupId: 'Group2',
-                            groupCount: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).groupCount,
-
-                            groupAmount: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).groupAmount,
-
-                            groupColor: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).groupColor,
-
-                            groupIcon: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).groupIcon,
-                            transactions: _transactions,
-
-                            percentage: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).percentage,
-
-                            savingsGoalEnabled: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).savingsGoalEnabled,
-
-                            savingsGoalAmount: _getGroupData(
-                              'Group2',
-                              theme.colorScheme.secondary,
-                              groupSettings,
-                            ).savingsGoalAmount,
-
-                            onTransferDrop: (source) => _onTransferDrop(
-                              source,
-                              _getGroupData(
+                              group2Color: _getGroupData(
                                 'Group2',
                                 theme.colorScheme.secondary,
                                 groupSettings,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12.h),
+                              ).groupColor,
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // ────────── Group3 ──────────
-                        Expanded(
-                          child: GroupCard(
-                            groupName: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).groupName,
-
-                            groupId: 'Group3',
-                            groupCount: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).groupCount,
-
-                            groupAmount: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).groupAmount,
-
-                            groupColor: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).groupColor,
-
-                            groupIcon: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).groupIcon,
-                            transactions: _transactions,
-
-                            percentage: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).percentage,
-
-                            savingsGoalEnabled: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).savingsGoalEnabled,
-
-                            savingsGoalAmount: _getGroupData(
-                              'Group3',
-                              Colors.purple,
-                              groupSettings,
-                            ).savingsGoalAmount,
-
-                            onTransferDrop: (source) => _onTransferDrop(
-                              source,
-                              _getGroupData(
+                              group3Color: _getGroupData(
                                 'Group3',
-                                Colors.purple,
+                                theme.colorScheme.tertiary,
                                 groupSettings,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 12.w),
+                              ).groupColor,
 
-                        // ────────── Group4 ──────────
-                        Expanded(
-                          child: GroupCard(
-                            groupName: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).groupName,
-
-                            groupId: 'Group4',
-                            groupCount: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).groupCount,
-
-                            groupAmount: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).groupAmount,
-
-                            groupColor: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).groupColor,
-
-                            groupIcon: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).groupIcon,
-                            transactions: _transactions,
-
-                            percentage: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).percentage,
-
-                            savingsGoalEnabled: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).savingsGoalEnabled,
-
-                            savingsGoalAmount: _getGroupData(
-                              'Group4',
-                              Colors.pink,
-                              groupSettings,
-                            ).savingsGoalAmount,
-
-                            onTransferDrop: (source) => _onTransferDrop(
-                              source,
-                              _getGroupData(
+                              group4Color: _getGroupData(
                                 'Group4',
-                                Colors.pink,
+                                theme.colorScheme.error,
                                 groupSettings,
+                              ).groupColor,
+
+                              // Callback when a group is dropped onto the cash box
+                              onTransferDrop: (source) => _onTransferDrop(
+                                source,
+                                GroupData(
+                                  groupId: 'CashBox',
+                                  groupName: loc.cashBox,
+                                  groupCount: 0,
+                                  groupAmount: _unallocatedAmount,
+                                  groupColor: Colors.amber,
+                                  groupIcon: Icons.savings_rounded,
+                                  percentage: _unallocatedPercentage,
+                                ),
                               ),
                             ),
-                          ),
+                            SizedBox(height: 12.h),
+
+                            // ────────── Group Header ──────────
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  loc.group,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: theme.colorScheme.outline,
+                                  ),
+                                ),
+
+                                // Edit Group Button
+                                FilledButton.icon(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          Dialog(child: EditGroupSgreen()),
+                                    );
+                                  },
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    foregroundColor: theme.colorScheme.outline,
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  label: Text(loc.editGroup),
+                                  icon: Icon(LucideIcons.edit),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8.h),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // ────────── Group1 ──────────
+                                Expanded(
+                                  child: GroupCard(
+                                    groupName: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).groupName,
+
+                                    groupId: 'Group1',
+                                    groupCount: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).groupCount,
+
+                                    groupAmount: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).groupAmount,
+
+                                    groupColor: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).groupColor,
+
+                                    groupIcon: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).groupIcon,
+                                    transactions: _transactions,
+
+                                    percentage: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).percentage,
+
+                                    savingsGoalEnabled: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).savingsGoalEnabled,
+
+                                    savingsGoalAmount: _getGroupData(
+                                      'Group1',
+                                      theme.colorScheme.primary,
+                                      groupSettings,
+                                    ).savingsGoalAmount,
+
+                                    onTransferDrop: (source) => _onTransferDrop(
+                                      source,
+                                      _getGroupData(
+                                        'Group1',
+                                        theme.colorScheme.primary,
+                                        groupSettings,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+
+                                // ────────── Group2 ──────────
+                                Expanded(
+                                  child: GroupCard(
+                                    groupName: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).groupName,
+
+                                    groupId: 'Group2',
+                                    groupCount: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).groupCount,
+
+                                    groupAmount: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).groupAmount,
+
+                                    groupColor: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).groupColor,
+
+                                    groupIcon: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).groupIcon,
+                                    transactions: _transactions,
+
+                                    percentage: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).percentage,
+
+                                    savingsGoalEnabled: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).savingsGoalEnabled,
+
+                                    savingsGoalAmount: _getGroupData(
+                                      'Group2',
+                                      theme.colorScheme.secondary,
+                                      groupSettings,
+                                    ).savingsGoalAmount,
+
+                                    onTransferDrop: (source) => _onTransferDrop(
+                                      source,
+                                      _getGroupData(
+                                        'Group2',
+                                        theme.colorScheme.secondary,
+                                        groupSettings,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.h),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // ────────── Group3 ──────────
+                                Expanded(
+                                  child: GroupCard(
+                                    groupName: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).groupName,
+
+                                    groupId: 'Group3',
+                                    groupCount: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).groupCount,
+
+                                    groupAmount: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).groupAmount,
+
+                                    groupColor: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).groupColor,
+
+                                    groupIcon: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).groupIcon,
+                                    transactions: _transactions,
+
+                                    percentage: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).percentage,
+
+                                    savingsGoalEnabled: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).savingsGoalEnabled,
+
+                                    savingsGoalAmount: _getGroupData(
+                                      'Group3',
+                                      Colors.purple,
+                                      groupSettings,
+                                    ).savingsGoalAmount,
+
+                                    onTransferDrop: (source) => _onTransferDrop(
+                                      source,
+                                      _getGroupData(
+                                        'Group3',
+                                        Colors.purple,
+                                        groupSettings,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+
+                                // ────────── Group4 ──────────
+                                Expanded(
+                                  child: GroupCard(
+                                    groupName: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).groupName,
+
+                                    groupId: 'Group4',
+                                    groupCount: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).groupCount,
+
+                                    groupAmount: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).groupAmount,
+
+                                    groupColor: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).groupColor,
+
+                                    groupIcon: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).groupIcon,
+                                    transactions: _transactions,
+
+                                    percentage: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).percentage,
+
+                                    savingsGoalEnabled: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).savingsGoalEnabled,
+
+                                    savingsGoalAmount: _getGroupData(
+                                      'Group4',
+                                      Colors.pink,
+                                      groupSettings,
+                                    ).savingsGoalAmount,
+
+                                    onTransferDrop: (source) => _onTransferDrop(
+                                      source,
+                                      _getGroupData(
+                                        'Group4',
+                                        Colors.pink,
+                                        groupSettings,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 100.h),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

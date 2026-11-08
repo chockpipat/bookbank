@@ -118,7 +118,7 @@ class _UnallocatedSummaryState extends State<UnallocatedSummary>
           scale: 1.06,
           child: Container(
             width: MediaQuery.of(context).size.width - 48.w,
-            height: 60.5.h,
+            height: 65.h,
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
@@ -212,7 +212,7 @@ class _UnallocatedSummaryState extends State<UnallocatedSummary>
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           width: double.infinity,
-          height: 60.h,
+          height: 65.h,
           padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,

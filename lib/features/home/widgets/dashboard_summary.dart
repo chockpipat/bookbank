@@ -57,7 +57,7 @@ class DashboardSummary extends StatelessWidget {
         );
       },
       child: Container(
-        height: 150.h,
+        height: 155.h,
         padding: EdgeInsets.all(16.r),
         width: double.infinity,
         decoration: BoxDecoration(

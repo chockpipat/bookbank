@@ -19,7 +19,7 @@ import 'package:bookbank/features/records/utils/record_filter.dart';
 import 'package:bookbank/features/records/utils/record_utils.dart';
 
 // ────────── Widgets ──────────
-import 'package:bookbank/features/records/widgets/record_widgets.dart';
+import 'package:bookbank/features/records/widgets/record_list.dart';
 import 'package:bookbank/Widgets/select_date_time.dart';
 import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
 
@@ -119,17 +119,6 @@ class _RecordScreenState extends State<RecordScreen> {
     await deleteRecord(context, item, _loadData);
   }
 
-  // ────────── Menu Action Handler ──────────
-  void _handleMenuAction(String action, MyData item) {
-    if (action == 'view') {
-      _viewRecord(item);
-    } else if (action == 'edit') {
-      _editRecord(item);
-    } else if (action == 'delete') {
-      _deleteRecord(item);
-    }
-  }
-
   // ────────── Selection Toggle ──────────
   void _toggleSelection(int id) {
     setState(() {
@@ -198,15 +187,17 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   // ────────── Record Row Builder ──────────
-  Widget _buildRecordRow(MyData item) {
-    return buildRecordRow(
-      context,
-      item,
-      (action) => _handleMenuAction(action, item),
+  Widget _buildRecordRow(MyData item, {bool showDateHeader = true}) {
+    return RecordListItem(
+      item: item,
       isMultiSelectMode: _isMultiSelectMode,
       isSelected: _selectedIds.contains(item.id ?? 0),
+      showDateHeader: showDateHeader,
       onTap: () => _toggleSelection(item.id ?? 0),
       onLongPress: () => _toggleSelection(item.id ?? 0),
+      onView: () => _viewRecord(item),
+      onEdit: () => _editRecord(item),
+      onDelete: () => _deleteRecord(item),
     );
   }
 
@@ -432,127 +423,34 @@ class _RecordScreenState extends State<RecordScreen> {
                     SizedBox(height: 18.h),
 
                     // ────────── Records List ──────────
-                    Text((('00/00/0000'))),
-                    SizedBox(height: 8.h),
-
-                    Container(
-                      width: double.infinity,
-                      height: 100.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14.r),
-                        color: theme.colorScheme.surface,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12.w),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // ────────── Icon ──────────
-                            Container(
-                              height: 35.h,
-                              width: 35.w,
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.outline,
-                                borderRadius: BorderRadius.circular(50.r),
+                    Expanded(
+                      child: _isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : filtered.isEmpty
+                          ? Center(
+                              child: Text(
+                                loc.noRecord,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                               ),
-                              child: Icon(
-                                LucideIcons.arrowUpFromLine,
-                                color: theme.colorScheme.onSurface,
-                                size: 20.sp,
-                              ),
+                            )
+                          : ListView.builder(
+                              padding: EdgeInsets.zero,
+                              itemCount: filtered.length,
+                              itemBuilder: (context, index) {
+                                final showDateHeader =
+                                    index == 0 ||
+                                    filtered[index - 1].date !=
+                                        filtered[index].date;
+                                return _buildRecordRow(
+                                  filtered[index],
+                                  showDateHeader: showDateHeader,
+                                );
+                              },
                             ),
-                            SizedBox(width: 12.w),
-
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      // ────────── Title ──────────
-                                      Text(
-                                        'Foot and Mouth Disease',
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: theme.colorScheme.onSurface,
-                                        ),
-                                      ),
-
-                                      // ────────── Amount ──────────
-                                      Text(
-                                        '฿100.00',
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: theme.colorScheme.onSurface,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4.h),
-
-                                  Row(
-                                    children: [
-                                      // ────────── Money Position ──────────
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 12.w),
-                                        decoration: BoxDecoration(
-                                          color: theme.colorScheme.outlineVariant,
-                                          border: Border.all(color: theme.colorScheme.onSurfaceVariant),
-                                          borderRadius: BorderRadius.circular(50.r),
-                                        ),
-                                        child: Text(
-                                          'Cash',
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: theme.colorScheme.onSurface,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 8.w),
-
-                                      // ────────── Category ──────────
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 12.w),
-                                        decoration: BoxDecoration(
-                                          color: theme.colorScheme.outlineVariant,
-                                          border: Border.all(color: theme.colorScheme.onSurfaceVariant),
-                                          borderRadius: BorderRadius.circular(50.r),
-                                        ),
-                                        child: Text(
-                                          'Category1',
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: theme.colorScheme.onSurface,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4.h),
-
-                                  Divider(color: theme.colorScheme.outline),
-
-                                  // ────────── Date Time ──────────
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        '15-11-2026 12:24',
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: theme.colorScheme.outline,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
                   ],
                 ),
