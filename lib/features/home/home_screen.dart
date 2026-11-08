@@ -343,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: LayoutBuilder(
             builder: (context, constraints) {
               return Padding(
-                padding: EdgeInsets.fromLTRB(24.w, 45.h, 24.w, 24.h),
+                padding: EdgeInsets.fromLTRB(20.w, 40.h, 20.w, 115.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -398,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 14.h),
+                            SizedBox(height: 12.h),
 
                             // ────────── Unallocated Summary ──────────
                             Text(
@@ -493,9 +493,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     backgroundColor: Colors.transparent,
                                     foregroundColor: theme.colorScheme.outline,
                                     padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                   ),
-                                  label: Text(loc.editGroup),
-                                  icon: Icon(LucideIcons.edit),
+                                  label: Text(
+                                    loc.editGroup,
+                                    style: TextStyle(fontSize: 12.sp),
+                                  ),
+                                  icon: Icon(LucideIcons.edit, size: 16.sp),
                                 ),
                               ],
                             ),
@@ -769,7 +774,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 100.h),
+                            SizedBox(height: 30.h),
                           ],
                         ),
                       ),

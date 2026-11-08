@@ -1,6 +1,7 @@
 // ────────── Packages & provider ──────────
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -94,7 +95,7 @@ class _UnallocatedSummaryState extends State<UnallocatedSummary>
     groupId: cashBoxGroupId,
     groupName: 'Cash Box',
     groupColor: Colors.amber,
-    groupIcon: Icons.savings_rounded,
+    groupIcon: LucideIcons.box,
     groupAmount: widget.unallocatedAmount,
   );
 

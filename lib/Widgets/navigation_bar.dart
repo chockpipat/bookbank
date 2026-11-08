@@ -125,15 +125,15 @@ class _HomePageState extends State<HomePage> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: 73.h,
+                  height: 65.h,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surfaceBright,
-                    border: Border(
-                      top: BorderSide(
-                        color: theme.scaffoldBackgroundColor,
-                        width: 8,
-                      ),
-                    ),
+                    // border: Border(
+                    //   top: BorderSide(
+                    //     color: theme.scaffoldBackgroundColor,
+                    //     width: 1.w,
+                    //   ),
+                    // ),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(14.r),
                       topRight: Radius.circular(14.r),

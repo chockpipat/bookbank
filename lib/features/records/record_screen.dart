@@ -14,7 +14,6 @@ import 'package:bookbank/data/database.dart';
 import 'package:bookbank/data/db_helper.dart';
 
 // ────────── Records Utils ──────────
-import 'package:bookbank/features/records/utils/record_actions.dart';
 import 'package:bookbank/features/records/utils/record_filter.dart';
 import 'package:bookbank/features/records/utils/record_utils.dart';
 
@@ -106,19 +105,6 @@ class _RecordScreenState extends State<RecordScreen> {
     return filtered;
   }
 
-  // ────────── Record Actions ──────────
-  Future<void> _viewRecord(MyData item) async {
-    await viewRecord(context, item);
-  }
-
-  Future<void> _editRecord(MyData item) async {
-    await editRecord(context, item, _loadData);
-  }
-
-  Future<void> _deleteRecord(MyData item) async {
-    await deleteRecord(context, item, _loadData);
-  }
-
   // ────────── Selection Toggle ──────────
   void _toggleSelection(int id) {
     setState(() {
@@ -193,11 +179,10 @@ class _RecordScreenState extends State<RecordScreen> {
       isMultiSelectMode: _isMultiSelectMode,
       isSelected: _selectedIds.contains(item.id ?? 0),
       showDateHeader: showDateHeader,
-      onTap: () => _toggleSelection(item.id ?? 0),
+      onTap: () {
+        if (_isMultiSelectMode) _toggleSelection(item.id ?? 0);
+      },
       onLongPress: () => _toggleSelection(item.id ?? 0),
-      onView: () => _viewRecord(item),
-      onEdit: () => _editRecord(item),
-      onDelete: () => _deleteRecord(item),
     );
   }
 
@@ -255,13 +240,18 @@ class _RecordScreenState extends State<RecordScreen> {
                         // Filter button
                         IconButton(
                           onPressed: () {},
+                          style: IconButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           icon: Icon(
                             LucideIcons.filter,
                             size: 18.sp,
                             color: theme.colorScheme.onSurface,
                           ),
                         ),
-                        SizedBox(width: 2.w),
+                        SizedBox(width: 16.w),
 
                         // Date picker
                         IconButton(
@@ -273,6 +263,11 @@ class _RecordScreenState extends State<RecordScreen> {
                                 _selectedDateTime = dateTime;
                               });
                             },
+                          ),
+                          style: IconButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           icon: Icon(
                             LucideIcons.calendar,

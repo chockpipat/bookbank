@@ -133,7 +133,9 @@ class _RecordListItemState extends State<RecordListItem> {
 
     final typeColor = isTransfer
         ? Colors.amber
-        : (isIncome ? Colors.green : Colors.red);
+        : (isIncome
+              ? const Color.fromARGB(255, 33, 175, 38)
+              : const Color.fromARGB(255, 255, 17, 0));
 
     // Group transfer: moneyList = source groupId, moneyGroup = target groupId
     // Legacy bank/cash transfer: moneyList and moneyGroup are 'bank' or 'cash'
@@ -193,14 +195,6 @@ class _RecordListItemState extends State<RecordListItem> {
                           width: _actionsWidth.w,
                           child: Row(
                             children: [
-                              // // View
-                              // _buildActionButton(
-                              //   icon: LucideIcons.eye,
-                              //   label: loc.view,
-                              //   color: theme.colorScheme.primary,
-                              //   onTap: widget.onView,
-                              // ),
-
                               // Edit (not available for transfers)
                               if (!isTransfer)
                                 _buildActionButton(
@@ -226,7 +220,10 @@ class _RecordListItemState extends State<RecordListItem> {
                   GestureDetector(
                     onHorizontalDragUpdate: _onHorizontalDragUpdate,
                     onHorizontalDragEnd: _onHorizontalDragEnd,
-                    onTap: _close,
+                    onTap: () {
+                      _close();
+                      widget.onTap?.call();
+                    },
                     child: Transform.translate(
                       offset: Offset(-_dragExtent * _actionsWidth.w, 0),
                       child: Container(
@@ -323,19 +320,11 @@ class _RecordListItemState extends State<RecordListItem> {
                                     // ────────── Chips: position & group ──────────
                                     Row(
                                       children: [
-                                        _buildChip(
-                                          theme,
-                                          positionLabel,
-                                          LucideIcons.wallet,
-                                        ),
+                                        _buildChip(theme, positionLabel),
                                         SizedBox(width: 8.w),
 
                                         Flexible(
-                                          child: _buildChip(
-                                            theme,
-                                            groupLabel,
-                                            LucideIcons.users,
-                                          ),
+                                          child: _buildChip(theme, groupLabel),
                                         ),
                                       ],
                                     ),
@@ -376,29 +365,19 @@ class _RecordListItemState extends State<RecordListItem> {
   }
 
   // ────────── Chip Builder ──────────
-  Widget _buildChip(ThemeData theme, String label, IconData icon) {
+  Widget _buildChip(ThemeData theme, String label) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceDim,
         borderRadius: BorderRadius.circular(50.r),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 12.sp, color: theme.colorScheme.onSurface),
-          SizedBox(width: 4.w),
-          Flexible(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: theme.colorScheme.onSurface,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
+      child: Flexible(
+        child: Text(
+          label,
+          style: TextStyle(fontSize: 11.sp, color: theme.colorScheme.onSurface),
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }

@@ -119,7 +119,7 @@ class DashboardSummary extends StatelessWidget {
                   context,
                   icon: null,
                   label: loc.validToday,
-                  balance: bankBalance,
+                  balance: 0,
                   total: totalBalance,
                   locProvider: locProvider,
                 ),

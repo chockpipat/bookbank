@@ -1,10 +1,8 @@
 // ────────── Imports ──────────
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 // ────────── Theme ──────────
 import '../../../core/theme/app_theme.dart';
-import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Functions ──────────
 import '../utils/record_filter.dart';
@@ -74,51 +72,4 @@ Widget buildFilterTab({
       ),
     ),
   );
-}
-
-// ────────── Record List View Widget ──────────
-Widget recondListView(IconData icon, String title, String data) {
-  return Row(
-    children: [
-      Icon(icon, size: AppSize.xl),
-      const SizedBox(width: 8),
-      Text(
-        '$title :',
-        style: TextStyle(fontSize: AppSize.s, color: AppColors.grey),
-      ),
-      const SizedBox(width: 8),
-      Text(data),
-    ],
-  );
-}
-
-// ────────── Menu item widgets ──────────
-class ViewMenuItem extends StatelessWidget {
-  const ViewMenuItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final loc = context.watch<LocalizationProvider>().loc;
-    return Text(loc.view);
-  }
-}
-
-class EditMenuItem extends StatelessWidget {
-  const EditMenuItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final loc = context.watch<LocalizationProvider>().loc;
-    return Text(loc.edit);
-  }
-}
-
-class DeleteMenuItem extends StatelessWidget {
-  const DeleteMenuItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final loc = context.watch<LocalizationProvider>().loc;
-    return Text(loc.delete);
-  }
 }

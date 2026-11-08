@@ -40,8 +40,8 @@ class Header extends StatelessWidget {
                   children: [
                     Image.asset(
                       'lib/core/icons/tangrao_logo1.png',
-                      width: 50.w,
-                      height: 50.h,
+                      width: 35.w,
+                      height: 35.h,
                     ),
                     SizedBox(width: 8.w),
 
@@ -82,7 +82,6 @@ class Header extends StatelessWidget {
                       ),
                       icon: Icon(LucideIcons.bell, size: 18.sp),
                     ),
-                    SizedBox(width: 8.w),
 
                     // ────────── Popup menu button ──────────
                     PopupMenuButton<String>(

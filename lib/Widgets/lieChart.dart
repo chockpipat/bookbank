@@ -2,6 +2,23 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+// ────────── Gradient helpers ──────────
+LinearGradient _lineGradient(List<Color> colors) => LinearGradient(
+      colors: colors,
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    );
+
+LinearGradient _areaGradient(List<Color> colors) => LinearGradient(
+      colors: colors,
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    );
+
+// Positive segments: green gradient / Negative segments: red gradient
+final _positiveColors = [const Color.fromARGB(255, 18, 168, 55), const Color.fromARGB(166, 18, 168, 55)];
+final _negativeColors = [const Color.fromARGB(255, 255, 4, 0), const Color.fromARGB(166, 255, 0, 0)];
+
 // ────────── Create Segments with Area ──────────
 List<LineChartBarData> createSegmentsWithArea(List<FlSpot> spots) {
   List<LineChartBarData> segments = [];
@@ -12,20 +29,23 @@ List<LineChartBarData> createSegmentsWithArea(List<FlSpot> spots) {
 
     // ────────── Check if both points are on the same side of x-axis ──────────
     if ((start.y >= 0 && end.y >= 0) || (start.y < 0 && end.y < 0)) {
-      final color = start.y >= 0 ? Colors.green : Colors.red;
+      final colors = start.y >= 0 ? _positiveColors : _negativeColors;
 
       // Add segment to list
       segments.add(
         LineChartBarData(
           spots: [start, end],
           isCurved: true,
-          color: color,
+          gradient: _lineGradient(colors),
           barWidth: 1.5,
           dotData: FlDotData(show: false),
 
           belowBarData: BarAreaData(
             show: true,
-            color: color.withValues(alpha: 0.2),
+            gradient: _areaGradient([
+              colors.first.withValues(alpha: 0.35),
+              colors.last.withValues(alpha: 0.0),
+            ]),
           ),
         ),
       );
@@ -38,37 +58,43 @@ List<LineChartBarData> createSegmentsWithArea(List<FlSpot> spots) {
     final zeroPoint = FlSpot(x0, 0);
 
     // ────────── Create first segment ──────────
-    final color1 = start.y >= 0 ? Colors.green : Colors.red;
+    final colors1 = start.y >= 0 ? _positiveColors : _negativeColors;
 
     // ────────── Add first segment to list ──────────
     segments.add(
       LineChartBarData(
         spots: [start, zeroPoint],
         isCurved: true,
-        color: color1,
+        gradient: _lineGradient(colors1),
         barWidth: 1.5,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
-          color: color1.withValues(alpha: 0.2),
+          gradient: _areaGradient([
+            colors1.first.withValues(alpha: 0.35),
+            colors1.last.withValues(alpha: 0.0),
+          ]),
         ),
       ),
     );
 
     // ────────── Create second segment ──────────
-    final color2 = end.y >= 0 ? Colors.green : Colors.red;
+    final colors2 = end.y >= 0 ? _positiveColors : _negativeColors;
 
     // ────────── Add second segment to list ──────────
     segments.add(
       LineChartBarData(
         spots: [zeroPoint, end],
         isCurved: true,
-        color: color2,
+        gradient: _lineGradient(colors2),
         barWidth: 1.5,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
-          color: color2.withValues(alpha: 0.25),
+          gradient: _areaGradient([
+            colors2.first.withValues(alpha: 0.35),
+            colors2.last.withValues(alpha: 0.0),
+          ]),
         ),
       ),
     );
