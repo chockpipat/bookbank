@@ -19,6 +19,7 @@ import 'package:bookbank/features/records/utils/record_utils.dart';
 
 // ────────── Widgets ──────────
 import 'package:bookbank/features/records/widgets/record_list.dart';
+import 'package:bookbank/features/records/widgets/filter_bottom_sheet.dart';
 import 'package:bookbank/Widgets/select_date_time.dart';
 import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
 
@@ -31,7 +32,7 @@ class RecordScreen extends StatefulWidget {
 
 class _RecordScreenState extends State<RecordScreen> {
   List<MyData> _allTransactions = [];
-  RecordFilter _filter = RecordFilter.all;
+  RecordFilters _filters = const RecordFilters();
   bool _isLoading = true;
   bool _hasError = false;
 
@@ -77,12 +78,23 @@ class _RecordScreenState extends State<RecordScreen> {
   List<MyData> get _filteredTransactions {
     final query = _searchController.text.trim().toLowerCase();
 
-    // Filter by type (income/expense/all)
+    // Filter by type (income/expense/transfer/all)
     var filtered = _allTransactions.where((item) {
-      if (_filter == RecordFilter.income && item.moneyType != 'income') {
+      if (_filters.type == RecordFilter.income && item.moneyType != 'income') {
         return false;
       }
-      if (_filter == RecordFilter.expense && item.moneyType != 'expense') {
+      if (_filters.type == RecordFilter.expense &&
+          item.moneyType != 'expense') {
+        return false;
+      }
+      if (_filters.type == RecordFilter.transfer &&
+          item.moneyType != 'transfer') {
+        return false;
+      }
+      if (_filters.moneyList != null && item.moneyList != _filters.moneyList) {
+        return false;
+      }
+      if (_filters.category != null && item.moneyGroup != _filters.category) {
         return false;
       }
       return true;
@@ -106,12 +118,19 @@ class _RecordScreenState extends State<RecordScreen> {
         listen: false,
       );
       final loc = locProvider.loc;
+      final groupProvider = Provider.of<GroupSettingsProvider>(
+        context,
+        listen: false,
+      );
       filtered = filtered.where((item) {
         final name = getItemName(
           item,
           anonymousText: loc.anonymous,
         ).toLowerCase();
-        return name.contains(query);
+        final groupName =
+            groupProvider.getGroupSettings(item.moneyGroup)?.groupName ?? '';
+        return name.contains(query) ||
+            groupName.toLowerCase().contains(query);
       }).toList();
     }
 
@@ -250,23 +269,34 @@ class _RecordScreenState extends State<RecordScreen> {
                         ),
                         const Spacer(),
 
-                        // Filter button
+                        // ────────── Filter button ──────────
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () => showRecordFilterSheet(
+                            context,
+                            groups: groupProvider.groupSettings,
+                            currentFilters: _filters,
+                            onChanged: (filters) {
+                              setState(() => _filters = filters);
+                            },
+                          ),
                           style: IconButton.styleFrom(
                             padding: EdgeInsets.zero,
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           icon: Icon(
-                            LucideIcons.filter,
+                            !_filters.isAll
+                                ? LucideIcons.filter
+                                : LucideIcons.filterX,
                             size: 18.sp,
-                            color: theme.colorScheme.onSurface,
+                            color: _filters.isAll
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.primary,
                           ),
                         ),
                         SizedBox(width: 16.w),
 
-                        // Date picker
+                        // ────────── Date picker ──────────
                         IconButton(
                           onPressed: () => showSelectDateTime(
                             context: context,
@@ -291,7 +321,7 @@ class _RecordScreenState extends State<RecordScreen> {
                           ),
                         ),
 
-                        // Clear date filter
+                        // ────────── Clear date filter ──────────
                         if (_selectedDateTime != null)
                           IconButton(
                             onPressed: () {
@@ -441,7 +471,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    LucideIcons.databaseZap,
+                                    LucideIcons.databaseX,
                                     size: 48.sp,
                                     color: theme.colorScheme.onSurface
                                         .withValues(alpha: 0.5),

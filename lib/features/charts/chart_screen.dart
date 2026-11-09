@@ -34,18 +34,15 @@ class _ChartScreenState extends State<ChartScreen> {
   double _dailyIncome = 0;
   double _dailyExpense = 0;
   double _dailyNet = 0;
-  Map<String, double> _dailyCategoryExpenses = {};
 
   // Monthly data
   List<FlSpot> _monthlySpots = [];
-  Map<String, double> _monthlyCategoryExpenses = {};
   double _monthlyIncome = 0;
   double _monthlyExpense = 0;
   double _monthlyNet = 0;
 
   // Yearly data
   List<FlSpot> _yearlySpots = [];
-  Map<String, double> _yearlyCategoryExpenses = {};
   double _yearlyIncome = 0;
   double _yearlyExpense = 0;
   double _yearlyNet = 0;
@@ -108,47 +105,11 @@ class _ChartScreenState extends State<ChartScreen> {
     _dailyExpense = calc.dailyExpense(dateStr);
     _dailyNet = calc.dailyNet(dateStr);
 
-    // Calculate daily category expenses
-    _dailyCategoryExpenses = {
-      'Group1': calc.dailyExpenseByCategory(dateStr, 'Group1'),
-      'Group2': calc.dailyExpenseByCategory(dateStr, 'Group2'),
-      'Group3': calc.dailyExpenseByCategory(dateStr, 'Group3'),
-      'Group4': calc.dailyExpenseByCategory(dateStr, 'Group4'),
-    };
-
-    // Remove categories with zero expense
-    _dailyCategoryExpenses.removeWhere((key, value) => value <= 0);
-
     // Calculate monthly spots
     _monthlySpots = calc.generateDailySpotsForMonth(
       _selectedYear,
       _selectedMonth,
     );
-
-    // Calculate monthly category expenses
-    _monthlyCategoryExpenses = {
-      'Group1': calc.monthlyExpenseByCategory(
-        _selectedYear,
-        _selectedMonth,
-        'Group1',
-      ),
-      'Group2': calc.monthlyExpenseByCategory(
-        _selectedYear,
-        _selectedMonth,
-        'Group2',
-      ),
-      'Group3': calc.monthlyExpenseByCategory(
-        _selectedYear,
-        _selectedMonth,
-        'Group3',
-      ),
-      'Group4': calc.monthlyExpenseByCategory(
-        _selectedYear,
-        _selectedMonth,
-        'Group4',
-      ),
-    };
-    _monthlyCategoryExpenses.removeWhere((key, value) => value <= 0);
 
     // Calculate monthly income/expense/net
     _monthlyIncome = calc.monthlyIncomeForDate(_selectedYear, _selectedMonth);
@@ -157,15 +118,6 @@ class _ChartScreenState extends State<ChartScreen> {
 
     // Calculate yearly spots
     _yearlySpots = calc.generateMonthlySpotsForYear(_selectedYear);
-
-    // Calculate yearly category expenses
-    _yearlyCategoryExpenses = {
-      'Group1': calc.yearlyExpenseByCategory(_selectedYear, 'Group1'),
-      'Group2': calc.yearlyExpenseByCategory(_selectedYear, 'Group2'),
-      'Group3': calc.yearlyExpenseByCategory(_selectedYear, 'Group3'),
-      'Group4': calc.yearlyExpenseByCategory(_selectedYear, 'Group4'),
-    };
-    _yearlyCategoryExpenses.removeWhere((key, value) => value <= 0);
 
     // Calculate yearly income/expense/net
     _yearlyIncome = calc.yearlyIncome(_selectedYear);
@@ -208,186 +160,53 @@ class _ChartScreenState extends State<ChartScreen> {
         final groupSettings = groupProvider.groupSettings;
         final loc = locProvider.loc;
 
-        final Map<String, IconData> categoryIcons = {
-          'Group1': _getIconFromCodePoint(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group1',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group1',
-                    groupName: 'Group1',
-                    iconCodePoint: Icons.work.codePoint,
-                    colorValue: Colors.blue.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .iconCodePoint,
-          ),
-          'Group2': _getIconFromCodePoint(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group2',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group2',
-                    groupName: 'Group2',
-                    iconCodePoint: Icons.shopping_cart.codePoint,
-                    colorValue: Colors.orange.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .iconCodePoint,
-          ),
-          'Group3': _getIconFromCodePoint(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group3',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group3',
-                    groupName: 'Group3',
-                    iconCodePoint: Icons.restaurant.codePoint,
-                    colorValue: Colors.purple.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .iconCodePoint,
-          ),
-          'Group4': _getIconFromCodePoint(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group4',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group4',
-                    groupName: 'Group4',
-                    iconCodePoint: Icons.movie.codePoint,
-                    colorValue: Colors.pink.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .iconCodePoint,
-          ),
-        };
+        final calc = FinancialCalculations(_transactions);
+        final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
 
-        final Map<String, Color> categoryColors = {
-          'Group1': Color(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group1',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group1',
-                    groupName: 'Group1',
-                    iconCodePoint: Icons.work.codePoint,
-                    colorValue: Colors.blue.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .colorValue,
-          ),
-          'Group2': Color(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group2',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group2',
-                    groupName: 'Group2',
-                    iconCodePoint: Icons.shopping_cart.codePoint,
-                    colorValue: Colors.orange.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .colorValue,
-          ),
-          'Group3': Color(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group3',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group3',
-                    groupName: 'Group3',
-                    iconCodePoint: Icons.restaurant.codePoint,
-                    colorValue: Colors.purple.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .colorValue,
-          ),
-          'Group4': Color(
-            groupSettings
-                .firstWhere(
-                  (s) => s.groupId == 'Group4',
-                  orElse: () => GroupSettings(
-                    groupId: 'Group4',
-                    groupName: 'Group4',
-                    iconCodePoint: Icons.movie.codePoint,
-                    colorValue: Colors.pink.toARGB32(),
-                    savingsGoalEnabled: false,
-                    savingsGoalAmount: 0,
-                  ),
-                )
-                .colorValue,
-          ),
-        };
+        // All category IDs: configured groups + any category used in transactions
+        final categoryIds = <String>{
+          ...groupSettings.map((g) => g.groupId),
+          ..._transactions
+              .where(
+                (t) => t.moneyType != 'transfer' && t.moneyGroup.isNotEmpty,
+              )
+              .map((t) => t.moneyGroup),
+        }.toList();
 
-        final Map<String, String> categoryNames = {
-          'Group1': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group1',
-                orElse: () => GroupSettings(
-                  groupId: 'Group1',
-                  groupName: 'Group1',
-                  iconCodePoint: Icons.work.codePoint,
-                  colorValue: Colors.blue.toARGB32(),
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-          'Group2': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group2',
-                orElse: () => GroupSettings(
-                  groupId: 'Group2',
-                  groupName: 'Group2',
-                  iconCodePoint: Icons.shopping_cart.codePoint,
-                  colorValue: Colors.orange.toARGB32(),
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-          'Group3': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group3',
-                orElse: () => GroupSettings(
-                  groupId: 'Group3',
-                  groupName: 'Group3',
-                  iconCodePoint: Icons.restaurant.codePoint,
-                  colorValue: Colors.purple.toARGB32(),
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-          'Group4': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group4',
-                orElse: () => GroupSettings(
-                  groupId: 'Group4',
-                  groupName: 'Group4',
-                  iconCodePoint: Icons.movie.codePoint,
-                  colorValue: Colors.pink.toARGB32(),
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-        };
+        Map<String, double> expensesFor(double Function(String id) compute) {
+          return {
+            for (final id in categoryIds) id: compute(id),
+          }..removeWhere((key, value) => value <= 0);
+        }
+
+        final dailyCategoryExpenses = expensesFor(
+          (id) => calc.dailyExpenseByCategory(dateStr, id),
+        );
+        final monthlyCategoryExpenses = expensesFor(
+          (id) => calc.monthlyExpenseByCategory(
+            _selectedYear,
+            _selectedMonth,
+            id,
+          ),
+        );
+        final yearlyCategoryExpenses = expensesFor(
+          (id) => calc.yearlyExpenseByCategory(_selectedYear, id),
+        );
+
+        final categoryIcons = <String, IconData>{};
+        final categoryColors = <String, Color>{};
+        final categoryNames = <String, String>{};
+        for (final id in categoryIds) {
+          final settings = groupProvider.getGroupSettings(id);
+          categoryIcons[id] = _getIconFromCodePoint(
+            settings?.iconCodePoint ?? Icons.add.codePoint,
+          );
+          final colorValue = settings?.colorValue ?? 0;
+          categoryColors[id] = colorValue != 0
+              ? Color(colorValue)
+              : Colors.blue;
+          categoryNames[id] = settings?.groupName ?? id;
+        }
 
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
@@ -460,7 +279,7 @@ class _ChartScreenState extends State<ChartScreen> {
                     dailyExpense: _dailyExpense,
                     dailyNet: _dailyNet,
                     onDateChanged: _onDateChanged,
-                    categoryExpenses: _dailyCategoryExpenses,
+                    categoryExpenses: dailyCategoryExpenses,
                     categoryIcons: categoryIcons,
                     categoryColors: categoryColors,
                     categoryNames: categoryNames,
@@ -473,8 +292,8 @@ class _ChartScreenState extends State<ChartScreen> {
                     selectedMonth: _selectedMonth,
                     spots: _monthlySpots,
                     onMonthChanged: _onMonthChanged,
-                    categoryExpenses: _monthlyCategoryExpenses,
-                    totalExpense: _monthlyCategoryExpenses.values.fold(
+                    categoryExpenses: monthlyCategoryExpenses,
+                    totalExpense: monthlyCategoryExpenses.values.fold(
                       0.0,
                       (a, b) => a + b,
                     ),
@@ -492,8 +311,8 @@ class _ChartScreenState extends State<ChartScreen> {
                     selectedYear: _selectedYear,
                     spots: _yearlySpots,
                     onYearChanged: _onYearChanged,
-                    categoryExpenses: _yearlyCategoryExpenses,
-                    totalExpense: _yearlyCategoryExpenses.values.fold(
+                    categoryExpenses: yearlyCategoryExpenses,
+                    totalExpense: yearlyCategoryExpenses.values.fold(
                       0.0,
                       (a, b) => a + b,
                     ),

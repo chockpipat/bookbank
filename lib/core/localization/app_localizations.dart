@@ -58,6 +58,7 @@ class AppLocalizations {
 
       // Record screen
       'transaction_history': 'Transaction History',
+      'filter': 'Filter',
       'all': 'All',
       'search': 'Search for program name...',
       'no_records': 'No records found',
@@ -281,6 +282,7 @@ If you have any questions about this privacy policy, please contact the develope
 
       // Record screen
       'transaction_history': 'ประวัติธุรกรรม',
+      'filter': 'ตัวกรอง',
       'all': 'ทั้งหมด',
       'search': 'ค้นหาชื่อรายการ...',
       'no_records': 'ไม่พบรายการ',
@@ -504,6 +506,7 @@ If you have any questions about this privacy policy, please contact the develope
 
       // Record screen
       'transaction_history': '交易历史',
+      'filter': '筛选',
       'all': '全部',
       'search': '搜索...',
       'no_records': '未找到记录',
@@ -729,6 +732,7 @@ If you have any questions about this privacy policy, please contact the develope
 
   // Record screen
   String get transactionHistory => translate('transaction_history');
+  String get filter => translate('filter');
   String get all => translate('all');
   String get search => translate('search');
   String get noRecords => translate('no_records');

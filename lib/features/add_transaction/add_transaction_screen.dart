@@ -115,62 +115,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         final locProvider = Provider.of<LocalizationProvider>(context);
         final loc = locProvider.loc;
 
-        // ────────── Map group IDs to display names ──────────
-        final Map<String, String> categoryNames = {
-          'Group1': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group1',
-                orElse: () => GroupSettings(
-                  groupId: 'Group1',
-                  groupName: 'Group1',
-                  iconCodePoint: 0,
-                  colorValue: 0,
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-          'Group2': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group2',
-                orElse: () => GroupSettings(
-                  groupId: 'Group2',
-                  groupName: 'Group2',
-                  iconCodePoint: 10,
-                  colorValue: 0,
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-          'Group3': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group3',
-                orElse: () => GroupSettings(
-                  groupId: 'Group3',
-                  groupName: 'Group3',
-                  iconCodePoint: 0,
-                  colorValue: 0,
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-          'Group4': groupSettings
-              .firstWhere(
-                (s) => s.groupId == 'Group4',
-                orElse: () => GroupSettings(
-                  groupId: 'Group4',
-                  groupName: 'Group4',
-                  iconCodePoint: 0,
-                  colorValue: 0,
-                  savingsGoalEnabled: false,
-                  savingsGoalAmount: 0,
-                ),
-              )
-              .groupName,
-        };
-
         return LayoutBuilder(
           builder: (context, constraints) {
             return Column(
@@ -287,7 +231,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           selectedGroup: selectedGroup,
                           onChanged: (val) =>
                               setState(() => selectedGroup = val),
-                          categoryNames: categoryNames,
+                          groups: groupSettings,
                         ),
                       ],
                     ],

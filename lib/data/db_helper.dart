@@ -29,7 +29,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 5,
+      version: 6,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -72,8 +72,6 @@ class DatabaseHelper {
         isPinned INTEGER NOT NULL DEFAULT 0
       )
     ''');
-    // Insert default group settings
-    await _insertDefaultGroupSettings(db);
   }
 
   // ────────── Database Upgrade ──────────
@@ -98,7 +96,6 @@ class DatabaseHelper {
           savingsGoalAmount REAL NOT NULL DEFAULT 0
         )
       ''');
-      await _insertDefaultGroupSettings(db);
     }
     if (oldVersion < 5) {
       await db.execute('''
@@ -113,48 +110,10 @@ class DatabaseHelper {
         )
       ''');
     }
-  }
-
-  // ────────── Default Group Settings ──────────
-
-  /// Insert default group settings
-  Future<void> _insertDefaultGroupSettings(Database db) async {
-    final defaultGroups = [
-      {
-        'groupId': 'Group1',
-        'groupName': 'Group1',
-        'iconCodePoint': 0xe145,
-        'colorValue': 0xFF2196F3,
-      }, // Icons.add
-      {
-        'groupId': 'Group2',
-        'groupName': 'Group2',
-        'iconCodePoint': 0xe145,
-        'colorValue': 0xFF4CAF50,
-      }, // Icons.add
-      {
-        'groupId': 'Group3',
-        'groupName': 'Group3',
-        'iconCodePoint': 0xe145,
-        'colorValue': 0xFF9C27B0,
-      }, // Icons.add
-      {
-        'groupId': 'Group4',
-        'groupName': 'Group4',
-        'iconCodePoint': 0xe145,
-        'colorValue': 0xFFE91E63,
-      }, // Icons.add
-    ];
-
-    for (var group in defaultGroups) {
-      await db.insert('group_settings', {
-        'groupId': group['groupId'],
-        'groupName': group['groupName'],
-        'iconCodePoint': group['iconCodePoint'],
-        'colorValue': group['colorValue'],
-        'savingsGoalEnabled': 0,
-        'savingsGoalAmount': 0,
-      }, conflictAlgorithm: ConflictAlgorithm.ignore);
+    if (oldVersion < 6) {
+      // Remove untouched default groups so users start with 0 categories.
+      // Groups the user has renamed (groupName != groupId) are kept.
+      await db.delete('group_settings', where: 'groupName = groupId');
     }
   }
 
@@ -217,6 +176,16 @@ class DatabaseHelper {
     );
     if (maps.isEmpty) return null;
     return GroupSettings.fromMap(maps.first);
+  }
+
+  /// Insert new group settings
+  Future<int> insertGroupSettings(GroupSettings settings) async {
+    final db = await database;
+    return await db.insert(
+      'group_settings',
+      settings.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
   }
 
   /// Update or insert group settings

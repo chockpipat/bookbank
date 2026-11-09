@@ -46,6 +46,46 @@ class GroupSettingsProvider extends ChangeNotifier {
     }
   }
 
+  /// Generate the next available group ID (Group1, Group2, ...)
+  String _nextGroupId() {
+    var max = 0;
+    final pattern = RegExp(r'^Group(\d+)$');
+    for (final s in _groupSettings) {
+      final match = pattern.firstMatch(s.groupId);
+      if (match != null) {
+        final n = int.tryParse(match.group(1)!) ?? 0;
+        if (n > max) max = n;
+      }
+    }
+    return 'Group${max + 1}';
+  }
+
+  /// Add a new category group and refresh the list
+  Future<GroupSettings?> addGroup({
+    required String groupName,
+    required int iconCodePoint,
+    required int colorValue,
+    bool savingsGoalEnabled = false,
+    double savingsGoalAmount = 0,
+  }) async {
+    try {
+      final settings = GroupSettings(
+        groupId: _nextGroupId(),
+        groupName: groupName,
+        iconCodePoint: iconCodePoint,
+        colorValue: colorValue,
+        savingsGoalEnabled: savingsGoalEnabled,
+        savingsGoalAmount: savingsGoalAmount,
+      );
+      await DatabaseHelper.instance.insertGroupSettings(settings);
+      await loadGroupSettings();
+      return getGroupSettings(settings.groupId);
+    } catch (e) {
+      debugPrint('Error adding group settings: $e');
+      return null;
+    }
+  }
+
   Future<void> updateGroupSettings(GroupSettings settings) async {
     try {
       await DatabaseHelper.instance.updateGroupSettings(settings);

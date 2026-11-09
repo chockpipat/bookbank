@@ -13,51 +13,13 @@ import 'package:bookbank/core/localization/localization_provider.dart';
 import 'package:bookbank/features/home/widgets/group_card.dart';
 
 class UnallocatedSummary extends StatefulWidget {
-  final double incomeTotal;
-  final double totalBalance;
   final double unallocatedAmount;
-  final double group1Amount;
-  final double group2Amount;
-  final double group3Amount;
-  final double group4Amount;
-  final double group1Income;
-  final double group2Income;
-  final double group3Income;
-  final double group4Income;
-  final double group1Percentage;
-  final double group2Percentage;
-  final double group3Percentage;
-  final double group4Percentage;
-  final double unallocatedPercentage;
-  final Color group1Color;
-  final Color group2Color;
-  final Color group3Color;
-  final Color group4Color;
 
   final void Function(GroupDragData source)? onTransferDrop;
 
   const UnallocatedSummary({
     super.key,
-    required this.incomeTotal,
-    required this.totalBalance,
     required this.unallocatedAmount,
-    required this.group1Amount,
-    required this.group2Amount,
-    required this.group3Amount,
-    required this.group4Amount,
-    required this.group1Income,
-    required this.group2Income,
-    required this.group3Income,
-    required this.group4Income,
-    required this.group1Percentage,
-    required this.group2Percentage,
-    required this.group3Percentage,
-    required this.group4Percentage,
-    required this.unallocatedPercentage,
-    required this.group1Color,
-    required this.group2Color,
-    required this.group3Color,
-    required this.group4Color,
     this.onTransferDrop,
   });
 

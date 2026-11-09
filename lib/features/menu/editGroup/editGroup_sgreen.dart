@@ -75,6 +75,28 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
     }
   }
 
+  Future<void> _addGroup() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => Dialog(
+        child: GroupEditDialog(
+          isNew: true,
+          groupSettings: GroupSettings(
+            groupId: '',
+            groupName: '',
+            iconCodePoint: Icons.add.codePoint,
+            colorValue: const Color(0xFF2196F3).toARGB32(),
+            savingsGoalEnabled: false,
+            savingsGoalAmount: 0,
+          ),
+        ),
+      ),
+    );
+    if (result == true) {
+      await _loadGroupSettings();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -170,6 +192,25 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
               ),
             ),
             const SizedBox(height: 16),
+
+            // Add Group Button
+            SizedBox(
+              width: double.infinity,
+              height: 40.h,
+              child: OutlinedButton.icon(
+                onPressed: _addGroup,
+                icon: Icon(Icons.add, size: 18.sp),
+                label: Text('${loc.add} ${loc.group}'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: theme.colorScheme.onSurface,
+                  side: BorderSide(color: theme.colorScheme.onSurfaceVariant),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
 
             TextButton(
               onPressed: () {

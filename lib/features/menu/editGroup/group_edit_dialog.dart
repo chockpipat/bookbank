@@ -3,14 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:bookbank/core/theme/app_theme.dart';
 import 'package:bookbank/data/database.dart';
-import 'package:bookbank/data/db_helper.dart';
 import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
 class GroupEditDialog extends StatefulWidget {
   final GroupSettings groupSettings;
+  final bool isNew;
 
-  const GroupEditDialog({super.key, required this.groupSettings});
+  const GroupEditDialog({
+    super.key,
+    required this.groupSettings,
+    this.isNew = false,
+  });
 
   @override
   State<GroupEditDialog> createState() => _GroupEditDialogState();
@@ -85,10 +89,12 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
   }
 
   Future<void> _saveSettings() async {
+    if (_nameController.text.trim().isEmpty) return;
+
     final updatedSettings = GroupSettings(
       id: widget.groupSettings.id,
       groupId: widget.groupSettings.groupId,
-      groupName: _nameController.text,
+      groupName: _nameController.text.trim(),
       iconCodePoint: _selectedIcon.codePoint,
       colorValue: _selectedColor.toARGB32(),
       savingsGoalEnabled: _savingsGoalEnabled,
@@ -97,15 +103,25 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
           : 0,
     );
 
-    await DatabaseHelper.instance.updateGroupSettings(updatedSettings);
-
     // Notify provider to refresh group settings across all screens
     if (mounted) {
       final groupProvider = Provider.of<GroupSettingsProvider>(
         context,
         listen: false,
       );
-      await groupProvider.updateGroupSettings(updatedSettings);
+      if (widget.isNew) {
+        await groupProvider.addGroup(
+          groupName: _nameController.text.trim(),
+          iconCodePoint: _selectedIcon.codePoint,
+          colorValue: _selectedColor.toARGB32(),
+          savingsGoalEnabled: _savingsGoalEnabled,
+          savingsGoalAmount: _savingsGoalEnabled
+              ? double.tryParse(_amountController.text) ?? 0
+              : 0,
+        );
+      } else {
+        await groupProvider.updateGroupSettings(updatedSettings);
+      }
       // ignore: use_build_context_synchronously
       Navigator.of(context).pop(true);
     }
@@ -151,7 +167,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
             ),
 
             Text(
-              loc.editGroup,
+              widget.isNew ? '${loc.add} ${loc.group}' : loc.editGroup,
               style: TextStyle(
                 fontSize: AppSize.l,
                 fontWeight: FontWeight.bold,
