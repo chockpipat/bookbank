@@ -33,6 +33,7 @@ class _RecordScreenState extends State<RecordScreen> {
   List<MyData> _allTransactions = [];
   RecordFilter _filter = RecordFilter.all;
   bool _isLoading = true;
+  bool _hasError = false;
 
   final TextEditingController _searchController = TextEditingController();
   final Set<int> _selectedIds = {};
@@ -52,12 +53,24 @@ class _RecordScreenState extends State<RecordScreen> {
   }
 
   Future<void> _loadData() async {
-    final data = await DatabaseHelper.instance.getAllData();
-    if (!mounted) return;
     setState(() {
-      _allTransactions = data;
-      _isLoading = false;
+      _isLoading = true;
+      _hasError = false;
     });
+    try {
+      final data = await DatabaseHelper.instance.getAllData();
+      if (!mounted) return;
+      setState(() {
+        _allTransactions = data;
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+    }
   }
 
   // ────────── Filtered Transactions ──────────
@@ -421,7 +434,47 @@ class _RecordScreenState extends State<RecordScreen> {
                     Expanded(
                       child: _isLoading
                           ? const Center(child: CircularProgressIndicator())
+                          : _hasError
+                          // ────────── Error State ──────────
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    LucideIcons.databaseZap,
+                                    size: 48.sp,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
+                                  ),
+                                  SizedBox(height: 12.h),
+
+                                  Text(
+                                    loc.loadFailed,
+                                    textAlign: TextAlign.center,
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                  SizedBox(height: 12.h),
+
+                                  TextButton.icon(
+                                    onPressed: _loadData,
+                                    style: TextButton.styleFrom(
+                                      foregroundColor:
+                                          theme.colorScheme.onSurface,
+                                    ),
+                                    icon: Icon(
+                                      LucideIcons.refreshCw,
+                                      size: 16.sp,
+                                    ),
+                                    label: Text(loc.retry),
+                                  ),
+                                ],
+                              ),
+                            )
                           : filtered.isEmpty
+                          // ────────── Empty State ──────────
                           ? Center(
                               child: Text(
                                 loc.noRecord,
@@ -432,6 +485,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                 ),
                               ),
                             )
+                          // ────────── Records List ──────────
                           : ListView.builder(
                               padding: EdgeInsets.zero,
                               itemCount: filtered.length,

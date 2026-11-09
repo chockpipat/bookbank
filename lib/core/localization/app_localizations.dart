@@ -118,6 +118,8 @@ class AppLocalizations {
       // General
       'cancel': 'Cancel',
       'confirm': 'Confirm',
+      'load_failed': 'Failed to load data. Please try again.',
+      'retry': 'Retry',
 
       // Please enter
       'please_enter_amount': '*Please enter an amount',
@@ -339,6 +341,8 @@ If you have any questions about this privacy policy, please contact the develope
       // General
       'cancel': 'ยกเลิก',
       'confirm': 'ยืนยัน',
+      'load_failed': 'โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง',
+      'retry': 'ลองใหม่',
 
       // Please enter
       'please_enter_amount': '*กรุณาใส่จำนวนเงิน',
@@ -559,6 +563,8 @@ If you have any questions about this privacy policy, please contact the develope
       // General
       'cancel': '取消',
       'confirm': '确认',
+      'load_failed': '加载数据失败，请重试',
+      'retry': '重试',
 
       // Please enter
       'please_enter_amount': '*请输入金额',
@@ -734,6 +740,8 @@ If you have any questions about this privacy policy, please contact the develope
   String get view => translate('view');
   String get edit => translate('edit');
   String get delete => translate('delete');
+  String get loadFailed => translate('load_failed');
+  String get retry => translate('retry');
 
   // Add transaction
   String get addList => translate('add_list');

@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.2.2
   lucide_icons_flutter: ^4.0.1
   cupertino_calendar_picker: ^3.0.0
+  material_ui: ^1.10.0
 
 dev_dependencies:
   flutter_test:

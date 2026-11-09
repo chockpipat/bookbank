@@ -196,11 +196,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                 : null;
                           });
                         },
+
                         onSaved: (value) {
                           if (value != null && value.isNotEmpty) {
                             _number = num.tryParse(value) ?? 0;
                           }
                         },
+
                         onTransferModeToggle: () {
                           setState(() {
                             _isTransferMode = !_isTransferMode;
@@ -215,6 +217,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       SizedBox(height: 20.h),
 
+                      // ────────── Transfer mode section ──────────
                       if (_isTransferMode) ...[
                         TransferMode(
                           transferFrom: _transferFrom,
@@ -233,6 +236,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               child: TitleInput(controller: _titleController),
                             ),
                             SizedBox(width: 16.w),
+
                             Flexible(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,6 +250,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 8.h),
+
                                   DateSelectorInkWell(
                                     selectedDate: selectedDate,
                                     formatDate: _formatDate,
@@ -261,6 +266,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                         SizedBox(height: 16.h),
 
+                        // ────────── Type selector section ──────────
                         TypeSelector(
                           selectedType: selectedOption,
                           onChanged: (val) =>
@@ -268,6 +274,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                         SizedBox(height: 20.h),
 
+                        // ────────── Position selector section ──────────
                         PositionSelector(
                           selectedPosition: selectedType,
                           onChanged: (val) =>
@@ -275,6 +282,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                         SizedBox(height: 20.h),
 
+                        // ────────── Category selector section ──────────
                         CategorySelector(
                           selectedGroup: selectedGroup,
                           onChanged: (val) =>
@@ -377,6 +385,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                 size: isTablet ? 24.sp : 20.sp,
                               ),
                               SizedBox(width: 12.w),
+
                               // Success message
                               Expanded(
                                 child: Text(

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:provider/provider.dart';
+import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:bookbank/features/onboarding/providers/onboarding_provider.dart';
 
 // ────────── Theme & Localization ──────────
@@ -51,6 +52,8 @@ class MyApp extends StatelessWidget {
                 themeMode: themeProvider.isDarkMode
                     ? ThemeMode.dark
                     : ThemeMode.light,
+                localizationsDelegates:
+                    material_ui.GlobalMaterialLocalizations.delegates,
                 home: const OnboardingWrapper(),
 
                 // ────────── Add responsive breakpoints ──────────

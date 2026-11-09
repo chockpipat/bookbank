@@ -53,13 +53,8 @@ class _SelectDateTimeState extends State<SelectDateTime> {
     final loc = locProvider.loc;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
-      title: Text(
-        loc.selectDateTime,
-        style: TextStyle(fontSize: AppSize.s),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      title: Text(loc.selectDateTime, style: TextStyle(fontSize: AppSize.s)),
       content: SizedBox(
         width: 350,
         child: CupertinoCalendar(
@@ -82,7 +77,9 @@ class _SelectDateTimeState extends State<SelectDateTime> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          style: TextButton.styleFrom(foregroundColor: AppColors.black),
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.onSurface,
+          ),
           child: Text(loc.cancel),
         ),
 
@@ -94,8 +91,8 @@ class _SelectDateTimeState extends State<SelectDateTime> {
             Navigator.pop(context);
           },
           style: FilledButton.styleFrom(
-            backgroundColor: AppColors.black,
-            foregroundColor: AppColors.white,
+            backgroundColor: Theme.of(context).colorScheme.onSurface,
+            foregroundColor: Theme.of(context).colorScheme.surface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
