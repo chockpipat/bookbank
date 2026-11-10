@@ -4,6 +4,7 @@ import 'package:bookbank/data/db_helper.dart';
 import 'package:bookbank/features/menu/editGroup/group_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
@@ -17,6 +18,7 @@ class EditGroupSgreen extends StatefulWidget {
 class _EditGroupSgreenState extends State<EditGroupSgreen> {
   List<GroupSettings> _groupSettings = [];
   bool _isLoading = true;
+  bool _hasError = false;
 
   final List<IconData> _availableIcons = [
     Icons.shopping_cart_rounded,
@@ -55,11 +57,22 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
   }
 
   Future<void> _loadGroupSettings() async {
-    final settings = await DatabaseHelper.instance.getAllGroupSettings();
-    if (mounted) {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
+    try {
+      final settings = await DatabaseHelper.instance.getAllGroupSettings();
+      if (!mounted) return;
       setState(() {
         _groupSettings = settings;
         _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
       });
     }
   }
@@ -107,8 +120,8 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.colorScheme.onSurfaceVariant),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: theme.colorScheme.surfaceDim),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -119,7 +132,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
             children: [
               Icon(Icons.edit, size: AppSize.l),
               SizedBox(width: 8),
-              Text(loc.editGroup, style: TextStyle(fontSize: AppSize.m)),
+              Text(loc.editGroup, style: TextStyle(fontSize: 14.sp)),
             ],
           ),
           SizedBox(height: 16),
@@ -127,6 +140,43 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
           // Group List
           if (_isLoading)
             Center(child: CircularProgressIndicator())
+          else if (_hasError)
+            Flexible(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      LucideIcons.databaseX,
+                      size: 48.sp,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                    SizedBox(height: 12),
+
+                    Text(
+                      loc.loadFailed,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: AppSize.m,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+
+                    TextButton.icon(
+                      onPressed: _loadGroupSettings,
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.onSurface,
+                      ),
+                      icon: Icon(LucideIcons.refreshCw, size: 16.sp),
+                      label: Text(loc.retry),
+                    ),
+                  ],
+                ),
+              ),
+            )
           else
             Flexible(
               child: ListView.builder(
@@ -191,38 +241,41 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
                 },
               ),
             ),
-            const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-            // Add Group Button
-            SizedBox(
-              width: double.infinity,
-              height: 40.h,
-              child: OutlinedButton.icon(
-                onPressed: _addGroup,
-                icon: Icon(Icons.add, size: 18.sp),
-                label: Text('${loc.add} ${loc.group}'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: theme.colorScheme.onSurface,
-                  side: BorderSide(color: theme.colorScheme.onSurfaceVariant),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+          // Add Group Button
+          SizedBox(
+            width: double.infinity,
+            height: 40.h,
+            child: OutlinedButton.icon(
+              onPressed: _addGroup,
+              icon: Icon(Icons.add, size: 18.sp),
+              label: Text(loc.addCategory),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: theme.colorScheme.onSurface,
+                side: BorderSide(color: theme.colorScheme.onSurfaceVariant),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7.r),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+          ),
+          const SizedBox(height: 8),
 
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                minimumSize: Size(double.infinity, 40.h),
-                foregroundColor: theme.scaffoldBackgroundColor,
-                backgroundColor: theme.colorScheme.onSurface,
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: TextButton.styleFrom(
+              minimumSize: Size(double.infinity, 40.h),
+              foregroundColor: theme.scaffoldBackgroundColor,
+              backgroundColor: theme.colorScheme.onSurface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7.r),
               ),
-              child: Text(loc.cancel),
             ),
+            child: Text(loc.cancel),
+          ),
         ],
       ),
     );

@@ -174,8 +174,9 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
                 color: theme.colorScheme.onSurface,
               ),
             ),
-
             SizedBox(height: 8),
+
+            // ──────────Group Name ────────── 
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
@@ -202,7 +203,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
             ),
             SizedBox(height: 16),
 
-            // Icon Selection
+            // ────────── Icon Selection ──────────
             Text(loc.icon, style: TextStyle(fontSize: AppSize.xs.sp)),
             SizedBox(height: 8),
             SizedBox(

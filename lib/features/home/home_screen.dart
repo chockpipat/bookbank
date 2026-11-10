@@ -17,6 +17,7 @@ import 'package:bookbank/features/home/popup/transfer_popup.dart';
 import 'package:bookbank/utils/calculations.dart';
 import 'package:bookbank/features/home/widgets/menu_items.dart';
 import 'package:bookbank/features/menu/editGroup/editGroup_sgreen.dart';
+import 'package:bookbank/features/transaction/transaction_in_out.dart';
 
 // ────────── Database ──────────
 import 'package:bookbank/data/database.dart';
@@ -312,13 +313,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MenuItems(
                                   late: 'Tang in',
                                   icon: LucideIcons.arrowDownToLine,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            TransactionInOut(title: 'Tang in'),
+                                      ),
+                                    );
+                                  },
                                 ),
 
                                 MenuItems(
                                   late: 'Tang out',
                                   icon: LucideIcons.arrowUpFromLine,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            TransactionInOut(title: 'Tang out'),
+                                      ),
+                                    );
+                                  },
                                 ),
 
                                 MenuItems(
@@ -391,7 +406,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     foregroundColor: theme.colorScheme.outline,
                                     padding: EdgeInsets.zero,
                                     minimumSize: Size.zero,
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   label: Text(
                                     loc.editGroup,
@@ -404,20 +420,69 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: 8.h),
 
                             // ────────── Group Cards (2 per row) ──────────
-                            for (var i = 0; i < groups.length; i += 2) ...[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(child: _buildGroupCard(groups[i])),
-                                  SizedBox(width: 12.w),
-                                  Expanded(
-                                    child: i + 1 < groups.length
-                                        ? _buildGroupCard(groups[i + 1])
-                                        : const SizedBox.shrink(),
-                                  ),
-                                ],
+                            if (groups.isNotEmpty) ...[
+                              for (var i = 0; i < groups.length; i += 2) ...[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(child: _buildGroupCard(groups[i])),
+                                    SizedBox(width: 12.w),
+                                    Expanded(
+                                      child: i + 1 < groups.length
+                                          ? _buildGroupCard(groups[i + 1])
+                                          : const SizedBox.shrink(),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 12.h),
+                              ],
+                            ] else ...[
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(height: 50.h),
+
+                                    Icon(
+                                      LucideIcons.folderX,
+                                      size: 24.sp,
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.5),
+                                    ),
+
+                                    Text(
+                                      loc.noCategory,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.5),
+                                      ),
+                                    ),
+                                    SizedBox(height: 12.h),
+
+                                    FilledButton.icon(
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) =>
+                                              Dialog(child: EditGroupSgreen()),
+                                        );
+                                      },
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor:
+                                            theme.colorScheme.onSurface,
+                                      ),
+                                      icon: Icon(LucideIcons.plus),
+                                      label: Text(
+                                        loc.addCategory,
+                                        style: TextStyle(fontSize: 12.sp),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(height: 12.h),
                             ],
                             SizedBox(height: 30.h),
                           ],
