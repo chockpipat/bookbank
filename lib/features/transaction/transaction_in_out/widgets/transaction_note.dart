@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:provider/provider.dart';
+
+import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Transaction Note Widget ──────────
 class TransactionNote extends StatefulWidget {
@@ -137,7 +140,7 @@ class _TransactionNoteState extends State<TransactionNote> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Catatan',
+                  'test Catatan',
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: theme.colorScheme.onSurface,
@@ -159,7 +162,7 @@ class _TransactionNoteState extends State<TransactionNote> {
                     padding: EdgeInsets.zero,
                   ),
                   label: Text(
-                    'Kelola Catatan',
+                    'test Kelola Catatan',
                     style: TextStyle(fontSize: 12.sp),
                   ),
                   icon: Icon(LucideIcons.edit, size: 16),
@@ -218,11 +221,14 @@ class _TransactionNoteState extends State<TransactionNote> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final locProvider = Provider.of<LocalizationProvider>(context);
+    final loc = locProvider.loc;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Note',
+          'test Note',
           style: TextStyle(fontSize: 12.sp, color: theme.colorScheme.onSurface),
         ),
         const SizedBox(height: 8),
@@ -231,11 +237,11 @@ class _TransactionNoteState extends State<TransactionNote> {
         Container(
           key: _fieldKey,
           width: double.infinity,
-          height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          height: 50.h,
+          padding: EdgeInsets.symmetric(horizontal: 8.w),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(7.r),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -247,10 +253,10 @@ class _TransactionNoteState extends State<TransactionNote> {
                   style: TextStyle(fontSize: 12.sp),
                   decoration: InputDecoration(
                     // Hint text && prefix icon
-                    hintText: 'Add note',
+                    hintText: 'Test Add Note',
                     prefixIcon: Icon(
                       LucideIcons.messageCircleMore,
-                      size: 20,
+                      size: 18.w,
                       color: theme.colorScheme.onSurface,
                     ),
 

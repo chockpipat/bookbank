@@ -68,7 +68,7 @@ class _TransactionAmountState extends State<TransactionAmount> {
                   Expanded(
                     child: TextFormField(
                       controller: controller,
-                      style: TextStyle(fontSize: 16.sp),
+                      style: TextStyle(fontSize: 12.sp),
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: '0.00',
@@ -77,7 +77,7 @@ class _TransactionAmountState extends State<TransactionAmount> {
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.5,
                           ),
-                          fontSize: 16.sp,
+                          fontSize: 12.sp,
                         ),
                         enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
