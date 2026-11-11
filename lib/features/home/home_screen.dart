@@ -17,7 +17,7 @@ import 'package:bookbank/features/home/popup/transfer_popup.dart';
 import 'package:bookbank/utils/calculations.dart';
 import 'package:bookbank/features/home/widgets/menu_items.dart';
 import 'package:bookbank/features/menu/editGroup/editGroup_sgreen.dart';
-import 'package:bookbank/features/transaction/transaction_in_out.dart';
+import 'package:bookbank/features/transaction/transaction_in_out/transaction_in_out.dart';
 
 // ────────── Database ──────────
 import 'package:bookbank/data/database.dart';

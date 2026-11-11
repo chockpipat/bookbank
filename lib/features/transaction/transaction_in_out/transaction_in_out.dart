@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:bookbank/core/localization/localization_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+// ────────── Widgets ──────────
+import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_amount.dart';
+import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_note.dart';
 
 class TransactionInOut extends StatefulWidget {
   final String title;
@@ -18,7 +20,6 @@ class _TransactionInOutState extends State<TransactionInOut> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final loc = context.read<LocalizationProvider>().loc;
 
     return Scaffold(
       body: Column(
@@ -85,10 +86,30 @@ class _TransactionInOutState extends State<TransactionInOut> {
                       const Spacer(),
 
                       // ────────── Info Icon ──────────
-                      Icon(
-                        LucideIcons.info,
-                        size: 18.sp,
-                        color: theme.colorScheme.onSurface,
+                      IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14.r),
+                                ),
+                                title: Text("Info"),
+                                content: Text("This is an info dialog"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Close"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(LucideIcons.info, size: 20.sp),
                       ),
                     ],
                   ),
@@ -97,15 +118,16 @@ class _TransactionInOutState extends State<TransactionInOut> {
 
               Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 15.h, 20.w, 115.h),
-                child: Column(
-                  children: [
-                    Form(
-                      child: Text(
-                        loc.amount,
-                        style: TextStyle(fontSize: 12.sp),
-                      ),
-                    ),
-                  ],
+                child: Form(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TransactionAmount(),
+                      SizedBox(height: 18.h),
+                      TransactionNote(),
+                      Text('Test')
+                    ],
+                  ),
                 ),
               ),
             ],
