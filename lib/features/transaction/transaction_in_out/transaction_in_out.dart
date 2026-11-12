@@ -1,11 +1,15 @@
 // ────────── Package Imports ──────────
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 // ────────── Local Imports ──────────
 import 'package:bookbank/Widgets/select_date_time.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
+import 'package:bookbank/data/database.dart';
+import 'package:bookbank/data/db_helper.dart';
+import 'package:bookbank/utils/calculations.dart';
 
 // ────────── Widgets ──────────
 import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_amount.dart';
@@ -25,6 +29,61 @@ class TransactionInOut extends StatefulWidget {
 
 class _TransactionInOutState extends State<TransactionInOut> {
   DateTime? _selectedDateTime;
+
+  String _amount = '';
+  String _note = '';
+  String _wallet = 'bank';
+  String? _category;
+  double _totalBalance = 0;
+
+  bool get _isIncome => widget.title == 'Tang in';
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDateTime = DateTime.now();
+    _loadBalance();
+  }
+
+  Future<void> _loadBalance() async {
+    try {
+      final data = await DatabaseHelper.instance.getAllData();
+      if (!mounted) return;
+      setState(() {
+        _totalBalance = FinancialCalculations(data).sumAll();
+      });
+    } catch (_) {}
+  }
+
+  Future<void> _saveTransaction() async {
+    final loc = context.read<LocalizationProvider>().loc;
+
+    final amount = num.tryParse(_amount);
+    if (amount == null || amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(loc.pleaseEnterAmount)),
+      );
+      return;
+    }
+
+    final date = _selectedDateTime ?? DateTime.now();
+    final item = MyData(
+      amount: amount,
+      moneyType: _isIncome ? 'income' : 'expense',
+      moneyList: _wallet,
+      moneyGroup: _category ?? '',
+      date: DateFormat('yyyy-MM-dd').format(date),
+      title: _note.trim().isNotEmpty ? _note.trim() : loc.anonymous,
+    );
+
+    await DatabaseHelper.instance.insertData(item);
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(loc.addedSuccess)),
+    );
+    Navigator.pop(context, true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +125,7 @@ class _TransactionInOutState extends State<TransactionInOut> {
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Icon(
-                      widget.title == 'Tang in'
+                      _isIncome
                           ? LucideIcons.arrowDownToLine
                           : LucideIcons.arrowUpFromLine,
                       color: theme.colorScheme.onPrimary,
@@ -84,7 +143,7 @@ class _TransactionInOutState extends State<TransactionInOut> {
 
                       // Total Balance
                       Text(
-                        "฿ 0.00",
+                        locProvider.formatAmount(_totalBalance),
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: theme.colorScheme.outline,
@@ -133,16 +192,24 @@ class _TransactionInOutState extends State<TransactionInOut> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TransactionAmount(),
+                      TransactionAmount(
+                        onChanged: (value) => _amount = value ?? '',
+                      ),
                       SizedBox(height: 18.h),
 
-                      TransactionNote(),
+                      TransactionNote(
+                        onChanged: (value) => _note = value,
+                      ),
                       SizedBox(height: 18.h),
 
-                      TransactionWallwt(),
+                      TransactionWallwt(
+                        onChanged: (value) => _wallet = value,
+                      ),
                       SizedBox(height: 18.h),
 
-                      TransactionCategory(),
+                      TransactionCategory(
+                        onChanged: (value) => _category = value,
+                      ),
                       SizedBox(height: 18.h),
                     ],
                   ),
@@ -159,6 +226,7 @@ class _TransactionInOutState extends State<TransactionInOut> {
                 FilledButton.icon(
                   onPressed: () => showSelectDateTime(
                     context: context,
+                    initialDateTime: _selectedDateTime,
                     onDateTimeSelected: (dateTime) {
                       setState(() {
                         _selectedDateTime = dateTime;
@@ -185,9 +253,7 @@ class _TransactionInOutState extends State<TransactionInOut> {
 
                 // ────────── Save Button ──────────
                 FilledButton(
-                  onPressed: () {
-                    // TODO: Implement transaction submission
-                  },
+                  onPressed: _saveTransaction,
                   style: FilledButton.styleFrom(
                     backgroundColor: theme.colorScheme.onSurface,
                     foregroundColor: theme.colorScheme.surface,

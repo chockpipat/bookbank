@@ -314,12 +314,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   late: 'Tang in',
                                   icon: LucideIcons.arrowDownToLine,
                                   onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            TransactionInOut(title: 'Tang in'),
-                                      ),
-                                    );
+                                    Navigator.of(context)
+                                        .push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TransactionInOut(
+                                                  title: 'Tang in',
+                                                ),
+                                          ),
+                                        )
+                                        .then((result) {
+                                          if (result == true) _loadData();
+                                        });
                                   },
                                 ),
 
@@ -327,12 +333,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   late: 'Tang out',
                                   icon: LucideIcons.arrowUpFromLine,
                                   onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            TransactionInOut(title: 'Tang out'),
-                                      ),
-                                    );
+                                    Navigator.of(context)
+                                        .push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TransactionInOut(
+                                                  title: 'Tang out',
+                                                ),
+                                          ),
+                                        )
+                                        .then((result) {
+                                          if (result == true) _loadData();
+                                        });
                                   },
                                 ),
 

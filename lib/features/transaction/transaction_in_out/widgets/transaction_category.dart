@@ -7,7 +7,9 @@ import 'package:bookbank/features/menu/editGroup/providers/group_settings_provid
 
 // ────────── Main Widget ──────────
 class TransactionCategory extends StatefulWidget {
-  const TransactionCategory({super.key});
+  final ValueChanged<String?>? onChanged;
+
+  const TransactionCategory({super.key, this.onChanged});
 
   @override
   State<TransactionCategory> createState() => _TransactionCategoryState();
@@ -92,6 +94,7 @@ class _TransactionCategoryState extends State<TransactionCategory> {
     setState(() {
       _selectedCategory = _selectedCategory == categoryId ? null : categoryId;
     });
+    widget.onChanged?.call(_selectedCategory);
   }
 
   @override

@@ -89,6 +89,27 @@ class GroupSettings {
   }
 }
 
+// ────────── QuickNote ──────────
+class QuickNote {
+  QuickNote({this.id, required this.note, this.sortOrder = 0});
+
+  int? id;
+  String note;
+  int sortOrder;
+
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'note': note, 'sortOrder': sortOrder};
+  }
+
+  factory QuickNote.fromMap(Map<String, dynamic> map) {
+    return QuickNote(
+      id: map['id'] as int?,
+      note: (map['note'] as String?) ?? '',
+      sortOrder: (map['sortOrder'] as int?) ?? 0,
+    );
+  }
+}
+
 // ────────── NoteModel ──────────
 class NoteModel {
   NoteModel({

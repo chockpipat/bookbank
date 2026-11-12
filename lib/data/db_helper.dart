@@ -29,7 +29,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 6,
+      version: 7,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -70,6 +70,13 @@ class DatabaseHelper {
         date TEXT NOT NULL,
         category TEXT NOT NULL DEFAULT 'General',
         isPinned INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE quick_notes(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        note TEXT NOT NULL,
+        sortOrder INTEGER NOT NULL DEFAULT 0
       )
     ''');
   }
@@ -114,6 +121,15 @@ class DatabaseHelper {
       // Remove untouched default groups so users start with 0 categories.
       // Groups the user has renamed (groupName != groupId) are kept.
       await db.delete('group_settings', where: 'groupName = groupId');
+    }
+    if (oldVersion < 7) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS quick_notes(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          note TEXT NOT NULL,
+          sortOrder INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
     }
   }
 
@@ -248,6 +264,53 @@ class DatabaseHelper {
   Future<int> deleteNote(int id) async {
     final db = await database;
     return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // ────────── Quick Note Operations ──────────
+
+  /// Read all quick notes in saved order
+  Future<List<QuickNote>> getQuickNotes() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'quick_notes',
+      orderBy: 'sortOrder ASC, id ASC',
+    );
+    return maps.map((map) => QuickNote.fromMap(map)).toList();
+  }
+
+  /// Insert new quick note at the end of the list
+  Future<int> insertQuickNote(String note) async {
+    final db = await database;
+    final existing = await getQuickNotes();
+    final maxOrder = existing.fold<int>(
+      0,
+      (max, e) => e.sortOrder > max ? e.sortOrder : max,
+    );
+    return await db.insert('quick_notes', {
+      'note': note,
+      'sortOrder': maxOrder + 1,
+    });
+  }
+
+  /// Delete quick note by id
+  Future<int> deleteQuickNote(int id) async {
+    final db = await database;
+    return await db.delete('quick_notes', where: 'id = ?', whereArgs: [id]);
+  }
+
+  /// Persist a new ordering for all quick notes
+  Future<void> updateQuickNotesOrder(List<QuickNote> notes) async {
+    final db = await database;
+    final batch = db.batch();
+    for (var i = 0; i < notes.length; i++) {
+      batch.update(
+        'quick_notes',
+        {'sortOrder': i},
+        where: 'id = ?',
+        whereArgs: [notes[i].id],
+      );
+    }
+    await batch.commit(noResult: true);
   }
 
   /// สลับสถานะปักหมุดบันทึก

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:bookbank/core/localization/localization_provider.dart';
+import 'package:bookbank/data/db_helper.dart';
 
 class TransactionAmount extends StatefulWidget {
   final Function(String?)? onChanged;
@@ -17,13 +18,68 @@ class TransactionAmount extends StatefulWidget {
 
 class _TransactionAmountState extends State<TransactionAmount> {
   final TextEditingController controller = TextEditingController();
-  
+
+  double? _latestAmount;
+  double? _popularAmount;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAmounts();
+  }
+
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
-  
+
+  // ────────── Load latest & most-used amounts ──────────
+  Future<void> _loadAmounts() async {
+    try {
+      final transactions = await DatabaseHelper.instance.getAllData();
+      if (!mounted || transactions.isEmpty) return;
+
+      // Latest transaction (already ordered by id DESC)
+      final latest = transactions.first.amount.toDouble();
+
+      // Most frequently used amount
+      final counts = <double, int>{};
+      for (final t in transactions) {
+        final amount = t.amount.toDouble();
+        counts[amount] = (counts[amount] ?? 0) + 1;
+      }
+      double popular = latest;
+      int maxCount = 0;
+      counts.forEach((amount, count) {
+        if (count > maxCount) {
+          maxCount = count;
+          popular = amount;
+        }
+      });
+
+      setState(() {
+        _latestAmount = latest;
+        _popularAmount = popular;
+      });
+    } catch (_) {}
+  }
+
+  String _formatAmount(double amount) {
+    if (amount == amount.truncateToDouble()) {
+      return amount.toStringAsFixed(0);
+    }
+    return amount.toStringAsFixed(2);
+  }
+
+  void _applyAmount(double amount) {
+    final text = _formatAmount(amount);
+    setState(() {
+      controller.text = text;
+    });
+    widget.onChanged?.call(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -96,49 +152,51 @@ class _TransactionAmountState extends State<TransactionAmount> {
           ),
           SizedBox(height: 8.h),
 
-          // ────────── IN/OUT Buttons ──────────
-          Row(
-            children: [
-              // IN Button
-              FilledButton.icon(
-                onPressed: () {
-                  setState(() {
-                    controller.text = '60';
-                  });
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: theme.colorScheme.surface,
-                  foregroundColor: theme.colorScheme.onSurface,
-                  side: BorderSide(color: theme.colorScheme.surface),
-                ),
-                icon: Icon(LucideIcons.rotateCcwClock, size: 16.w),
-                label: Text(
-                  'latest : ฿ 60.00',
-                  style: TextStyle(fontSize: 12.sp),
-                ),
-              ),
-              SizedBox(width: 12.w),
+          // ────────── Quick Amount Buttons ──────────
+          if (_latestAmount != null || _popularAmount != null)
+            Row(
+              children: [
+                // Latest Transaction Button
+                if (_latestAmount != null)
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () => _applyAmount(_latestAmount!),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: theme.colorScheme.surface,
+                        foregroundColor: theme.colorScheme.onSurface,
+                        side: BorderSide(color: theme.colorScheme.surface),
+                      ),
+                      icon: Icon(LucideIcons.rotateCcwClock, size: 16.w),
+                      label: Text(
+                        '${loc.latest} : ฿ ${_formatAmount(_latestAmount!)}',
+                        style: TextStyle(fontSize: 12.sp),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                if (_latestAmount != null && _popularAmount != null)
+                  SizedBox(width: 12.w),
 
-              // OUT Button
-              FilledButton.icon(
-                onPressed: () {
-                  setState(() {
-                    controller.text = '20';
-                  });
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: theme.colorScheme.surface,
-                  foregroundColor: theme.colorScheme.onSurface,
-                  side: BorderSide(color: theme.colorScheme.surface),
-                ),
-                icon: Icon(LucideIcons.star, size: 16.w),
-                label: Text(
-                  'Popular : ฿ 20.00',
-                  style: TextStyle(fontSize: 12.sp),
-                ),
-              ),
-            ],
-          ),
+                // Popular Amount Button
+                if (_popularAmount != null)
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () => _applyAmount(_popularAmount!),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: theme.colorScheme.surface,
+                        foregroundColor: theme.colorScheme.onSurface,
+                        side: BorderSide(color: theme.colorScheme.surface),
+                      ),
+                      icon: Icon(LucideIcons.star, size: 16.w),
+                      label: Text(
+                        '${loc.popular} : ฿ ${_formatAmount(_popularAmount!)}',
+                        style: TextStyle(fontSize: 12.sp),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
         ],
       ),
     );

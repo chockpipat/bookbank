@@ -103,6 +103,12 @@ class AppLocalizations {
       'enter_note_title': 'Enter note title...',
       'enter_note_content': 'Enter note content...',
       'enter_content': 'Please enter note content',
+      'note': 'Note',
+      'manage_notes': 'Manage Notes',
+      'latest': 'Latest',
+      'popular': 'Popular',
+      'empty_notes': 'No notes yet. Tap + to add one.',
+      'enter_quick_note': 'Enter note...',
 
       // Note categories
       'category_all': 'All',
@@ -293,6 +299,12 @@ If you have any questions about this privacy policy, please contact the develope
       'enter_note_title': 'ใส่ชื่อโน้ต...',
       'enter_note_content': 'ใส่เนื้อหาโน้ต...',
       'enter_content': 'กรุณาใส่เนื้อหา',
+      'note': 'โน้ต',
+      'manage_notes': 'จัดการโน้ต',
+      'latest': 'ล่าสุด',
+      'popular': 'ยอดนิยม',
+      'empty_notes': 'ยังไม่มีโน้ต แตะ + เพื่อเพิ่ม',
+      'enter_quick_note': 'ใส่โน้ต...',
 
       // Note categories
       'category_all': 'ทั้งหมด',
@@ -482,6 +494,12 @@ If you have any questions about this privacy policy, please contact the develope
       'enter_note_title': '输入笔记标题...',
       'enter_note_content': '输入笔记内容...',
       'enter_content': '请输入笔记内容',
+      'note': '备注',
+      'manage_notes': '管理笔记',
+      'latest': '最近',
+      'popular': '常用',
+      'empty_notes': '暂无笔记，点击 + 添加',
+      'enter_quick_note': '输入备注...',
 
       // Note categories
       'category_all': '全部',
@@ -676,6 +694,12 @@ If you have any questions about this privacy policy, please contact the develope
   String get enterNoteTitle => translate('enter_note_title');
   String get enterNoteContent => translate('enter_note_content');
   String get enterContent => translate('enter_content');
+  String get note => translate('note');
+  String get manageNotes => translate('manage_notes');
+  String get latest => translate('latest');
+  String get popular => translate('popular');
+  String get emptyNotes => translate('empty_notes');
+  String get enterQuickNote => translate('enter_quick_note');
 
   // Note categories
   String get categoryAll => translate('category_all');

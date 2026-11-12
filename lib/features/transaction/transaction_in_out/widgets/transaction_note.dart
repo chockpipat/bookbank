@@ -4,10 +4,16 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 import 'package:bookbank/core/localization/localization_provider.dart';
+import 'package:bookbank/data/database.dart';
+import 'package:bookbank/data/db_helper.dart';
+import 'package:bookbank/utils/calculations.dart';
+import 'package:bookbank/features/transaction/transaction_in_out/manage_notes_screen.dart';
 
 // ────────── Transaction Note Widget ──────────
 class TransactionNote extends StatefulWidget {
-  const TransactionNote({super.key});
+  final ValueChanged<String>? onChanged;
+
+  const TransactionNote({super.key, this.onChanged});
 
   @override
   State<TransactionNote> createState() => _TransactionNoteState();
@@ -48,11 +54,37 @@ class _TransactionNoteState extends State<TransactionNote> {
   final GlobalKey _fieldKey = GlobalKey();
   OverlayEntry? _dropdownEntry;
 
+  List<QuickNote> _quickNotes = [];
+  double _totalBalance = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _noteController.addListener(_onNoteChanged);
+    _loadData();
+  }
+
   @override
   void dispose() {
     _dropdownEntry?.remove();
     _noteController.dispose();
     super.dispose();
+  }
+
+  void _onNoteChanged() {
+    widget.onChanged?.call(_noteController.text);
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final notes = await DatabaseHelper.instance.getQuickNotes();
+      final transactions = await DatabaseHelper.instance.getAllData();
+      if (!mounted) return;
+      setState(() {
+        _quickNotes = notes;
+        _totalBalance = FinancialCalculations(transactions).sumAll();
+      });
+    } catch (_) {}
   }
 
   void _toggleDropdown() {
@@ -114,8 +146,18 @@ class _TransactionNoteState extends State<TransactionNote> {
     _closeDropdown();
   }
 
+  void _openManageNotes() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ManageNotesScreen()),
+    ).then((_) => _loadData());
+  }
+
   Widget _buildDropdownPanel(BuildContext context) {
     final theme = Theme.of(context);
+    final locProvider = Provider.of<LocalizationProvider>(context);
+    final loc = locProvider.loc;
+
     return Container(
       height: 250,
       width: double.infinity,
@@ -140,7 +182,7 @@ class _TransactionNoteState extends State<TransactionNote> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'test Catatan',
+                  loc.notes,
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: theme.colorScheme.onSurface,
@@ -149,23 +191,43 @@ class _TransactionNoteState extends State<TransactionNote> {
 
                 // Manage note button
                 TextButton.icon(
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const ManageNotes(),
-                    //   ),
-                    // );
-                  },
+                  onPressed: _openManageNotes,
                   style: TextButton.styleFrom(
                     foregroundColor: theme.colorScheme.onSurface,
                     padding: EdgeInsets.zero,
                   ),
                   label: Text(
-                    'test Kelola Catatan',
+                    loc.manageNotes,
                     style: TextStyle(fontSize: 12.sp),
                   ),
                   icon: Icon(LucideIcons.edit, size: 16),
+                ),
+              ],
+            ),
+
+            // Total remaining balance
+            Row(
+              children: [
+                Icon(
+                  LucideIcons.wallet,
+                  size: 16.sp,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+                SizedBox(width: 6.w),
+                Text(
+                  '${loc.transferRemaining} : ',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
+                ),
+                Text(
+                  locProvider.formatAmount(_totalBalance),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),
@@ -176,41 +238,31 @@ class _TransactionNoteState extends State<TransactionNote> {
 
             // Content
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _DropdownNoteContent(
-                      dropdownNoteName: 'Gaji',
-                      onNoteSelected: () => _selectNote('Gaji'),
+              child: _quickNotes.isEmpty
+                  ? Center(
+                      child: Text(
+                        loc.emptyNotes,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ..._quickNotes.map(
+                            (note) => _DropdownNoteContent(
+                              dropdownNoteName: note.note,
+                              onNoteSelected: () => _selectNote(note.note),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    _DropdownNoteContent(
-                      dropdownNoteName: 'Deposit Keamanan',
-                      onNoteSelected: () => _selectNote('Deposit Keamanan'),
-                    ),
-                    _DropdownNoteContent(
-                      dropdownNoteName: 'Makanan',
-                      onNoteSelected: () => _selectNote('Makanan'),
-                    ),
-                    _DropdownNoteContent(
-                      dropdownNoteName: 'Sewa',
-                      onNoteSelected: () => _selectNote('Sewa'),
-                    ),
-                    _DropdownNoteContent(
-                      dropdownNoteName: 'Perbaikan',
-                      onNoteSelected: () => _selectNote('Perbaikan'),
-                    ),
-                    _DropdownNoteContent(
-                      dropdownNoteName: 'Belanja',
-                      onNoteSelected: () => _selectNote('Belanja'),
-                    ),
-                    _DropdownNoteContent(
-                      dropdownNoteName: 'Top Up Game',
-                      onNoteSelected: () => _selectNote('Top Up Game'),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ],
         ),
@@ -228,7 +280,7 @@ class _TransactionNoteState extends State<TransactionNote> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'test Note',
+          loc.note,
           style: TextStyle(fontSize: 12.sp, color: theme.colorScheme.onSurface),
         ),
         const SizedBox(height: 8),
@@ -253,7 +305,7 @@ class _TransactionNoteState extends State<TransactionNote> {
                   style: TextStyle(fontSize: 12.sp),
                   decoration: InputDecoration(
                     // Hint text && prefix icon
-                    hintText: 'Test Add Note',
+                    hintText: loc.enterQuickNote,
                     prefixIcon: Icon(
                       LucideIcons.messageCircleMore,
                       size: 18.w,

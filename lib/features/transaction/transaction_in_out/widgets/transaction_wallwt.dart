@@ -7,7 +7,9 @@ import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Transaction Wallwt ──────────
 class TransactionWallwt extends StatefulWidget {
-  const TransactionWallwt({super.key});
+  final ValueChanged<String>? onChanged;
+
+  const TransactionWallwt({super.key, this.onChanged});
 
   @override
   State<TransactionWallwt> createState() => _TransactionWallwtState();
@@ -65,13 +67,14 @@ class _TransactionWallwtState extends State<TransactionWallwt> {
       setState(() {
         _selectedWalletPosition = position;
       });
+      widget.onChanged?.call(position);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'test',
+          loc.moneyPosition,
           style: TextStyle(fontSize: 12.sp, color: theme.colorScheme.onSurface),
         ),
         SizedBox(height: 8.h),
