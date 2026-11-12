@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 import 'package:bookbank/data/database.dart';
 import 'package:bookbank/data/db_helper.dart';
-import 'package:bookbank/utils/calculations.dart';
 import 'package:bookbank/features/transaction/transaction_in_out/manage_notes_screen.dart';
 
 // ────────── Transaction Note Widget ──────────
@@ -55,7 +54,6 @@ class _TransactionNoteState extends State<TransactionNote> {
   OverlayEntry? _dropdownEntry;
 
   List<QuickNote> _quickNotes = [];
-  double _totalBalance = 0;
 
   @override
   void initState() {
@@ -78,11 +76,9 @@ class _TransactionNoteState extends State<TransactionNote> {
   Future<void> _loadData() async {
     try {
       final notes = await DatabaseHelper.instance.getQuickNotes();
-      final transactions = await DatabaseHelper.instance.getAllData();
       if (!mounted) return;
       setState(() {
         _quickNotes = notes;
-        _totalBalance = FinancialCalculations(transactions).sumAll();
       });
     } catch (_) {}
   }
@@ -147,6 +143,7 @@ class _TransactionNoteState extends State<TransactionNote> {
   }
 
   void _openManageNotes() {
+    Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ManageNotesScreen()),
@@ -201,33 +198,6 @@ class _TransactionNoteState extends State<TransactionNote> {
                     style: TextStyle(fontSize: 12.sp),
                   ),
                   icon: Icon(LucideIcons.edit, size: 16),
-                ),
-              ],
-            ),
-
-            // Total remaining balance
-            Row(
-              children: [
-                Icon(
-                  LucideIcons.wallet,
-                  size: 16.sp,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  '${loc.transferRemaining} : ',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                ),
-                Text(
-                  locProvider.formatAmount(_totalBalance),
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                  ),
                 ),
               ],
             ),
@@ -314,7 +284,7 @@ class _TransactionNoteState extends State<TransactionNote> {
 
                     // Hint text style
                     hintStyle: TextStyle(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       fontSize: 12.sp,
                     ),
 

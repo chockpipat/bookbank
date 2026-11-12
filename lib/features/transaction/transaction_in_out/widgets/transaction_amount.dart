@@ -100,54 +100,43 @@ class _TransactionAmountState extends State<TransactionAmount> {
           ),
           SizedBox(height: 8.h),
 
-          // Amount Input Container
+          // Amount Input
           Container(
             width: double.infinity,
             height: 50.h,
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
             decoration: BoxDecoration(
-              border: Border.all(color: theme.colorScheme.outlineVariant),
-              borderRadius: BorderRadius.circular(8.r),
               color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(7.r),
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Row(
-                children: [
-                  // Currency Symbol
-                  Text(
-                    locProvider.currencySymbol,
-                    style: TextStyle(fontSize: 16.sp),
-                  ),
-                  SizedBox(width: 8.w),
-
-                  // Amount Input Field
-                  Expanded(
-                    child: TextFormField(
-                      controller: controller,
-                      style: TextStyle(fontSize: 12.sp),
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: '0.00',
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        labelStyle: TextStyle(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.5,
-                          ),
-                          fontSize: 12.sp,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                        ),
+            child: TextFormField(
+              controller: controller,
+              style: TextStyle(fontSize: 12.sp),
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: '0.00',
+                prefixIcon: SizedBox(
+                  width: 24.w,
+                  child: Center(
+                    child: Text(
+                      locProvider.currencySymbol,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: theme.colorScheme.onSurface
                       ),
-                      onChanged: widget.onChanged,
-                      onSaved: widget.onSaved,
                     ),
                   ),
-                ],
+                ),
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                labelStyle: TextStyle(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontSize: 12.sp,
+                ),
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
               ),
+              onChanged: widget.onChanged,
+              onSaved: widget.onSaved,
             ),
           ),
           SizedBox(height: 8.h),

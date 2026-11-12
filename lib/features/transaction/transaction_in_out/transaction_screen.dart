@@ -35,6 +35,7 @@ class _TransactionInOutState extends State<TransactionInOut> {
   String _wallet = 'bank';
   String? _category;
   double _totalBalance = 0;
+  bool _isErrorAmount = false;
 
   bool get _isIncome => widget.title == 'Tang in';
 
@@ -45,6 +46,7 @@ class _TransactionInOutState extends State<TransactionInOut> {
     _loadBalance();
   }
 
+  // ────────── Load Balance ──────────
   Future<void> _loadBalance() async {
     try {
       final data = await DatabaseHelper.instance.getAllData();
@@ -55,14 +57,15 @@ class _TransactionInOutState extends State<TransactionInOut> {
     } catch (_) {}
   }
 
+  // ────────── Save Transaction ──────────
   Future<void> _saveTransaction() async {
     final loc = context.read<LocalizationProvider>().loc;
 
     final amount = num.tryParse(_amount);
     if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.pleaseEnterAmount)),
-      );
+      setState(() {
+        _isErrorAmount = true;
+      });
       return;
     }
 
@@ -192,21 +195,43 @@ class _TransactionInOutState extends State<TransactionInOut> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Amount input
                       TransactionAmount(
-                        onChanged: (value) => _amount = value ?? '',
+                        onChanged: (value) {
+                          setState(() {
+                            _amount = value ?? '';
+                            _isErrorAmount = false;
+                          });
+                        },
                       ),
+
+                      // Error message for amount
+                      if (_isErrorAmount)
+                        Row(
+                          children: [
+                            Icon(LucideIcons.alertCircle, color: Colors.red, size: 12.w),
+                            SizedBox(width: 8.w),
+                            Text(
+                              loc.pleaseEnterAmount,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ],
+                        ),
                       SizedBox(height: 18.h),
 
+                      // Note input
                       TransactionNote(
                         onChanged: (value) => _note = value,
                       ),
                       SizedBox(height: 18.h),
 
+                      // Wallet selection
                       TransactionWallwt(
                         onChanged: (value) => _wallet = value,
                       ),
                       SizedBox(height: 18.h),
 
+                      // Category selection
                       TransactionCategory(
                         onChanged: (value) => _category = value,
                       ),
