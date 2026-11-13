@@ -246,7 +246,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
           // Add Group Button
           SizedBox(
             width: double.infinity,
-            height: 40.h,
+            height: 50.h,
             child: OutlinedButton.icon(
               onPressed: _addGroup,
               icon: Icon(Icons.add, size: 18.sp),
@@ -267,7 +267,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
               Navigator.of(context).pop();
             },
             style: TextButton.styleFrom(
-              minimumSize: Size(double.infinity, 40.h),
+              minimumSize: Size(double.infinity, 50.h),
               foregroundColor: theme.scaffoldBackgroundColor,
               backgroundColor: theme.colorScheme.onSurface,
               shape: RoundedRectangleBorder(

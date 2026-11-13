@@ -17,7 +17,7 @@ import 'package:bookbank/features/home/popup/transfer_popup.dart';
 import 'package:bookbank/utils/calculations.dart';
 import 'package:bookbank/features/home/widgets/menu_items.dart';
 import 'package:bookbank/features/menu/editGroup/editGroup_sgreen.dart';
-import 'package:bookbank/features/transaction/transaction_in_out/transaction_screen.dart';
+import 'package:bookbank/features/transaction/transaction_screen.dart';
 
 // ────────── Database ──────────
 import 'package:bookbank/data/database.dart';
@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                TransactionInOut(
+                                                TransactionScreen(
                                                   title: 'Tang in',
                                                 ),
                                           ),
@@ -337,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .push(
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                TransactionInOut(
+                                                TransactionScreen(
                                                   title: 'Tang out',
                                                 ),
                                           ),
@@ -351,7 +351,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MenuItems(
                                   late: 'Transfer',
                                   icon: LucideIcons.repeat,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TransactionScreen(
+                                                  title: 'Transfer',
+                                                ),
+                                          ),
+                                        )
+                                        .then((result) {
+                                          if (result == true) _loadData();
+                                        });
+                                  },
                                 ),
 
                                 MenuItems(
