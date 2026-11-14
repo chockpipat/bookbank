@@ -6,10 +6,7 @@ import 'package:bookbank/core/localization/localization_provider.dart';
 class EmptyNotesView extends StatelessWidget {
   final VoidCallback onAddNote;
 
-  const EmptyNotesView({
-    super.key,
-    required this.onAddNote,
-  });
+  const EmptyNotesView({super.key, required this.onAddNote});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +34,7 @@ class EmptyNotesView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16.h),
+
             Text(
               loc.noRecord,
               style: theme.textTheme.titleMedium?.copyWith(
@@ -46,12 +44,13 @@ class EmptyNotesView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
+
             Text(
               loc.addNotePrompt,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontSize: 12.sp,
-                color: theme.colorScheme.onSurfaceVariant,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
           ],

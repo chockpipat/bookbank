@@ -1,6 +1,7 @@
 // ────────── Package Imports ──────────
 import 'package:flutter/material.dart';
 import 'package:cupertino_calendar_picker/cupertino_calendar_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // ────────── theme & localization ──────────
@@ -54,7 +55,7 @@ class _SelectDateTimeState extends State<SelectDateTime> {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      title: Text(loc.selectDateTime, style: TextStyle(fontSize: AppSize.s)),
+      title: Text(loc.selectDateTime, style: TextStyle(fontSize: 16.sp)),
       content: SizedBox(
         width: 350,
         child: CupertinoCalendar(
@@ -79,9 +80,11 @@ class _SelectDateTimeState extends State<SelectDateTime> {
           onPressed: () => Navigator.pop(context),
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).colorScheme.onSurface,
+            minimumSize: Size(80.w, 50.h),
           ),
           child: Text(loc.cancel),
         ),
+        SizedBox(width: 4.w),
 
         FilledButton(
           onPressed: () {
@@ -94,8 +97,9 @@ class _SelectDateTimeState extends State<SelectDateTime> {
             backgroundColor: Theme.of(context).colorScheme.onSurface,
             foregroundColor: Theme.of(context).colorScheme.surface,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
+            minimumSize: Size(80.w, 50.h),
           ),
           child: Text(loc.confirm),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
 import 'package:bookbank/data/database.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
@@ -44,12 +45,12 @@ class NoteCard extends StatelessWidget {
             color: isSelected
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.8)
                 : note.isPinned
-                    ? theme.colorScheme.onSurface.withValues(alpha: 0.8)
-                    : theme.colorScheme.outline,
+                ? theme.colorScheme.onSurface.withValues(alpha: 0.8)
+                : theme.colorScheme.outline,
             width: isSelected ? 2.0 : (note.isPinned ? 1.5 : 1.0),
           ),
         ),
-        color: isSelected 
+        color: isSelected
             ? theme.colorScheme.onSurface.withValues(alpha: 0.1)
             : theme.colorScheme.surface,
         child: Padding(
@@ -62,13 +63,19 @@ class NoteCard extends StatelessWidget {
                 children: [
                   if (isMultiSelectMode) ...[
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
                       child: Icon(
                         isSelected ? Icons.check_circle : Icons.circle_outlined,
                         size: 24.sp,
-                        color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurfaceVariant,
+                        color: isSelected
+                            ? theme.colorScheme.onSurface
+                            : theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
+
                     Container(
                       width: 12.w,
                       height: 12.h,
@@ -78,8 +85,12 @@ class NoteCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8.w),
+
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: cardColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8.r),
@@ -108,8 +119,12 @@ class NoteCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8.w),
+
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: cardColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8.r),
@@ -128,9 +143,12 @@ class NoteCard extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
+
                     IconButton(
                       icon: Icon(
-                        note.isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+                        note.isPinned
+                            ? Icons.push_pin
+                            : Icons.push_pin_outlined,
                         size: 18.sp,
                         color: note.isPinned
                             ? theme.colorScheme.onSurface
@@ -142,6 +160,7 @@ class NoteCard extends StatelessWidget {
                       tooltip: note.isPinned ? loc.unpin : loc.pin,
                     ),
                     SizedBox(width: 4.w),
+
                     PopupMenuButton<String>(
                       icon: Icon(
                         Icons.more_vert,
@@ -168,13 +187,25 @@ class NoteCard extends StatelessWidget {
                             ],
                           ),
                         ),
+
                         PopupMenuItem(
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(Icons.delete_outline, color: theme.colorScheme.error, size: 16.sp),
+                              Icon(
+                                Icons.delete_outline,
+                                color: theme.colorScheme.error,
+                                size: 16.sp,
+                              ),
                               SizedBox(width: 8.w),
-                              Text(loc.delete, style: TextStyle(fontSize: 13.sp, color: theme.colorScheme.error)),
+
+                              Text(
+                                loc.delete,
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: theme.colorScheme.error,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -223,6 +254,7 @@ class NoteCard extends StatelessWidget {
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                       SizedBox(width: 4.w),
+
                       Text(
                         note.date,
                         style: TextStyle(

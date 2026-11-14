@@ -52,23 +52,22 @@ class _NoteSearchBarState extends State<NoteSearchBar> {
                 onTap: () => noteProvider.setCategory(category, loc),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 6.h,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? theme.colorScheme.onSurface
                         : theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(
-                      color: theme.colorScheme.outline,
-                    ),
+                    borderRadius: BorderRadius.circular(50.r),
+                    border: Border.all(color: theme.colorScheme.outline),
                   ),
                   child: Center(
                     child: Text(
                       category,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
                         color: isSelected
                             ? theme.scaffoldBackgroundColor
                             : theme.colorScheme.onSurface,

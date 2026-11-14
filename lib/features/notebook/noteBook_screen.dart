@@ -1,14 +1,22 @@
-import 'package:bookbank/core/theme/app_theme.dart';
+// ────────── Packages & Providers ──────────
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:bookbank/data/database.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:bookbank/features/notebook/providers/note_provider.dart';
+
+// ────────── Database ──────────
+import 'package:bookbank/data/database.dart';
+
+// ────────── Theme & localization ──────────
+import 'package:bookbank/core/theme/app_theme.dart';
+import 'package:bookbank/core/localization/localization_provider.dart';
+
+// ────────── Widgets ──────────
 import 'package:bookbank/features/notebook/widgets/empty_notes_view.dart';
 import 'package:bookbank/features/notebook/widgets/note_card.dart';
 import 'package:bookbank/features/notebook/widgets/note_editor_dialog.dart';
 import 'package:bookbank/features/notebook/widgets/note_search_bar.dart';
-import 'package:bookbank/core/localization/localization_provider.dart';
 
 class NoteBookScreen extends StatefulWidget {
   const NoteBookScreen({super.key});
@@ -29,6 +37,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     });
   }
 
+  // ────────── Helper Methods ──────────
   void _showDeleteConfirmation(BuildContext context, NoteModel note) {
     final theme = Theme.of(context);
     final noteProvider = Provider.of<NoteProvider>(context, listen: false);
@@ -42,6 +51,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
           borderRadius: BorderRadius.circular(16.r),
           side: BorderSide(color: theme.colorScheme.onSurfaceVariant),
         ),
+
         title: Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error),
@@ -49,9 +59,9 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
             Text(loc.confirmDelete),
           ],
         ),
-        content: Text(
-          '${loc.confirmDeleteNote} "${note.title}"?',
-        ),
+
+        content: Text('${loc.confirmDeleteNote} "${note.title}"?'),
+
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -60,6 +70,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
           ),
+
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -79,6 +90,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       content: Container(
+                        padding: EdgeInsets.only(left: 8.w),
                         decoration: BoxDecoration(
                           border: Border(
                             left: BorderSide(
@@ -87,7 +99,6 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                             ),
                           ),
                         ),
-                        padding: EdgeInsets.only(left: 8.w),
                         child: Row(
                           children: [
                             Icon(
@@ -96,6 +107,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                               size: 24.sp,
                             ),
                             SizedBox(width: 12.w),
+
                             Expanded(
                               child: Text(
                                 loc.noteDeleted,
@@ -125,6 +137,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     );
   }
 
+  // ────────── Selection Methods ──────────
   void _toggleSelection(int id) {
     setState(() {
       if (_selectedIds.contains(id)) {
@@ -139,6 +152,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     });
   }
 
+  // ────────── Clear Selection ──────────
   void _clearSelection() {
     setState(() {
       _selectedIds.clear();
@@ -146,6 +160,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     });
   }
 
+  // ────────── Delete Selected Notes ──────────
   Future<void> _deleteSelectedNotes() async {
     if (_selectedIds.isEmpty) return;
 
@@ -157,7 +172,9 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
-          side: BorderSide(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         title: Text(loc.delete),
         content: Text('${loc.delete} ${_selectedIds.length} ${loc.notes}?'),
@@ -168,15 +185,13 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(
-              loc.delete,
-              style: TextStyle(color: Colors.red),
-            ),
+            child: Text(loc.delete, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
 
+    // Delete Notes
     if (confirmed == true && mounted) {
       for (final id in _selectedIds) {
         await noteProvider.deleteNote(id);
@@ -185,6 +200,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     }
   }
 
+  // ────────── Show Note Detail Dialog ──────────
   void _showNoteDetailDialog(BuildContext context, NoteModel note) {
     final theme = Theme.of(context);
     final noteProvider = Provider.of<NoteProvider>(context, listen: false);
@@ -216,6 +232,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                     ),
                   ),
                   SizedBox(width: 8.w),
+
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 10.w,
@@ -235,6 +252,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                     ),
                   ),
                   const Spacer(),
+
                   IconButton(
                     icon: Icon(
                       note.isPinned ? Icons.push_pin : Icons.push_pin_outlined,
@@ -247,6 +265,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                       Navigator.of(context).pop();
                     },
                   ),
+
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () => Navigator.of(context).pop(),
@@ -312,6 +331,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                     ),
                   ),
                   SizedBox(width: 12.w),
+
                   ElevatedButton.icon(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -333,26 +353,34 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     );
   }
 
+  // ────────── Main Build Method ──────────
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final noteProvider = Provider.of<NoteProvider>(context);
     final locProvider = Provider.of<LocalizationProvider>(context);
-    final filteredNotes = noteProvider.getFilteredNotesWithLocalization(locProvider);
+    final filteredNotes = noteProvider.getFilteredNotesWithLocalization(
+      locProvider,
+    );
 
     final loc = locProvider.loc;
 
     return Scaffold(
+      // ────────── Floating Action Button ──────────
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 120.h), // Lower bottom navigation bar
-        child: FloatingActionButton.extended(
+        padding: EdgeInsets.only(bottom: 90.h, right: 20.w),
+        child: IconButton(
           onPressed: () => NoteEditorDialog.show(context),
-          backgroundColor: theme.colorScheme.onSurface,
-          foregroundColor: theme.scaffoldBackgroundColor,
-          label: Text(loc.add, style: TextStyle(fontSize: AppSize.xs.sp)),
-          icon: Icon(Icons.add, size: 18.sp),
+          style: IconButton.styleFrom(
+            backgroundColor: theme.colorScheme.onSurface,
+            foregroundColor: theme.scaffoldBackgroundColor,
+            minimumSize: Size(46.w, 46.h),
+          ),
+          icon: Icon(Icons.add, size: 24.sp),
         ),
       ),
+
+      // ────────── Body Content ──────────
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
@@ -363,14 +391,16 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // ────────── Title Section ──────────
                   Row(
                     children: [
                       Icon(
-                        Icons.edit_square,
+                        LucideIcons.notepadText,
                         color: theme.colorScheme.onSurface,
                         size: 24.sp,
                       ),
                       SizedBox(width: 16.w),
+
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -381,17 +411,22 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+
                           Text(
                             loc.notesSubtitle,
                             style: TextStyle(
                               fontSize: AppSize.xs.sp,
-                              color: theme.colorScheme.onSurfaceVariant,
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ],
                   ),
+
+                  // ────────── Item Count ──────────
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 12.w,
@@ -415,7 +450,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
               ),
               SizedBox(height: 16.h),
 
-              // Search & Category Filters or Selection Menu
+              // ────────── Search & Category Filters or Selection Menu ──────────
               if (_isMultiSelectMode)
                 Container(
                   height: 48.h,
@@ -433,6 +468,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                         ),
                       ),
                       const Spacer(),
+
                       InkWell(
                         onTap: _clearSelection,
                         borderRadius: BorderRadius.circular(20.r),
@@ -446,6 +482,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                         ),
                       ),
                       SizedBox(width: 8.w),
+
                       InkWell(
                         onTap: _deleteSelectedNotes,
                         borderRadius: BorderRadius.circular(20.r),
@@ -465,7 +502,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                 const NoteSearchBar(),
               SizedBox(height: 16.h),
 
-              // Note Content List /Grid View
+              // ────────── Note Content List /Grid View ──────────
               Expanded(
                 child: noteProvider.isLoading
                     ? Center(
@@ -496,7 +533,8 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                               onTogglePin: () => noteProvider.togglePin(note),
                               isMultiSelectMode: _isMultiSelectMode,
                               isSelected: _selectedIds.contains(note.id ?? 0),
-                              onToggleSelection: () => _toggleSelection(note.id ?? 0),
+                              onToggleSelection: () =>
+                                  _toggleSelection(note.id ?? 0),
                             );
                           },
                         ),

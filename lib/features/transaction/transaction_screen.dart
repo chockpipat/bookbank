@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:provider/provider.dart';
 
 // ────────── Local Imports ──────────
 import 'package:bookbank/Widgets/select_date_time.dart';
@@ -18,7 +19,7 @@ import 'package:bookbank/features/transaction/transaction_in_out/widgets/transac
 import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_note.dart';
 import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_wallwt.dart';
 import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_category.dart';
-import 'package:provider/provider.dart';
+import 'package:bookbank/Widgets/hasError.dart';
 
 class TransactionScreen extends StatefulWidget {
   final String title;
@@ -31,6 +32,8 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   DateTime? _selectedDateTime;
+  bool _loadingBalance = true;
+  bool _hasError = false;
 
   String _amount = '';
   String _note = '';
@@ -59,8 +62,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
       if (!mounted) return;
       setState(() {
         _totalBalance = FinancialCalculations(data).sumAll();
+        _loadingBalance = false;
       });
-    } catch (_) {}
+    } catch (_) {
+      setState(() {
+        _hasError = true;
+        _loadingBalance = false;
+      });
+    }
   }
 
   // ────────── Show success snackbar (same style as AddTransactionScreen) ──────────
@@ -384,8 +393,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               style: IconButton.styleFrom(
                                 padding: EdgeInsets.zero,
                                 minimumSize: Size(32.w, 32.h),
-                                tapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                             ),
                             SizedBox(width: 10.w),
@@ -457,10 +465,26 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         SizedBox(height: 18.h),
 
                         // Category selection
-                        TransactionCategory(
-                          onChanged: (value) => _category = value,
-                        ),
-                        SizedBox(height: 18.h),
+                        _loadingBalance
+                            ? const Center(child: CircularProgressIndicator())
+                            : _hasError
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    loc.category,
+                                    style: TextStyle(
+                                      color: theme.colorScheme.onSurface,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                  SizedBox(height: 24.h),
+                                  Haserror(loadData: _loadBalance),
+                                ],
+                              )
+                            : TransactionCategory(
+                                onChanged: (value) => _category = value,
+                              ),
                       ],
                     ),
                   ),

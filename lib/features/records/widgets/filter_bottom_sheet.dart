@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
-// ────────── Theme & Localization ──────────
-import 'package:bookbank/core/theme/app_theme.dart';
+// ────────── Localization ──────────
 import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Database ──────────
@@ -23,10 +22,7 @@ void showRecordFilterSheet(
   required ValueChanged<RecordFilters> onChanged,
 }) {
   final theme = Theme.of(context);
-  final loc = Provider.of<LocalizationProvider>(
-    context,
-    listen: false,
-  ).loc;
+  final loc = Provider.of<LocalizationProvider>(context, listen: false).loc;
 
   RecordFilters filters = currentFilters;
 
@@ -49,10 +45,8 @@ void showRecordFilterSheet(
             ? theme.colorScheme.surface
             : theme.colorScheme.onSurface,
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.r)),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
     );
   }
 
@@ -64,8 +58,8 @@ void showRecordFilterSheet(
         Text(
           title,
           style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: AppSize.s.sp,
+            color: theme.colorScheme.onSurface,
+            fontSize: 12.sp,
           ),
         ),
         SizedBox(height: 8.h),
@@ -99,6 +93,21 @@ void showRecordFilterSheet(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // ────────── Top Handle Bar ──────────
+                  Center(
+                    child: Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.3,
+                        ),
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+
                   // ────────── Sheet Header ──────────
                   Row(
                     children: [
@@ -109,23 +118,11 @@ void showRecordFilterSheet(
                       ),
                       SizedBox(width: 8.w),
 
-                      Expanded(
-                        child: Text(
-                          loc.filter,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: AppSize.m.sp,
-                          ),
-                        ),
-                      ),
-
-                      IconButton(
-                        onPressed: () => Navigator.pop(sheetContext),
-                        icon: Icon(Icons.close, size: 20.sp),
-                        style: IconButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      Text(
+                        loc.filter,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.sp,
                         ),
                       ),
                     ],
@@ -175,15 +172,13 @@ void showRecordFilterSheet(
                     chip(
                       label: loc.cash,
                       selected: filters.moneyList == 'cash',
-                      onTap: () =>
-                          select(filters.copyWith(moneyList: 'cash')),
+                      onTap: () => select(filters.copyWith(moneyList: 'cash')),
                     ),
 
                     chip(
                       label: loc.bank,
                       selected: filters.moneyList == 'bank',
-                      onTap: () =>
-                          select(filters.copyWith(moneyList: 'bank')),
+                      onTap: () => select(filters.copyWith(moneyList: 'bank')),
                     ),
                   ]),
 

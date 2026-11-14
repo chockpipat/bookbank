@@ -1,12 +1,18 @@
-import 'package:bookbank/core/theme/app_theme.dart';
+// ────────── Packages ──────────
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:bookbank/data/database.dart';
 import 'package:bookbank/features/notebook/providers/note_provider.dart';
+
+// ────────── Database ──────────
+import 'package:bookbank/data/database.dart';
+
+// ────────── Theme & Localization ──────────
+import 'package:bookbank/core/theme/app_theme.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
+// ────────── Widgets ──────────
 class NoteEditorDialog extends StatefulWidget {
   final NoteModel? noteToEdit;
 
@@ -25,13 +31,14 @@ class NoteEditorDialog extends StatefulWidget {
   State<NoteEditorDialog> createState() => _NoteEditorDialogState();
 }
 
+// ────────── State ──────────
 class _NoteEditorDialogState extends State<NoteEditorDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _contentController;
 
-  String? _selectedCategory; // This stores the localized name for UI
-  String? _selectedCategoryKey; // This stores the internal key for database
+  String? _selectedCategory;
+  String? _selectedCategoryKey;
   late int _selectedColorValue;
   bool _isSaving = false;
 
@@ -44,29 +51,27 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
     0xFF00BCD4, // Teal
   ];
 
+  // ────────── Category Helpers ──────────
   List<String> _categories(BuildContext context) {
     final loc = context.watch<LocalizationProvider>().loc;
-    return [
-      loc.categoryGeneral,
-      loc.categoryFinance,
-      loc.categoryGoals,
-    ];
+    return [loc.categoryGeneral, loc.categoryFinance, loc.categoryGoals];
   }
 
-  // Convert localized category name to internal key
+  // ────────── Category Helpers ──────────
   String _getCategoryKey(String localizedCategory, BuildContext context) {
     final loc = context.read<LocalizationProvider>().loc;
     if (localizedCategory == loc.categoryGeneral) return 'General';
     if (localizedCategory == loc.categoryFinance) return 'Finance';
     if (localizedCategory == loc.categoryGoals) return 'Goals';
-    // If it's already an internal key, return it
-    if (localizedCategory == 'General' || localizedCategory == 'Finance' || localizedCategory == 'Goals') {
+    if (localizedCategory == 'General' ||
+        localizedCategory == 'Finance' ||
+        localizedCategory == 'Goals') {
       return localizedCategory;
     }
     return 'General'; // fallback
   }
 
-  // Convert internal key to localized category name
+  // ────────── Category Helpers ──────────
   String _getLocalizedCategory(String categoryKey, BuildContext context) {
     final loc = context.read<LocalizationProvider>().loc;
     if (categoryKey == 'General') return loc.categoryGeneral;
@@ -81,7 +86,6 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
     final note = widget.noteToEdit;
     _titleController = TextEditingController(text: note?.title ?? '');
     _contentController = TextEditingController(text: note?.content ?? '');
-    // Store the internal key from database
     _selectedCategoryKey = note?.category;
     _selectedColorValue = note?.colorValue ?? _colorPalette[0];
   }
@@ -93,6 +97,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
     super.dispose();
   }
 
+  // ────────── Save Note Logic ──────────
   Future<void> _saveNote() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -104,10 +109,11 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
     final loc = Provider.of<LocalizationProvider>(context, listen: false).loc;
     final formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
 
-    // Convert localized category name to internal key for database
     final categoryKey = _getCategoryKey(_selectedCategory!, context);
 
     bool success = false;
+
+    // ────────── Update Note ──────────
     if (widget.noteToEdit != null) {
       final updatedNote = widget.noteToEdit!.copyWith(
         title: _titleController.text.trim(),
@@ -127,6 +133,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
       );
     }
 
+    // ────────── UI Updates ──────────
     if (mounted) {
       setState(() {
         _isSaving = false;
@@ -160,6 +167,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                     size: 24.sp,
                   ),
                   SizedBox(width: 12.w),
+
                   Expanded(
                     child: Text(
                       widget.noteToEdit == null
@@ -184,12 +192,11 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final loc = context.watch<LocalizationProvider>().loc;
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     final locProvider = Provider.of<LocalizationProvider>(context);
     final loc = locProvider.loc;
-    
-    // Initialize selected category if not set (convert internal key to localized name)
+
+    // ────────── Initialize Selected Category ──────────
     if (_selectedCategory == null && _selectedCategoryKey != null) {
       _selectedCategory = _getLocalizedCategory(_selectedCategoryKey!, context);
     }
@@ -210,7 +217,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top Handle Bar
+                // ────────── Top Handle Bar ──────────
                 Center(
                   child: Container(
                     width: 40.w,
@@ -225,7 +232,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                 ),
                 SizedBox(height: 16.h),
 
-                // Title bar
+                // ────────── Title bar ──────────
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -236,15 +243,19 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                           size: 24.sp,
                         ),
                         const SizedBox(width: 8),
+
                         Text(
-                          widget.noteToEdit != null ? loc.editNote : loc.addNote,
+                          widget.noteToEdit != null
+                              ? loc.editNote
+                              : loc.addNote,
                           style: theme.textTheme.titleLarge?.copyWith(
-                            fontSize: 18.sp,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
+
                     IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
@@ -253,29 +264,31 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                 ),
                 SizedBox(height: 16.h),
 
-                // Title Input
+                // ────────── Title Input ──────────
                 TextFormField(
                   controller: _titleController,
                   validator: (value) => value == null || value.trim().isEmpty
                       ? loc.enterTitle
                       : null,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 12.sp,
                     color: theme.colorScheme.onSurface,
                   ),
                   decoration: InputDecoration(
                     labelText: loc.title,
                     hintText: loc.enterNoteTitle,
+                    labelStyle: TextStyle(fontSize: 12.sp),
+                    hintStyle: TextStyle(fontSize: 12.sp),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: theme.colorScheme.outline,
                         width: 1.5,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
                         color: theme.colorScheme.onSurface,
                         width: 2,
@@ -283,7 +296,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                     ),
 
                     errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
                         color: theme.colorScheme.error,
                         width: 1.5,
@@ -291,7 +304,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                     ),
 
                     focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
                         color: theme.colorScheme.error,
                         width: 2,
@@ -305,7 +318,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                 ),
                 SizedBox(height: 14.h),
 
-                // Content Input
+                // ────────── Content Input ──────────
                 TextFormField(
                   controller: _contentController,
                   validator: (value) => value == null || value.trim().isEmpty
@@ -313,23 +326,25 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                       : null,
                   maxLines: 4,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 12.sp,
                     color: theme.colorScheme.onSurface,
                   ),
                   decoration: InputDecoration(
                     labelText: loc.content,
                     hintText: loc.enterNoteContent,
+                    labelStyle: TextStyle(fontSize: 12.sp),
+                    hintStyle: TextStyle(fontSize: 12.sp),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     alignLabelWithHint: true,
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
-                        color: theme.colorScheme.onSurfaceVariant,
+                        color: theme.colorScheme.outline,
                         width: 1.5,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
                         color: theme.colorScheme.onSurface,
                         width: 2,
@@ -337,7 +352,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                     ),
 
                     errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
                         color: theme.colorScheme.error,
                         width: 1.5,
@@ -345,7 +360,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                     ),
 
                     focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+                      borderRadius: BorderRadius.circular(7.r),
                       borderSide: BorderSide(
                         color: theme.colorScheme.error,
                         width: 2,
@@ -359,7 +374,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                 ),
                 SizedBox(height: 16.h),
 
-                // Category Selection
+                // ────────── Category Selection ──────────
                 Text(
                   loc.category,
                   style: TextStyle(
@@ -368,6 +383,8 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                   ),
                 ),
                 SizedBox(height: 8.h),
+
+                // ────────── Category Chips ──────────
                 Wrap(
                   spacing: 8.w,
                   children: _categories(context).map((category) {
@@ -382,6 +399,8 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                           });
                         }
                       },
+                      side: BorderSide.none,
+                      checkmarkColor: theme.colorScheme.onSurface,
                       selectedColor: theme.colorScheme.onSurface.withValues(
                         alpha: 0.2,
                       ),
@@ -397,7 +416,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                 ),
                 SizedBox(height: 16.h),
 
-                // Color Selection
+                // ────────── Color Selection ──────────
                 Text(
                   loc.noteColor,
                   style: TextStyle(
@@ -406,6 +425,8 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                   ),
                 ),
                 SizedBox(height: 8.h),
+
+                // ────────── Color Chips ──────────
                 Row(
                   children: _colorPalette.map((colorVal) {
                     final isSelected = _selectedColorValue == colorVal;
@@ -449,7 +470,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                 ),
                 SizedBox(height: 24.h),
 
-                // Action Buttons
+                // ────────── Action Buttons ──────────
                 SizedBox(
                   width: double.infinity,
                   height: 48.h,
@@ -459,7 +480,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                       backgroundColor: theme.colorScheme.onSurface,
                       foregroundColor: theme.scaffoldBackgroundColor,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14.r),
+                        borderRadius: BorderRadius.circular(7.r),
                       ),
                     ),
                     child: _isSaving
@@ -475,10 +496,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                             widget.noteToEdit != null
                                 ? loc.saveChanges
                                 : loc.createNote,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontSize: 14.sp),
                           ),
                   ),
                 ),
