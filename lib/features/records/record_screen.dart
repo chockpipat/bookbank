@@ -22,6 +22,7 @@ import 'package:bookbank/features/records/widgets/record_list.dart';
 import 'package:bookbank/features/records/widgets/filter_bottom_sheet.dart';
 import 'package:bookbank/Widgets/select_date_time.dart';
 import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
+import 'package:bookbank/Widgets/hasError.dart';
 
 class RecordScreen extends StatefulWidget {
   const RecordScreen({super.key});
@@ -466,43 +467,7 @@ class _RecordScreenState extends State<RecordScreen> {
                           ? const Center(child: CircularProgressIndicator())
                           : _hasError
                           // ────────── Error State ──────────
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    LucideIcons.databaseX,
-                                    size: 48.sp,
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.5),
-                                  ),
-                                  SizedBox(height: 12.h),
-
-                                  Text(
-                                    loc.loadFailed,
-                                    textAlign: TextAlign.center,
-                                    style: textTheme.bodyMedium?.copyWith(
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5),
-                                    ),
-                                  ),
-                                  SizedBox(height: 12.h),
-
-                                  TextButton.icon(
-                                    onPressed: _loadData,
-                                    style: TextButton.styleFrom(
-                                      foregroundColor:
-                                          theme.colorScheme.onSurface,
-                                    ),
-                                    icon: Icon(
-                                      LucideIcons.refreshCw,
-                                      size: 16.sp,
-                                    ),
-                                    label: Text(loc.retry),
-                                  ),
-                                ],
-                              ),
-                            )
+                          ? Haserror(loadData: _loadData)
                           : filtered.isEmpty
                           // ────────── Empty State ──────────
                           ? Center(

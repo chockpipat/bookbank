@@ -1,13 +1,19 @@
-import 'package:bookbank/core/theme/app_theme.dart';
-import 'package:bookbank/data/database.dart';
-import 'package:bookbank/data/db_helper.dart';
-import 'package:bookbank/features/menu/editGroup/group_edit_dialog.dart';
+// ────────── Packages ──────────
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
+
+// ────────── Theme & Localization ──────────
+import 'package:bookbank/core/theme/app_theme.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
+// ────────── Database ──────────
+import 'package:bookbank/data/database.dart';
+import 'package:bookbank/data/db_helper.dart';
+
+// ────────── Widgets ──────────
+import 'package:bookbank/features/menu/editGroup/group_edit_dialog.dart';
+import 'package:bookbank/Widgets/hasError.dart';
 class EditGroupSgreen extends StatefulWidget {
   const EditGroupSgreen({super.key});
 
@@ -43,6 +49,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
     Icons.handyman_outlined,
   ];
 
+  // ────────── Get Icon from Code Point ──────────
   IconData _getIconFromCodePoint(int codePoint) {
     return _availableIcons.firstWhere(
       (icon) => icon.codePoint == codePoint,
@@ -56,6 +63,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
     _loadGroupSettings();
   }
 
+  // ────────── Load Group Settings ──────────
   Future<void> _loadGroupSettings() async {
     setState(() {
       _isLoading = true;
@@ -77,6 +85,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
     }
   }
 
+  // ────────── Edit Group ──────────
   Future<void> _editGroup(GroupSettings settings) async {
     final result = await showDialog<bool>(
       context: context,
@@ -88,6 +97,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
     }
   }
 
+  // ────────── Add Group ──────────
   Future<void> _addGroup() async {
     final result = await showDialog<bool>(
       context: context,
@@ -127,6 +137,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ────────── Dialog Title ──────────
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -137,45 +148,13 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
           ),
           SizedBox(height: 16),
 
-          // Group List
+          // ────────── Category List ──────────
           if (_isLoading)
             Center(child: CircularProgressIndicator())
           else if (_hasError)
-            Flexible(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      LucideIcons.databaseX,
-                      size: 48.sp,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
-                    SizedBox(height: 12),
-
-                    Text(
-                      loc.loadFailed,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: AppSize.m,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12),
-
-                    TextButton.icon(
-                      onPressed: _loadGroupSettings,
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                      ),
-                      icon: Icon(LucideIcons.refreshCw, size: 16.sp),
-                      label: Text(loc.retry),
-                    ),
-                  ],
-                ),
-              ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 26.h),
+              child: Haserror(loadData: _loadGroupSettings),
             )
           else
             Flexible(
@@ -219,7 +198,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
                         ),
                         SizedBox(width: 16),
 
-                        // Group Name
+                        // Category Name
                         Expanded(
                           child: Text(
                             group.groupName,
@@ -243,7 +222,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
             ),
           const SizedBox(height: 16),
 
-          // Add Group Button
+          // ────────── Add Category Button ──────────
           SizedBox(
             width: double.infinity,
             height: 50.h,
@@ -262,6 +241,7 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
           ),
           const SizedBox(height: 8),
 
+          // ────────── Cancel Button ──────────
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

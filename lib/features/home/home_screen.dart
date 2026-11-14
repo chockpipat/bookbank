@@ -18,6 +18,7 @@ import 'package:bookbank/utils/calculations.dart';
 import 'package:bookbank/features/home/widgets/menu_items.dart';
 import 'package:bookbank/features/menu/editGroup/editGroup_sgreen.dart';
 import 'package:bookbank/features/transaction/transaction_screen.dart';
+import 'package:bookbank/Widgets/hasError.dart';
 
 // ────────── Database ──────────
 import 'package:bookbank/data/database.dart';
@@ -57,6 +58,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isLoading = true;
+  bool _hasError = false;
+
   List<MyData> _transactions = [];
   double _totalBalance = 0;
   double _bankBalance = 0;
@@ -146,14 +150,27 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadData();
   }
 
-  // Load data from database
+  // ────────── Load data from database ──────────
   Future<void> _loadData() async {
-    final data = await DatabaseHelper.instance.getAllData();
-    if (!mounted) return;
     setState(() {
-      _transactions = data;
-      _calculateTotals();
+      _isLoading = true;
+      _hasError = false;
     });
+    try {
+      final data = await DatabaseHelper.instance.getAllData();
+      if (!mounted) return;
+      setState(() {
+        _transactions = data;
+        _calculateTotals();
+        _isLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+    }
   }
 
   // ────────── Calculate financial totals from transactions ──────────
@@ -376,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             SizedBox(height: 12.h),
 
-                            // ────────── Unallocated Summary ──────────
+                            // ────────── Cash Box ──────────
                             Text(
                               loc.cashBox,
                               style: TextStyle(
@@ -405,7 +422,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             SizedBox(height: 12.h),
 
-                            // ────────── Group Header ──────────
+                            // ────────── Category Header ──────────
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -417,7 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
 
-                                // Edit Group Button
+                                // Edit Category Button
                                 FilledButton.icon(
                                   onPressed: () {
                                     showDialog(
@@ -444,8 +461,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             SizedBox(height: 8.h),
 
-                            // ────────── Group Cards (2 per row) ──────────
-                            if (groups.isNotEmpty) ...[
+                            // ────────── Category Cards (2 per row) ──────────
+                            if (_isLoading)
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 24.h),
+                                  child: CircularProgressIndicator(
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
+                              )
+                            else if (_hasError)
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 24.h),
+                                child: Haserror(loadData: _loadData),
+                              )
+                            else if (groups.isNotEmpty) ...[
                               for (var i = 0; i < groups.length; i += 2) ...[
                                 Row(
                                   mainAxisAlignment:
@@ -469,12 +500,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     SizedBox(height: 50.h),
 
-                                    Icon(
-                                      LucideIcons.folderX,
-                                      size: 24.sp,
-                                      color: theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.5),
+                                    Container(
+                                      width: 60.w,
+                                      height: 60.h,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            theme.colorScheme.surfaceContainer,
+                                        borderRadius: BorderRadius.circular(
+                                          50.r,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        LucideIcons.folderX,
+                                        size: 34.sp,
+                                        color: theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.5),
+                                      ),
                                     ),
+                                    SizedBox(height: 8.h),
 
                                     Text(
                                       loc.noCategory,
