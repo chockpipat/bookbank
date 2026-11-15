@@ -41,6 +41,13 @@ class AppLocalizations {
       'monthly_data': 'Monthly data',
       'net': 'Net',
       'not_enough_data': 'Not enough data',
+      'expense_categories': 'Expense categories',
+      'date_range': 'Date range',
+      'from': 'From',
+      'to': 'To',
+      'select_date': 'Select date',
+      'select_month': 'Select month',
+      'select_year': 'Select year',
 
       // Record screen
       'transaction_history': 'Transaction History',
@@ -237,6 +244,13 @@ If you have any questions about this privacy policy, please contact the develope
       'monthly_data': 'ข้อมูลรายเดือน',
       'net': 'สุทธิ',
       'not_enough_data': 'ไม่มีข้อมูล',
+      'expense_categories': 'หมวดหมู่รายจ่าย',
+      'date_range': 'ช่วงวันที่',
+      'from': 'จาก',
+      'to': 'ถึง',
+      'select_date': 'เลือกวันที่',
+      'select_month': 'เลือกเดือน',
+      'select_year': 'เลือกปี',
 
       // Record screen
       'transaction_history': 'ประวัติธุรกรรม',
@@ -433,6 +447,13 @@ If you have any questions about this privacy policy, please contact the develope
       'monthly_data': '月度数据',
       'net': '净额',
       'not_enough_data': '没有足够数据',
+      'expense_categories': '支出类别',
+      'date_range': '日期范围',
+      'from': '从',
+      'to': '到',
+      'select_date': '选择日期',
+      'select_month': '选择月份',
+      'select_year': '选择年份',
 
       // Record screen
       'transaction_history': '交易历史',
@@ -631,6 +652,13 @@ If you have any questions about this privacy policy, please contact the develope
   String get monthlyData => translate('monthly_data');
   String get net => translate('net');
   String get notEnoughData => translate('not_enough_data');
+  String get expenseCategories => translate('expense_categories');
+  String get dateRange => translate('date_range');
+  String get from => translate('from');
+  String get to => translate('to');
+  String get selectDate => translate('select_date');
+  String get selectMonth => translate('select_month');
+  String get selectYear => translate('select_year');
 
   // Record screen
   String get transactionHistory => translate('transaction_history');

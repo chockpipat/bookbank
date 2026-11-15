@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // ────────── Widgets ──────────
 import 'package:bookbank/features/home/home_screen.dart';
 import 'package:bookbank/features/add_transaction/add_transaction_screen.dart';
-import 'package:bookbank/features/charts/chart_screen.dart';
+import 'package:bookbank/features/dashboard/dashboard_screen.dart';
 import 'package:bookbank/features/records/record_screen.dart';
 import 'package:bookbank/features/notebook/noteBook_screen.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
