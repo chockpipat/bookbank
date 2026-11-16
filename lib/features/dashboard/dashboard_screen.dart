@@ -129,7 +129,7 @@ class _ChartScreenState extends State<ChartScreen> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceBright,
+                      color: theme.colorScheme.surface,
                       borderRadius: BorderRadius.vertical(
                         bottom: Radius.circular(24.r),
                       ),
@@ -181,7 +181,7 @@ class _ChartScreenState extends State<ChartScreen> {
                                 Text(
                                   loc.totalBalance,
                                   style: textTheme.bodyLarge?.copyWith(
-                                    color: AppColors.grey,
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                                     fontSize: AppSize.xs.sp,
                                   ),
                                 ),
@@ -204,11 +204,36 @@ class _ChartScreenState extends State<ChartScreen> {
                     padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 24.h),
                     child: Column(
                       children: [
+                        // ────────── Chart ──────────
                         DashboardChart(
                           transactions: _transactions,
                           categoryIcons: categoryIcons,
                           categoryColors: categoryColors,
                           categoryNames: categoryNames,
+                        ),
+                        SizedBox(height: 24.h),
+
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surface,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'test',
+                                  style: textTheme.bodyLarge?.copyWith(
+                                    fontSize: AppSize.m.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

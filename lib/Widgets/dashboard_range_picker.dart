@@ -17,11 +17,9 @@ import 'package:cupertino_ui/cupertino_ui.dart'
 import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Pick mode ──────────
-
 enum DashboardPickMode { day, month, year }
 
 // ────────── Picked range result ──────────
-
 class DashboardPickedRange {
   const DashboardPickedRange({required this.start, required this.end});
 
@@ -30,7 +28,6 @@ class DashboardPickedRange {
 }
 
 // ────────── Show picker ──────────
-
 Future<DashboardPickedRange?> showDashboardRangePicker(
   BuildContext context, {
   required DashboardPickMode mode,
@@ -48,7 +45,6 @@ Future<DashboardPickedRange?> showDashboardRangePicker(
 }
 
 // ────────── Dialog ──────────
-
 class _DashboardRangePickerDialog extends StatefulWidget {
   final DashboardPickMode mode;
   final DateTime initialStart;
@@ -84,10 +80,7 @@ class _DashboardRangePickerDialogState
   void initState() {
     super.initState();
     _from = _normalize(widget.initialStart, isEnd: false);
-    _to = _normalize(
-      widget.initialEnd ?? widget.initialStart,
-      isEnd: true,
-    );
+    _to = _normalize(widget.initialEnd ?? widget.initialStart, isEnd: true);
     _isRange = _mode != DashboardPickMode.year && _isDifferentPeriod();
   }
 
@@ -143,14 +136,10 @@ class _DashboardRangePickerDialogState
       }
     }
 
-    Navigator.pop(
-      context,
-      DashboardPickedRange(start: start, end: end),
-    );
+    Navigator.pop(context, DashboardPickedRange(start: start, end: end));
   }
 
   // ────────── Day pickers ──────────
-
   Widget _dayCalendar(
     DateTime value,
     ValueChanged<DateTime> onChanged, {
@@ -181,11 +170,7 @@ class _DashboardRangePickerDialogState
   }
 
   // ────────── Month pickers ──────────
-
-  Widget _monthPicker(
-    DateTime value,
-    ValueChanged<DateTime> onChanged,
-  ) {
+  Widget _monthPicker(DateTime value, ValueChanged<DateTime> onChanged) {
     return SizedBox(
       height: 216.h,
       width: double.infinity,
@@ -206,12 +191,8 @@ class _DashboardRangePickerDialogState
   }
 
   // ────────── Year picker ──────────
-
   Widget _yearPicker() {
-    final selectedIndex = (_from.year - _minYear).clamp(
-      0,
-      _maxYear - _minYear,
-    );
+    final selectedIndex = (_from.year - _minYear).clamp(0, _maxYear - _minYear);
 
     return SizedBox(
       height: 216.h,
@@ -240,16 +221,12 @@ class _DashboardRangePickerDialogState
   }
 
   // ────────── Build ──────────
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = context.watch<LocalizationProvider>().loc;
 
-    final dialogWidth = math.min(
-      360.0,
-      MediaQuery.sizeOf(context).width - 48,
-    );
+    final dialogWidth = math.min(360.0, MediaQuery.sizeOf(context).width - 48);
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -264,10 +241,7 @@ class _DashboardRangePickerDialogState
               if (_mode != DashboardPickMode.year)
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    loc.dateRange,
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
+                  title: Text(loc.dateRange, style: TextStyle(fontSize: 14.sp)),
                   value: _isRange,
                   onChanged: (value) {
                     setState(() {
@@ -352,9 +326,9 @@ class _DashboardRangePickerDialogState
           text,
           style: TextStyle(
             fontSize: 12.sp,
-            color: Theme.of(context).colorScheme.onSurface.withValues(
-              alpha: 0.6,
-            ),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       ),

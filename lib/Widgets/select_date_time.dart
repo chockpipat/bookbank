@@ -65,7 +65,7 @@ class _SelectDateTimeState extends State<SelectDateTime> {
           currentDateTime: DateTime.now(),
           timeLabel: loc.time,
           mode: CupertinoCalendarMode.dateTime,
-          mainColor: AppColors.grey,
+          mainColor: Theme.of(context).colorScheme.surfaceContainer,
           onDateTimeChanged: (dateTime) {
             setState(() {
               _selectedDateTime = dateTime;

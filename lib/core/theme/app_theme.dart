@@ -68,6 +68,7 @@ class AppTheme {
         outlineVariant: AppColors.grey,
         outline: AppColors.mediumGrey,
         surfaceBright: AppColors.charcoal,
+        surfaceContainer: AppColors.grey,
       ),
     );
   }
@@ -84,6 +85,7 @@ class AppTheme {
         outlineVariant: AppColors.black, // border card
         outline: AppColors.mediumGrey, // line && description
         surfaceBright: AppColors.charcoal, // navigation bar
+        surfaceContainer: AppColors.card, // card
       ),
     );
   }

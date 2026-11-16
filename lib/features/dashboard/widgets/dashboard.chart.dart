@@ -58,14 +58,23 @@ class _DateRangeButton extends StatelessWidget {
         style: IconButton.styleFrom(
           backgroundColor: isSelected
               ? theme.colorScheme.onSurface
-              : theme.colorScheme.outline,
+              : theme.colorScheme.surfaceContainer,
           foregroundColor: isSelected
               ? theme.colorScheme.surface
               : theme.colorScheme.onSurface,
+          minimumSize: Size(30.w, 30.h),
         ),
         icon: isEmpty
             ? Icon(LucideIcons.calendar, size: 18.w)
-            : Text(label ?? '', style: TextStyle(fontSize: 13.sp)),
+            : Text(
+                label ?? '',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: isSelected
+                      ? theme.colorScheme.surfaceContainer
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
       ),
     );
   }
@@ -342,12 +351,7 @@ class _DashboardChartState extends State<DashboardChart> {
     return sum;
   }
 
-  double _sumByTypeInMonth(
-    List<MyData> txs,
-    String type,
-    int year,
-    int month,
-  ) {
+  double _sumByTypeInMonth(List<MyData> txs, String type, int year, int month) {
     var sum = 0.0;
     for (final t in txs) {
       if (t.moneyType != type) continue;
@@ -379,11 +383,7 @@ class _DashboardChartState extends State<DashboardChart> {
   }
 
   Widget _chartFrame(Widget child) {
-    return SizedBox(
-      height: 180.h,
-      width: double.infinity,
-      child: child,
-    );
+    return SizedBox(height: 180.h, width: double.infinity, child: child);
   }
 
   Widget _emptyChart() {
@@ -392,10 +392,7 @@ class _DashboardChartState extends State<DashboardChart> {
       Center(
         child: Text(
           loc.notEnoughData,
-          style: TextStyle(
-            color: AppColors.grey,
-            fontSize: AppSize.xs.sp,
-          ),
+          style: TextStyle(color: AppColors.grey, fontSize: AppSize.xs.sp),
         ),
       ),
     );
@@ -420,16 +417,10 @@ class _DashboardChartState extends State<DashboardChart> {
         Container(
           width: 10.w,
           height: 10.h,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         SizedBox(width: 4.w),
-        Text(
-          label,
-          style: TextStyle(fontSize: 11.sp),
-        ),
+        Text(label, style: TextStyle(fontSize: 11.sp)),
       ],
     );
   }
@@ -498,10 +489,7 @@ class _DashboardChartState extends State<DashboardChart> {
               ),
             ),
           ),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-          ),
+          gridData: FlGridData(show: true, drawVerticalLine: false),
           borderData: FlBorderData(show: false),
           barGroups: [
             for (var i = 0; i < days.length; i++)
@@ -591,10 +579,7 @@ class _DashboardChartState extends State<DashboardChart> {
               ),
             ),
           ),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-          ),
+          gridData: FlGridData(show: true, drawVerticalLine: false),
           borderData: FlBorderData(show: false),
           lineBarsData: [
             LineChartBarData(
@@ -690,10 +675,7 @@ class _DashboardChartState extends State<DashboardChart> {
               ),
             ),
           ),
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-          ),
+          gridData: FlGridData(show: true, drawVerticalLine: false),
           borderData: FlBorderData(show: false),
           barGroups: [
             for (var i = 0; i < 12; i++)
@@ -741,8 +723,7 @@ class _DashboardChartState extends State<DashboardChart> {
   }
 
   int _displayYear(int year) {
-    final isThai =
-        context.read<LocalizationProvider>().language.code == 'th';
+    final isThai = context.read<LocalizationProvider>().language.code == 'th';
     return isThai ? year + 543 : year;
   }
 
@@ -816,7 +797,7 @@ class _DashboardChartState extends State<DashboardChart> {
                 width: 40.w,
                 height: 40.h,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.outline,
+                  color: theme.colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(50.r),
                 ),
                 child: Icon(
@@ -838,12 +819,14 @@ class _DashboardChartState extends State<DashboardChart> {
                     ),
                   ),
                   Text(
-                    loc.incomeExpenseByCategory,
+                    _mode == DashboardPickMode.day
+                        ? loc.chartDay
+                        : _mode == DashboardPickMode.month
+                            ? loc.chartMonth
+                            : loc.chartYear,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.5,
-                      ),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -858,20 +841,20 @@ class _DashboardChartState extends State<DashboardChart> {
                     isSelected: _mode == DashboardPickMode.day,
                     onPressed: () => _onModeChanged(DashboardPickMode.day),
                   ),
+
                   _DateRangeButton(
                     label: 'M',
                     isSelected: _mode == DashboardPickMode.month,
                     onPressed: () => _onModeChanged(DashboardPickMode.month),
                   ),
+
                   _DateRangeButton(
                     label: 'Y',
                     isSelected: _mode == DashboardPickMode.year,
                     onPressed: () => _onModeChanged(DashboardPickMode.year),
                   ),
-                  _DateRangeButton(
-                    isEmpty: true,
-                    onPressed: _openPicker,
-                  ),
+
+                  _DateRangeButton(isEmpty: true, onPressed: _openPicker),
                 ],
               ),
             ],
@@ -883,7 +866,8 @@ class _DashboardChartState extends State<DashboardChart> {
             width: double.infinity,
             padding: EdgeInsets.all(8.w),
             decoration: BoxDecoration(
-              color: theme.colorScheme.outline,
+              // color: theme.colorScheme.outline,
+              color: theme.colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(14.r),
             ),
             child: Column(
@@ -968,13 +952,10 @@ class _DashboardChartState extends State<DashboardChart> {
             ...sortedCategories.map((entry) {
               final groupId = entry.key;
               final amount = entry.value;
-              final percentage = expenseTotal > 0
-                  ? amount / expenseTotal
-                  : 0.0;
+              final percentage = expenseTotal > 0 ? amount / expenseTotal : 0.0;
 
               return _ExpenseCategory(
-                icon:
-                    widget.categoryIcons[groupId] ?? Icons.category_outlined,
+                icon: widget.categoryIcons[groupId] ?? Icons.category_outlined,
                 category: groupId.isEmpty
                     ? loc.anonymous
                     : (widget.categoryNames[groupId] ?? groupId),

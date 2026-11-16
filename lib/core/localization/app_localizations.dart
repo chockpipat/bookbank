@@ -37,7 +37,9 @@ class AppLocalizations {
       'dashboard': 'Dashboard',
       'view_stats': 'View your statistics in detail.',
       'data_for_day': 'Data for this day',
-      'income_expense_by_category': 'Income and expenses by category',
+      'chart_day': 'Daily chart',
+      'chart_month': 'Monthly chart',
+      'chart_year': 'Yearly chart',
       'monthly_data': 'Monthly data',
       'net': 'Net',
       'not_enough_data': 'Not enough data',
@@ -240,7 +242,9 @@ If you have any questions about this privacy policy, please contact the develope
       'dashboard': 'แดชบอร์ด',
       'view_stats': 'ดูสถิติของคุณในรายละเอียด',
       'data_for_day': 'ข้อมูลวันนี้',
-      'income_expense_by_category': 'รายรับและรายจ่ายตามหมวดหมู่',
+      'chart_day': 'กราฟรายวัน',
+      'chart_month': 'กราฟรายเดือน',
+      'chart_year': 'กราฟรายปี',
       'monthly_data': 'ข้อมูลรายเดือน',
       'net': 'สุทธิ',
       'not_enough_data': 'ไม่มีข้อมูล',
@@ -443,7 +447,9 @@ If you have any questions about this privacy policy, please contact the develope
       'dashboard': '仪表盘',
       'view_stats': '查看您的详细统计数据',
       'data_for_day': '今日数据',
-      'income_expense_by_category': '按类别的收支情况',
+      'chart_day': '日图表',
+      'chart_month': '月图表',
+      'chart_year': '年图表',
       'monthly_data': '月度数据',
       'net': '净额',
       'not_enough_data': '没有足够数据',
@@ -648,7 +654,9 @@ If you have any questions about this privacy policy, please contact the develope
   String get dashboard => translate('dashboard');
   String get viewStats => translate('view_stats');
   String get dataForDay => translate('data_for_day');
-  String get incomeExpenseByCategory => translate('income_expense_by_category');
+  String get chartDay => translate('chart_day');
+  String get chartMonth => translate('chart_month');
+  String get chartYear => translate('chart_year');
   String get monthlyData => translate('monthly_data');
   String get net => translate('net');
   String get notEnoughData => translate('not_enough_data');
