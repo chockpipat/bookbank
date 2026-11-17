@@ -52,7 +52,7 @@ class _DateRangeButton extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      padding: EdgeInsets.symmetric(horizontal: 1.w),
       child: IconButton(
         onPressed: onPressed,
         style: IconButton.styleFrom(
@@ -99,7 +99,7 @@ class _ProgramCard extends StatelessWidget {
     return Expanded(
       child: Container(
         width: double.infinity,
-        height: 55.h,
+        height: 60.h,
         padding: EdgeInsets.all(8.w),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
@@ -415,11 +415,11 @@ class _DashboardChartState extends State<DashboardChart> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 10.w,
-          height: 10.h,
+          width: 8.w,
+          height: 8.h,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        SizedBox(width: 4.w),
+        SizedBox(width: 8.w),
         Text(label, style: TextStyle(fontSize: 11.sp)),
       ],
     );
@@ -794,8 +794,8 @@ class _DashboardChartState extends State<DashboardChart> {
           Row(
             children: [
               Container(
-                width: 40.w,
-                height: 40.h,
+                width: 35.w,
+                height: 35.h,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(50.r),

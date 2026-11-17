@@ -205,9 +205,7 @@ class _GroupCardState extends State<GroupCard>
       builder: (context, child) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          height: (widget.savingsGoalEnabled && widget.savingsGoalAmount > 0)
-              ? 130.h
-              : 115.h,
+          height: 130.h,
           width: double.infinity,
           padding: EdgeInsets.all(12.r),
           decoration: BoxDecoration(

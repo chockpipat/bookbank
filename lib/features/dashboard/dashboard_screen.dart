@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 // ────────── Widgets ──────────
 import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
 import 'package:bookbank/features/dashboard/widgets/dashboard.chart.dart';
+import 'package:bookbank/features/dashboard/widgets/contribution_graph.dart';
 
 // ────────── Database ──────────
 import 'package:bookbank/utils/calculations.dart';
@@ -181,7 +182,8 @@ class _ChartScreenState extends State<ChartScreen> {
                                 Text(
                                   loc.totalBalance,
                                   style: textTheme.bodyLarge?.copyWith(
-                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
                                     fontSize: AppSize.xs.sp,
                                   ),
                                 ),
@@ -225,12 +227,15 @@ class _ChartScreenState extends State<ChartScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'test',
+                                  'Contribution graph',
                                   style: textTheme.bodyLarge?.copyWith(
                                     fontSize: AppSize.m.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                SizedBox(height: 12.h),
+
+                                ContributionGraph(transactions: _transactions),
                               ],
                             ),
                           ),
