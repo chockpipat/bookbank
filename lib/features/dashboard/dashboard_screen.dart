@@ -226,15 +226,6 @@ class _ChartScreenState extends State<ChartScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Contribution graph',
-                                  style: textTheme.bodyLarge?.copyWith(
-                                    fontSize: AppSize.m.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 12.h),
-
                                 ContributionGraph(transactions: _transactions),
                               ],
                             ),

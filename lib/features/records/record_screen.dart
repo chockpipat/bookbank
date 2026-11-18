@@ -16,6 +16,7 @@ import 'package:bookbank/data/db_helper.dart';
 // ────────── Records Utils ──────────
 import 'package:bookbank/features/records/utils/record_filter.dart';
 import 'package:bookbank/features/records/utils/record_utils.dart';
+import 'package:bookbank/features/transaction/transaction_screen.dart';
 
 // ────────── Widgets ──────────
 import 'package:bookbank/features/records/widgets/record_list.dart';
@@ -205,6 +206,45 @@ class _RecordScreenState extends State<RecordScreen> {
     }
   }
 
+  // ────────── Single Record Deletion ──────────
+  Future<void> _deleteRecord(MyData item) async {
+    final loc = Provider.of<LocalizationProvider>(
+      context,
+      listen: false,
+    ).loc;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+        title: Text(loc.confirmDelete),
+        content: Text(
+          '${loc.delete} ${getItemName(item, anonymousText: loc.anonymous)}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(loc.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(loc.delete, style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted && item.id != null) {
+      await DatabaseHelper.instance.deleteData(item.id!);
+      await _loadData();
+    }
+  }
+
   // ────────── Record Row Builder ──────────
   Widget _buildRecordRow(MyData item, {bool showDateHeader = true}) {
     return RecordListItem(
@@ -216,6 +256,25 @@ class _RecordScreenState extends State<RecordScreen> {
         if (_isMultiSelectMode) _toggleSelection(item.id ?? 0);
       },
       onLongPress: () => _toggleSelection(item.id ?? 0),
+      onEdit: item.moneyType == 'transfer'
+          ? null
+          : () {
+              Navigator.of(context)
+                  .push(
+                    MaterialPageRoute(
+                      builder: (context) => TransactionScreen(
+                        title: item.moneyType == 'income'
+                            ? 'Tang in'
+                            : 'Tang out',
+                        existingItem: item,
+                      ),
+                    ),
+                  )
+                  .then((result) {
+                    if (result == true) _loadData();
+                  });
+            },
+      onDelete: () => _deleteRecord(item),
     );
   }
 

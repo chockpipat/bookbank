@@ -50,6 +50,7 @@ class AppLocalizations {
       'select_date': 'Select date',
       'select_month': 'Select month',
       'select_year': 'Select year',
+      'contribution_graph': 'Contribution graph',
 
       // Record screen
       'transaction_history': 'Transaction History',
@@ -255,6 +256,7 @@ If you have any questions about this privacy policy, please contact the develope
       'select_date': 'เลือกวันที่',
       'select_month': 'เลือกเดือน',
       'select_year': 'เลือกปี',
+      'contribution_graph': 'กราฟการใช้จ่าย',
 
       // Record screen
       'transaction_history': 'ประวัติธุรกรรม',
@@ -460,6 +462,7 @@ If you have any questions about this privacy policy, please contact the develope
       'select_date': '选择日期',
       'select_month': '选择月份',
       'select_year': '选择年份',
+      'contribution_graph': '贡献图',
 
       // Record screen
       'transaction_history': '交易历史',
@@ -667,6 +670,7 @@ If you have any questions about this privacy policy, please contact the develope
   String get selectDate => translate('select_date');
   String get selectMonth => translate('select_month');
   String get selectYear => translate('select_year');
+  String get contributionGraph => translate('contribution_graph');
 
   // Record screen
   String get transactionHistory => translate('transaction_history');

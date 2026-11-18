@@ -30,10 +30,30 @@ class _ContributionGraphState extends State<ContributionGraph> {
   static const Color _expenseColor = Color(0xFFFF0000);
 
   int _selectedYear = DateTime.now().year;
+  bool _yearPickedByUser = false;
+
+  int get _latestTransactionYear {
+    int? year;
+    for (final transaction in widget.transactions) {
+      final date = _parseDate(transaction);
+      if (date != null && (year == null || date.year > year)) {
+        year = date.year;
+      }
+    }
+    return year ?? DateTime.now().year;
+  }
+
+  int get _displayYear =>
+      _yearPickedByUser ? _selectedYear : _latestTransactionYear;
 
   @override
   void didUpdateWidget(covariant ContributionGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (!_yearPickedByUser) {
+      _selectedYear = _latestTransactionYear;
+      return;
+    }
 
     final minYear = _minYear;
     final maxYear = _maxYear;
@@ -190,7 +210,6 @@ class _ContributionGraphState extends State<ContributionGraph> {
   }
 
   // ────────── Details dialog ──────────
-
   void _showDayDetails(DateTime day, _DayTotals? total) {
     final locProvider = context.read<LocalizationProvider>();
     final loc = locProvider.loc;
@@ -221,12 +240,14 @@ class _ContributionGraphState extends State<ContributionGraph> {
                       _incomeColor,
                     ),
                     SizedBox(height: 8.h),
+
                     _detailRow(
                       loc.expense,
                       locProvider.formatAmount(total.expense),
                       _expenseColor,
                     ),
                     SizedBox(height: 8.h),
+
                     _detailRow(
                       loc.net,
                       locProvider.formatAmount(total.net),
@@ -250,8 +271,10 @@ class _ContributionGraphState extends State<ContributionGraph> {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         SizedBox(width: 8.w),
+
         Text(label, style: TextStyle(fontSize: AppSize.base.sp)),
         const Spacer(),
+
         Text(
           amount,
           style: TextStyle(
@@ -265,7 +288,6 @@ class _ContributionGraphState extends State<ContributionGraph> {
   }
 
   // ────────── Year picker ──────────
-
   Future<void> _pickYear() async {
     final loc = context.read<LocalizationProvider>().loc;
     final years = _availableYears;
@@ -286,7 +308,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
               separatorBuilder: (context, index) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final year = years[index];
-                final isSelected = year == _selectedYear;
+                final isSelected = year == _displayYear;
 
                 return ListTile(
                   dense: true,
@@ -309,6 +331,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
 
     if (selectedYear != null && mounted) {
       setState(() {
+        _yearPickedByUser = true;
         _selectedYear = selectedYear;
       });
     }
@@ -320,7 +343,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
     return OutlinedButton.icon(
       onPressed: _pickYear,
       icon: Icon(LucideIcons.calendar, size: 16.sp),
-      label: Text('$_selectedYear'),
+      label: Text('$_displayYear'),
       style: OutlinedButton.styleFrom(
         foregroundColor: theme.colorScheme.onSurface,
         side: BorderSide(color: theme.colorScheme.outlineVariant),
@@ -338,7 +361,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
     final theme = Theme.of(context);
     final loc = context.watch<LocalizationProvider>().loc;
 
-    final year = _selectedYear;
+    final year = _displayYear;
     final totals = _dailyTotals(year);
     final columns = _columnsForYear(year);
     final monthLabels = _monthLabels(columns, year, loc);
@@ -352,8 +375,20 @@ class _ContributionGraphState extends State<ContributionGraph> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Align(alignment: Alignment.centerRight, child: _yearButton()),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              loc.contributionGraph,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 14.sp,
+              ),
+            ),
+            Align(alignment: Alignment.centerRight, child: _yearButton()),
+          ],
+        ),
         SizedBox(height: 8.h),
+
         SizedBox(
           height: graphHeight,
           child: SingleChildScrollView(
@@ -361,6 +396,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ────────── Month Labels ──────────
                 SizedBox(
                   height: 14.h,
                   child: Row(
@@ -387,6 +423,8 @@ class _ContributionGraphState extends State<ContributionGraph> {
                   ),
                 ),
                 SizedBox(height: 4.h),
+
+                // ────────── Contribution Grid ──────────
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

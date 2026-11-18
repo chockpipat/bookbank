@@ -8,8 +8,13 @@ import 'package:bookbank/features/menu/editGroup/providers/group_settings_provid
 // ────────── Main Widget ──────────
 class TransactionCategory extends StatefulWidget {
   final ValueChanged<String?>? onChanged;
+  final String? initialCategory;
 
-  const TransactionCategory({super.key, this.onChanged});
+  const TransactionCategory({
+    super.key,
+    this.onChanged,
+    this.initialCategory,
+  });
 
   @override
   State<TransactionCategory> createState() => _TransactionCategoryState();
@@ -57,6 +62,14 @@ class _CategoryButton extends StatelessWidget {
 // ────────── State Class ──────────
 class _TransactionCategoryState extends State<TransactionCategory> {
   String? _selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = (widget.initialCategory?.isEmpty ?? true)
+        ? null
+        : widget.initialCategory;
+  }
 
   final List<IconData> _availableIcons = [
     Icons.shopping_cart_rounded,

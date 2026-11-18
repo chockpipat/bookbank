@@ -9,8 +9,14 @@ import 'package:bookbank/data/db_helper.dart';
 class TransactionAmount extends StatefulWidget {
   final Function(String?)? onChanged;
   final Function(String?)? onSaved;
+  final String? initialValue;
 
-  const TransactionAmount({super.key, this.onChanged, this.onSaved});
+  const TransactionAmount({
+    super.key,
+    this.onChanged,
+    this.onSaved,
+    this.initialValue,
+  });
 
   @override
   State<TransactionAmount> createState() => _TransactionAmountState();
@@ -25,6 +31,7 @@ class _TransactionAmountState extends State<TransactionAmount> {
   @override
   void initState() {
     super.initState();
+    controller.text = widget.initialValue ?? '';
     _loadAmounts();
   }
 

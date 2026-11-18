@@ -8,8 +8,9 @@ import 'package:bookbank/core/localization/localization_provider.dart';
 // ────────── Transaction Wallwt ──────────
 class TransactionWallwt extends StatefulWidget {
   final ValueChanged<String>? onChanged;
+  final String? initialWallet;
 
-  const TransactionWallwt({super.key, this.onChanged});
+  const TransactionWallwt({super.key, this.onChanged, this.initialWallet});
 
   @override
   State<TransactionWallwt> createState() => _TransactionWallwtState();
@@ -54,7 +55,13 @@ class WalletPositionButton extends StatelessWidget {
 
 // ────────── Transaction Wallwt State ──────────
 class _TransactionWallwtState extends State<TransactionWallwt> {
-  String? _selectedWalletPosition = 'bank';
+  String? _selectedWalletPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedWalletPosition = widget.initialWallet ?? 'bank';
+  }
 
   @override
   Widget build(BuildContext context) {

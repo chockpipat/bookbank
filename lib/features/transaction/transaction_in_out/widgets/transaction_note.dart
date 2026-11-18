@@ -11,8 +11,9 @@ import 'package:bookbank/features/transaction/transaction_in_out/manage_notes_sc
 // ────────── Transaction Note Widget ──────────
 class TransactionNote extends StatefulWidget {
   final ValueChanged<String>? onChanged;
+  final String? initialValue;
 
-  const TransactionNote({super.key, this.onChanged});
+  const TransactionNote({super.key, this.onChanged, this.initialValue});
 
   @override
   State<TransactionNote> createState() => _TransactionNoteState();
@@ -58,6 +59,7 @@ class _TransactionNoteState extends State<TransactionNote> {
   @override
   void initState() {
     super.initState();
+    _noteController.text = widget.initialValue ?? '';
     _noteController.addListener(_onNoteChanged);
     _loadData();
   }

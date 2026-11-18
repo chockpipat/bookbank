@@ -23,8 +23,9 @@ import 'package:bookbank/Widgets/hasError.dart';
 
 class TransactionScreen extends StatefulWidget {
   final String title;
+  final MyData? existingItem;
 
-  const TransactionScreen({super.key, required this.title});
+  const TransactionScreen({super.key, required this.title, this.existingItem});
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -52,6 +53,22 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void initState() {
     super.initState();
     _selectedDateTime = DateTime.now();
+
+    // ────────── Prefill form when editing an existing record ──────────
+    final existing = widget.existingItem;
+    if (existing != null) {
+      _amount = existing.amount.toString();
+      _note = existing.title == 'Anonymous' ? '' : (existing.title ?? '');
+      _wallet = existing.moneyList;
+      _category = existing.moneyGroup.isEmpty ? null : existing.moneyGroup;
+      _transferFrom = existing.moneyList;
+      _transferTo = existing.moneyGroup;
+      final parsedDate = DateTime.tryParse(existing.date ?? '');
+      if (parsedDate != null) {
+        _selectedDateTime = parsedDate;
+      }
+    }
+
     _loadBalance();
   }
 
@@ -161,6 +178,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
     final date = _selectedDateTime ?? DateTime.now();
     final item = MyData(
+      id: widget.existingItem?.id,
       amount: amount,
       moneyType: 'transfer',
       moneyList: _transferFrom,
@@ -169,10 +187,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
       title: 'Money Position',
     );
 
-    await DatabaseHelper.instance.insertData(item);
+    if (widget.existingItem == null) {
+      await DatabaseHelper.instance.insertData(item);
+    } else {
+      await DatabaseHelper.instance.updateData(item);
+    }
 
     if (!mounted) return;
-    _showSuccessSnackBar(loc.transferSuccess);
+    _showSuccessSnackBar(
+      widget.existingItem == null ? loc.transferSuccess : loc.updatedSuccess,
+    );
     _closeAfterSave();
   }
 
@@ -195,6 +219,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
     final date = _selectedDateTime ?? DateTime.now();
     final item = MyData(
+      id: widget.existingItem?.id,
       amount: amount,
       moneyType: _isIncome ? 'income' : 'expense',
       moneyList: _wallet,
@@ -203,10 +228,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
       title: _note.isNotEmpty ? _note : 'Anonymous',
     );
 
-    await DatabaseHelper.instance.insertData(item);
+    if (widget.existingItem == null) {
+      await DatabaseHelper.instance.insertData(item);
+    } else {
+      await DatabaseHelper.instance.updateData(item);
+    }
 
     if (!mounted) return;
-    _showSuccessSnackBar(loc.addedSuccess);
+    _showSuccessSnackBar(
+      widget.existingItem == null ? loc.addedSuccess : loc.updatedSuccess,
+    );
     _closeAfterSave();
   }
 
@@ -320,6 +351,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       children: [
                         // ────────── Amount input ──────────
                         TransactionAmount(
+                          initialValue: _amount.isEmpty ? null : _amount,
                           onChanged: (value) {
                             setState(() {
                               _amount = value ?? '';
@@ -428,6 +460,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       children: [
                         // Amount input
                         TransactionAmount(
+                          initialValue: _amount.isEmpty ? null : _amount,
                           onChanged: (value) {
                             setState(() {
                               _amount = value ?? '';
@@ -455,11 +488,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         SizedBox(height: 18.h),
 
                         // Note input
-                        TransactionNote(onChanged: (value) => _note = value),
+                        TransactionNote(
+                          initialValue: _note.isEmpty ? null : _note,
+                          onChanged: (value) => _note = value,
+                        ),
                         SizedBox(height: 18.h),
 
                         // Wallet selection
                         TransactionWallwt(
+                          initialWallet: _wallet,
                           onChanged: (value) => _wallet = value,
                         ),
                         SizedBox(height: 18.h),
@@ -483,6 +520,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                 ],
                               )
                             : TransactionCategory(
+                                initialCategory: _category,
                                 onChanged: (value) => _category = value,
                               ),
                       ],

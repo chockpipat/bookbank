@@ -49,7 +49,7 @@ class _RecordListItemState extends State<RecordListItem> {
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     if (widget.isMultiSelectMode) return;
     setState(() {
-      _dragExtent = (_dragExtent - details.delta.dx / _actionsWidth).clamp(
+      _dragExtent = (_dragExtent - details.delta.dx / _actionsWidth.w).clamp(
         0.0,
         1.0,
       );
