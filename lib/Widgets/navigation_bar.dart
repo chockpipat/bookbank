@@ -1,16 +1,17 @@
 // ────────── Package Imports ──────────
-import 'package:bookbank/core/localization/localization_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Widgets ──────────
 import 'package:bookbank/features/home/home_screen.dart';
-import 'package:bookbank/features/add_transaction/add_transaction_screen.dart';
 import 'package:bookbank/features/dashboard/dashboard_screen.dart';
 import 'package:bookbank/features/records/record_screen.dart';
 import 'package:bookbank/features/notebook/noteBook_screen.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:provider/provider.dart';
+import 'package:bookbank/features/setting/setting_screen.dart';
 
 // ────────── Stateful Widget ──────────
 class HomePage extends StatefulWidget {
@@ -30,9 +31,9 @@ class _HomePageState extends State<HomePage> {
   List<Widget> get pages => [
     HomeScreen(key: _homeKey),
     RecordScreen(key: _recordKey),
-    const AddTransactionScreen(),
-    ChartScreen(),
-    NoteBookScreen(),
+    const ChartScreen(),
+    const NoteBookScreen(),
+    const SettingScreen(),
   ];
 
   // ────────── Build navigation item ──────────
@@ -146,12 +147,12 @@ class _HomePageState extends State<HomePage> {
                       _buildNavItem(0, LucideIcons.house, loc.home),
                       _buildNavItem(1, LucideIcons.layoutList, loc.record),
                       _buildNavItem(
-                        3,
+                        2,
                         LucideIcons.chartNoAxesCombined,
                         loc.charts,
                       ),
-                      _buildNavItem(4, LucideIcons.notepadText, loc.notes),
-                      _buildNavItem(2, LucideIcons.settings, loc.settings),
+                      _buildNavItem(3, LucideIcons.notepadText, loc.notes),
+                      _buildNavItem(4, LucideIcons.settings, loc.settings),
                     ],
                   ),
                 ),

@@ -131,6 +131,9 @@ class AppLocalizations {
       'category_entertainment': 'Entertainment',
       'category_bills': 'Bills',
 
+      // Settings
+      
+
       // Group settings
       'icon': 'Icon',
       'color': 'Color',
