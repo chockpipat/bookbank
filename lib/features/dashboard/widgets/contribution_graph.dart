@@ -32,26 +32,34 @@ class _ContributionGraphState extends State<ContributionGraph> {
   int _selectedYear = DateTime.now().year;
   bool _yearPickedByUser = false;
 
-  int get _latestTransactionYear {
+  static bool _isDisplayable(MyData transaction) {
+    final type = transaction.moneyType;
+    return type == 'income' || type == 'expense';
+  }
+
+  int? get _latestDataYear {
     int? year;
     for (final transaction in widget.transactions) {
+      if (!_isDisplayable(transaction)) continue;
       final date = _parseDate(transaction);
       if (date != null && (year == null || date.year > year)) {
         year = date.year;
       }
     }
-    return year ?? DateTime.now().year;
+    return year;
   }
 
   int get _displayYear =>
-      _yearPickedByUser ? _selectedYear : _latestTransactionYear;
+      _yearPickedByUser
+          ? _selectedYear
+          : (_latestDataYear ?? DateTime.now().year);
 
   @override
   void didUpdateWidget(covariant ContributionGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (!_yearPickedByUser) {
-      _selectedYear = _latestTransactionYear;
+      _selectedYear = _latestDataYear ?? DateTime.now().year;
       return;
     }
 
@@ -79,6 +87,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
   int get _minYear {
     var year = DateTime.now().year;
     for (final transaction in widget.transactions) {
+      if (!_isDisplayable(transaction)) continue;
       final date = _parseDate(transaction);
       if (date != null && date.year < year) year = date.year;
     }
@@ -88,6 +97,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
   int get _maxYear {
     var year = DateTime.now().year;
     for (final transaction in widget.transactions) {
+      if (!_isDisplayable(transaction)) continue;
       final date = _parseDate(transaction);
       if (date != null && date.year > year) year = date.year;
     }
@@ -106,8 +116,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
     final totals = <DateTime, _DayTotals>{};
 
     for (final transaction in widget.transactions) {
-      final type = transaction.moneyType;
-      if (type != 'income' && type != 'expense') continue;
+      if (!_isDisplayable(transaction)) continue;
 
       final date = _parseDate(transaction);
       if (date == null || date.year != year) continue;
@@ -115,7 +124,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
       final day = DateTime(date.year, date.month, date.day);
       final entry = totals.putIfAbsent(day, () => _DayTotals());
 
-      if (type == 'income') {
+      if (transaction.moneyType == 'income') {
         entry.income += transaction.amount.toDouble();
       } else {
         entry.expense += transaction.amount.toDouble();

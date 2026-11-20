@@ -62,19 +62,41 @@ class settingMenuItem {
               ],
             ),
           )
-        : TextButton.icon(
-            onPressed: onTap,
-            style: TextButton.styleFrom(
-              foregroundColor: title == 'Delete Data' ? Colors.red : theme.colorScheme.onSurface,
-              minimumSize: Size(double.infinity, 50.h),
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.all(16.w),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
+        : Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            child: InkWell(
+              onTap: onTap,
+              child: Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: 16.sp,
+                    color: title == 'Delete Data'
+                        ? Colors.red
+                        : theme.colorScheme.onSurface,
+                  ),
+                  SizedBox(width: 7.w),
+
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: title == 'Delete Data'
+                          ? Colors.red
+                          : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  Spacer(),
+
+                  if (title != 'Delete Data')
+                    Icon(
+                      Icons.chevron_right,
+                      size: 18.sp,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                ],
               ),
             ),
-            label: Text(title, style: TextStyle(fontSize: 12.sp)),
-            icon: Icon(icon, size: 16.sp),
           );
   }
 }
@@ -211,10 +233,16 @@ class _SettingScreenState extends State<SettingScreen> {
                     onTap: () {},
                   ).build(context),
 
+                  const Divider(color: Colors.grey),
+
                   settingMenuItem(
                     title: 'Delete Data',
                     icon: LucideIcons.trash,
-                    onTap: () {},
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Delete Data')),
+                      );
+                    },
                   ).build(context),
                 ],
               ),

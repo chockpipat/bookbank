@@ -1,10 +1,12 @@
 // ────────── Packages & Providers ──────────
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:provider/provider.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:bookbank/features/onboarding/providers/onboarding_provider.dart';
 
 // ────────── Theme & Localization ──────────
@@ -17,6 +19,14 @@ import 'package:bookbank/features/notebook/providers/note_provider.dart';
 import 'package:bookbank/features/onboarding/onboarding_page_1.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // initialize database factory for desktop platforms
+  if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
   runApp(const MyApp());
 }
 
@@ -25,7 +35,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return ScreenUtilInit(
       designSize: const Size(375, 812),

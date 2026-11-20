@@ -84,8 +84,16 @@ class _RecordListItemState extends State<RecordListItem> {
           onTap?.call();
         },
         child: Container(
-          color: color.withValues(alpha: 0.15),
           alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: label == 'Delete'
+                ? BorderRadius.only(
+                    topRight: Radius.circular(14.r),
+                    bottomRight: Radius.circular(14.r),
+                  )
+                : null,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -180,6 +188,7 @@ class _RecordListItemState extends State<RecordListItem> {
                 _formatHeaderDate(item.date),
                 style: TextStyle(fontSize: 12.sp),
               ),
+            SizedBox(height: 4.h),
 
             // ────────── Card with swipe actions ──────────
             ClipRRect(
@@ -193,6 +202,7 @@ class _RecordListItemState extends State<RecordListItem> {
                         alignment: Alignment.centerRight,
                         child: SizedBox(
                           width: _actionsWidth.w,
+                          height: 90.h,
                           child: Row(
                             children: [
                               // Edit (not available for transfers)
@@ -228,6 +238,7 @@ class _RecordListItemState extends State<RecordListItem> {
                       offset: Offset(-_dragExtent * _actionsWidth.w, 0),
                       child: Container(
                         width: double.infinity,
+                        margin: EdgeInsets.only(bottom: 4.h),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14.r),
                           color: widget.isSelected
@@ -374,7 +385,7 @@ class _RecordListItemState extends State<RecordListItem> {
       ),
       child: Flexible(
         child: Text(
-          label,
+          label.isNotEmpty ? label : 'N/A',
           style: TextStyle(fontSize: 11.sp, color: theme.colorScheme.onSurface),
           overflow: TextOverflow.ellipsis,
         ),

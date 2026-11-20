@@ -291,7 +291,7 @@ class _RecordScreenState extends State<RecordScreen> {
           body: LayoutBuilder(
             builder: (context, constraints) {
               return Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 40.h, 20.w, 130.h),
+                padding: EdgeInsets.fromLTRB(20.w, 40.h, 20.w, 100.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
