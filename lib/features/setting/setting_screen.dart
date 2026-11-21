@@ -27,7 +27,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 // ────────── Setting Menu Item ──────────
-class settingMenuItem {
+class SettingMenuItem {
   final String title;
   final IconData icon;
   final VoidCallback? onTap;
@@ -35,10 +35,10 @@ class settingMenuItem {
   bool switchValue = false;
   String? showData;
 
-  settingMenuItem({
+  SettingMenuItem({
     required this.title,
     required this.icon,
-    required this.onTap,
+    this.onTap,
     this.onSwitchChanged,
     this.switchValue = false,
     this.showData,
@@ -46,6 +46,7 @@ class settingMenuItem {
 
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = context.read<LocalizationProvider>().loc;
 
     return onSwitchChanged != null
         ? Padding(
@@ -69,7 +70,7 @@ class settingMenuItem {
                   child: Switch(
                     value: switchValue,
                     onChanged: onSwitchChanged,
-                    activeThumbColor: theme.colorScheme.onSurface,
+                    activeThumbColor: theme.colorScheme.primary,
                   ),
                 ),
               ],
@@ -84,7 +85,7 @@ class settingMenuItem {
                   Icon(
                     icon,
                     size: 16.sp,
-                    color: title == 'Delete Data'
+                    color: title == loc.deleteData
                         ? Colors.red
                         : theme.colorScheme.onSurface,
                   ),
@@ -94,7 +95,7 @@ class settingMenuItem {
                     title,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: title == 'Delete Data'
+                      color: title == loc.deleteData
                           ? Colors.red
                           : theme.colorScheme.onSurface,
                     ),
@@ -106,16 +107,16 @@ class settingMenuItem {
                       showData!,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: theme.colorScheme.onSurface,
+                        color: theme.colorScheme.outline,
                       ),
                     ),
                   SizedBox(width: 8.w),
 
-                  if (title != 'Delete Data')
+                  if (title != loc.downloadData && title != loc.deleteData)
                     Icon(
                       Icons.chevron_right,
                       size: 18.sp,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      color: theme.colorScheme.outline,
                     ),
                 ],
               ),
@@ -185,192 +186,200 @@ class _SettingScreenState extends State<SettingScreen> {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20.w, 40.h, 20.w, 115.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ────────── Header ──────────
-            Row(
-              children: [
-                Icon(
-                  LucideIcons.settings,
-                  size: 24.sp,
-                  color: theme.colorScheme.onSurface,
-                ),
-                SizedBox(width: 12.w),
+        padding: EdgeInsets.fromLTRB(20.w, 40.h, 20.w, 100.h),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ────────── Header ──────────
+              Row(
+                children: [
+                  Icon(
+                    LucideIcons.settings,
+                    size: 24.sp,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  SizedBox(width: 12.w),
 
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      loc.settings,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontSize: AppSize.l.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    Text(
-                      loc.viewStats,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontSize: AppSize.xs.sp,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        loc.settings,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontSize: AppSize.l.sp,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
+
+                      Text(
+                        loc.settingsSubtitle,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: AppSize.xs.sp,
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+
+              // ────────── General Settings ──────────
+              SettingBackingClasses.settingMenuItem(
+                context: context,
+                title: loc.generalSettings,
+                child: Column(
+                  children: [
+                    SettingMenuItem(
+                      title: loc.editGroup,
+                      icon: LucideIcons.folderEdit,
+                      showData:
+                          '${context.watch<GroupSettingsProvider>().groupSettings.length}',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditGroupSgreen(),
+                          ),
+                        );
+                      },
+                    ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.darkTheme,
+                      icon: LucideIcons.moon,
+                      onTap: () {},
+                      switchValue: context.watch<ThemeProvider>().isDarkMode,
+                      onSwitchChanged: (_) =>
+                          context.read<ThemeProvider>().toggleTheme(),
+                    ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.changeLanguage,
+                      icon: LucideIcons.globe,
+                      showData: locProvider.language.label,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LanguageSettingScreen(),
+                          ),
+                        );
+                      },
+                    ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.changeCurrency,
+                      icon: LucideIcons.circleDollarSign,
+                      showData: locProvider.currency.code,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CurrencySettingScreen(),
+                          ),
+                        );
+                      },
+                    ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.manageNotes,
+                      icon: LucideIcons.bookOpen,
+                      showData: '$_quickNotesCount',
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ManageNotesScreen(),
+                          ),
+                        );
+                        _loadQuickNotesCount();
+                      },
+                    ).build(context),
                   ],
                 ),
-              ],
-            ),
-            SizedBox(height: 20.h),
-
-            // ────────── General Settings ──────────
-            SettingBackingClasses.settingMenuItem(
-              context: context,
-              title: loc.categoryGeneral,
-              child: Column(
-                children: [
-                  settingMenuItem(
-                    title: loc.editGroup,
-                    icon: LucideIcons.folderEdit,
-                    showData:
-                        '${context.watch<GroupSettingsProvider>().groupSettings.length}',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const EditGroupSgreen(),
-                        ),
-                      );
-                    },
-                  ).build(context),
-
-                  settingMenuItem(
-                    title: loc.darkTheme,
-                    icon: LucideIcons.moon,
-                    onTap: () {},
-                    switchValue: context.watch<ThemeProvider>().isDarkMode,
-                    onSwitchChanged: (_) =>
-                        context.read<ThemeProvider>().toggleTheme(),
-                  ).build(context),
-
-                  settingMenuItem(
-                    title: loc.changeLanguage,
-                    icon: LucideIcons.globe,
-                    showData: locProvider.language.label,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LanguageSettingScreen(),
-                        ),
-                      );
-                    },
-                  ).build(context),
-
-                  settingMenuItem(
-                    title: loc.changeCurrency,
-                    icon: LucideIcons.circleDollarSign,
-                    showData: locProvider.currency.code,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CurrencySettingScreen(),
-                        ),
-                      );
-                    },
-                  ).build(context),
-
-                  settingMenuItem(
-                    title: loc.manageNotes,
-                    icon: LucideIcons.bookOpen,
-                    showData: '$_quickNotesCount',
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ManageNotesScreen(),
-                        ),
-                      );
-                      _loadQuickNotesCount();
-                    },
-                  ).build(context),
-                ],
               ),
-            ),
-            SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
 
-            // ────────── Test Scan Settings ──────────
-            SettingBackingClasses.settingMenuItem(
-              context: context,
-              title: 'test Scan settings',
-              child: Column(
-                children: [
-                  settingMenuItem(
-                    title: 'test Scan Settings',
-                    icon: LucideIcons.scan,
-                    onTap: () {},
-                  ).build(context),
+              // ────────── Test Scan Settings ──────────
+              SettingBackingClasses.settingMenuItem(
+                context: context,
+                title: loc.scanSettings,
+                child: Column(
+                  children: [
+                    SettingMenuItem(
+                      title: loc.scanSettingsTitle,
+                      icon: LucideIcons.scan,
+                    ).build(context),
 
-                  settingMenuItem(
-                    title: 'test Scan notification',
-                    icon: LucideIcons.bell,
-                    onTap: () {},
-                  ).build(context),
-                ],
+                    SettingMenuItem(
+                      title: loc.scanNotification,
+                      icon: LucideIcons.bell,
+                      switchValue: context.watch<ThemeProvider>().isDarkMode,
+                      onSwitchChanged: (_) =>
+                          context.read<ThemeProvider>().toggleTheme(),
+                    ).build(context),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 20.h),
+              SizedBox(height: 20.h),
 
-            // ────────── Info ──────────
-            SettingBackingClasses.settingMenuItem(
-              context: context,
-              title: 'Info',
-              child: Column(
-                children: [
-                  settingMenuItem(
-                    title: loc.about,
-                    icon: LucideIcons.info,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AboutSgreen(),
-                        ),
-                      );
-                    },
-                  ).build(context),
+              // ────────── Info ──────────
+              SettingBackingClasses.settingMenuItem(
+                context: context,
+                title: loc.additionalSettings,
+                child: Column(
+                  children: [
+                    SettingMenuItem(
+                      title: loc.about,
+                      icon: LucideIcons.info,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AboutSgreen(),
+                          ),
+                        );
+                      },
+                    ).build(context),
 
-                  settingMenuItem(
-                    title: loc.privacyPolicy,
-                    icon: LucideIcons.fileText,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PrivacyPolicyDialog(),
-                        ),
-                      );
-                    },
-                  ).build(context),
+                    SettingMenuItem(
+                      title: loc.privacyPolicy,
+                      icon: LucideIcons.fileText,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicyDialog(),
+                          ),
+                        );
+                      },
+                    ).build(context),
 
-                  const Divider(color: Colors.grey),
+                    const Divider(color: Colors.grey),
 
-                  settingMenuItem(
-                    title: 'Delete Data',
-                    icon: LucideIcons.trash,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Delete Data')),
-                      );
-                    },
-                  ).build(context),
-                ],
+                    SettingMenuItem(
+                      title: loc.downloadData,
+                      icon: LucideIcons.download,
+                    ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.deleteData,
+                      icon: LucideIcons.trash,
+                      onTap: () {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(loc.deleteData)));
+                      },
+                    ).build(context),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

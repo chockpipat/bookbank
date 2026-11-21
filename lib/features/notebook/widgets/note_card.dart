@@ -40,27 +40,28 @@ class NoteCard extends StatelessWidget {
         elevation: 1,
         margin: EdgeInsets.only(bottom: 12.h),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(14.r),
           side: BorderSide(
             color: isSelected
-                ? theme.colorScheme.onSurface.withValues(alpha: 0.8)
+                ? theme.colorScheme.onSurface.withValues(alpha: 0.5)
                 : note.isPinned
-                ? theme.colorScheme.onSurface.withValues(alpha: 0.8)
-                : theme.colorScheme.outline,
+                ? theme.colorScheme.onSurface.withValues(alpha: 0.5)
+                : theme.colorScheme.outlineVariant,
             width: isSelected ? 2.0 : (note.isPinned ? 1.5 : 1.0),
           ),
         ),
         color: isSelected
             ? theme.colorScheme.onSurface.withValues(alpha: 0.1)
             : theme.colorScheme.surface,
+        shadowColor: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.all(14.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header row (Color bar, Category tag, Pin, Actions)
               Row(
                 children: [
+                  // ────────── Multi-select checkbox ──────────
                   if (isMultiSelectMode) ...[
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -76,6 +77,7 @@ class NoteCard extends StatelessWidget {
                       ),
                     ),
 
+                    // ────────── Color indicator circle ──────────
                     Container(
                       width: 12.w,
                       height: 12.h,
@@ -86,6 +88,7 @@ class NoteCard extends StatelessWidget {
                     ),
                     SizedBox(width: 8.w),
 
+                    // ────────── Category tag ──────────
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.w,
@@ -110,6 +113,7 @@ class NoteCard extends StatelessWidget {
                     ),
                     const Spacer(),
                   ] else ...[
+                    // ────────── Color indicator circle ──────────
                     Container(
                       width: 12.w,
                       height: 12.h,
@@ -120,6 +124,7 @@ class NoteCard extends StatelessWidget {
                     ),
                     SizedBox(width: 8.w),
 
+                    // ────────── Category tag ──────────
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.w,
@@ -144,6 +149,7 @@ class NoteCard extends StatelessWidget {
                     ),
                     const Spacer(),
 
+                    // ────────── Pin button ──────────
                     IconButton(
                       icon: Icon(
                         note.isPinned
@@ -161,6 +167,7 @@ class NoteCard extends StatelessWidget {
                     ),
                     SizedBox(width: 4.w),
 
+                    // ────────── More options menu ──────────
                     PopupMenuButton<String>(
                       icon: Icon(
                         Icons.more_vert,
@@ -216,7 +223,7 @@ class NoteCard extends StatelessWidget {
               ),
               SizedBox(height: 10.h),
 
-              // Title
+              // ────────── Title ──────────
               Text(
                 note.title,
                 maxLines: 1,
@@ -229,7 +236,7 @@ class NoteCard extends StatelessWidget {
               ),
               SizedBox(height: 6.h),
 
-              // Content preview
+              // ────────── Content preview ──────────
               Text(
                 note.content,
                 maxLines: 3,
@@ -242,7 +249,7 @@ class NoteCard extends StatelessWidget {
               ),
               SizedBox(height: 12.h),
 
-              // Date Footer
+              // ────────── Date Footer ──────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

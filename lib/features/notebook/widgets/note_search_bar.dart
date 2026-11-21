@@ -61,7 +61,7 @@ class _NoteSearchBarState extends State<NoteSearchBar> {
                         ? theme.colorScheme.onSurface
                         : theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(50.r),
-                    border: Border.all(color: theme.colorScheme.outline),
+                    border: Border.all(color: theme.colorScheme.outlineVariant),
                   ),
                   child: Center(
                     child: Text(

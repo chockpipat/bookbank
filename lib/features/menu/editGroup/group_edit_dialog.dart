@@ -1,10 +1,15 @@
+// ────────── Packages & Providers ──────────
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:bookbank/core/theme/app_theme.dart';
-import 'package:bookbank/data/database.dart';
 import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
+
+// ────────── Theme & Localization ──────────
+import 'package:bookbank/core/theme/app_theme.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
+
+// ────────── Data ──────────
+import 'package:bookbank/data/database.dart';
 
 class GroupEditDialog extends StatefulWidget {
   final GroupSettings groupSettings;
@@ -27,6 +32,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
   late Color _selectedColor;
   late bool _savingsGoalEnabled;
 
+  // ────────── Icons ──────────
   final List<IconData> _availableIcons = [
     Icons.shopping_cart_rounded,
     Icons.home_rounded,
@@ -50,6 +56,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
     Icons.handyman_outlined,
   ];
 
+  // ────────── Colors ──────────
   final List<Color> _availableColors = [
     const Color.fromARGB(255, 2, 140, 253),
     const Color.fromARGB(255, 5, 223, 13),
@@ -63,20 +70,23 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
     Colors.amber,
   ];
 
+  // ────────── Lifecycle ──────────
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(
       text: widget.groupSettings.groupName,
     );
+
     _amountController = TextEditingController(
       text: widget.groupSettings.savingsGoalAmount.toStringAsFixed(2),
     );
-    // Find the icon from the available list that matches the codePoint
+
     _selectedIcon = _availableIcons.firstWhere(
       (icon) => icon.codePoint == widget.groupSettings.iconCodePoint,
-      orElse: () => Icons.add,
+      orElse: () => Icons.shopping_cart_rounded,
     );
+
     _selectedColor = Color(widget.groupSettings.colorValue);
     _savingsGoalEnabled = widget.groupSettings.savingsGoalEnabled;
   }
@@ -88,6 +98,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
     super.dispose();
   }
 
+  // ────────── Save ──────────
   Future<void> _saveSettings() async {
     if (_nameController.text.trim().isEmpty) return;
 
@@ -103,7 +114,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
           : 0,
     );
 
-    // Notify provider to refresh group settings across all screens
+    // ────────── Provider ──────────
     if (mounted) {
       final groupProvider = Provider.of<GroupSettingsProvider>(
         context,
@@ -155,7 +166,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
+            // ────────── Header ──────────
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -166,6 +177,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
               ],
             ),
 
+            // ────────── Title ──────────
             Text(
               widget.isNew ? '${loc.add} ${loc.group}' : loc.editGroup,
               style: TextStyle(
@@ -176,7 +188,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
             ),
             SizedBox(height: 8),
 
-            // ──────────Group Name ────────── 
+            // ────────── Category Name ──────────
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
@@ -206,6 +218,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
             // ────────── Icon Selection ──────────
             Text(loc.icon, style: TextStyle(fontSize: AppSize.xs.sp)),
             SizedBox(height: 8),
+
             SizedBox(
               height: 35,
               child: ListView.builder(
@@ -244,9 +257,10 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
             ),
             SizedBox(height: 16),
 
-            // Color Selection
+            // ────────── Color Selection ──────────
             Text(loc.color, style: TextStyle(fontSize: AppSize.xs.sp)),
             SizedBox(height: 8),
+
             SizedBox(
               height: 35,
               child: ListView.builder(
@@ -283,7 +297,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
             ),
             SizedBox(height: 16),
 
-            // Savings Goal Switch
+            // ────────── Savings Goal Switch ──────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -322,7 +336,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
             ),
             SizedBox(height: 16),
 
-            // Savings Goal Amount
+            // ────────── Savings Goal Amount ──────────
             if (_savingsGoalEnabled) ...[
               Text(
                 loc.savingsGoalAmount,
@@ -358,7 +372,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
               SizedBox(height: 16),
             ],
 
-            // Save Button
+            // ────────── Save Button ──────────
             SizedBox(
               width: double.infinity,
               height: 50,

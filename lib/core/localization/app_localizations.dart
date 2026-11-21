@@ -132,7 +132,14 @@ class AppLocalizations {
       'category_bills': 'Bills',
 
       // Settings
-      
+      'settings_subtitle': 'Settings for your app preferences',
+      'general_settings': 'General settings',
+      'scan_settings': 'Scan settings',
+      'scan_settings_title': 'Scan Settings',
+      'scan_notification': 'Scan notification',
+      'additional_settings': 'Additional settings',
+      'download_data': 'Download Data',
+      'delete_data': 'Delete Data',
 
       // Group settings
       'icon': 'Icon',
@@ -340,6 +347,16 @@ If you have any questions about this privacy policy, please contact the develope
       'category_entertainment': 'บันเทิง',
       'category_bills': 'บิล',
 
+      // Settings
+      'settings_subtitle': 'การตั้งค่าแอปของคุณ',
+      'general_settings': 'การตั้งค่าทั่วไป',
+      'scan_settings': 'การตั้งค่าการสแกน',
+      'scan_settings_title': 'การตั้งค่าการสแกน',
+      'scan_notification': 'การแจ้งเตือนการสแกน',
+      'additional_settings': 'การตั้งค่าเพิ่มเติม',
+      'download_data': 'ดาวน์โหลดข้อมูล',
+      'delete_data': 'ลบข้อมูล',
+
       // Group settings
       'icon': 'ไอคอน',
       'color': 'สี',
@@ -544,6 +561,16 @@ If you have any questions about this privacy policy, please contact the develope
       'category_shopping': '购物',
       'category_entertainment': '娱乐',
       'category_bills': '账单',
+
+      // Settings
+      'settings_subtitle': '您的应用偏好设置',
+      'general_settings': '常规设置',
+      'scan_settings': '扫描设置',
+      'scan_settings_title': '扫描设置',
+      'scan_notification': '扫描通知',
+      'additional_settings': '附加设置',
+      'download_data': '下载数据',
+      'delete_data': '删除数据',
 
       // Group settings
       'icon': '图标',
@@ -754,6 +781,16 @@ If you have any questions about this privacy policy, please contact the develope
   String get categoryShopping => translate('category_shopping');
   String get categoryEntertainment => translate('category_entertainment');
   String get categoryBills => translate('category_bills');
+
+  // Settings
+  String get settingsSubtitle => translate('settings_subtitle');
+  String get generalSettings => translate('general_settings');
+  String get scanSettings => translate('scan_settings');
+  String get scanSettingsTitle => translate('scan_settings_title');
+  String get scanNotification => translate('scan_notification');
+  String get additionalSettings => translate('additional_settings');
+  String get downloadData => translate('download_data');
+  String get deleteData => translate('delete_data');
 
   // Group settings
   String get icon => translate('icon');

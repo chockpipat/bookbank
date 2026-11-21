@@ -66,9 +66,10 @@ class AppTheme {
         surfaceContainerHighest: AppColors.white,
         surfaceDim: AppColors.grey,
         outlineVariant: AppColors.grey,
-        outline: AppColors.mediumGrey,
+        outline: AppColors.black.withValues(alpha: 0.5),
         surfaceBright: AppColors.charcoal,
         surfaceContainer: AppColors.grey,
+        primary: Colors.blue,
       ),
     );
   }
@@ -86,6 +87,7 @@ class AppTheme {
         outline: AppColors.mediumGrey, // line && description
         surfaceBright: AppColors.charcoal, // navigation bar
         surfaceContainer: AppColors.card, // card
+        primary: Colors.blue,
       ),
     );
   }

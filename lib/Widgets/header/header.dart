@@ -7,16 +7,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 // ────────── localization ──────────
 import 'package:bookbank/core/localization/localization_provider.dart';
 
-// ────────── Widgets ──────────
-import 'package:bookbank/features/menu/editGroup/editGroup_sgreen.dart';
-import 'package:bookbank/features/menu/about/about_sgreen.dart';
-
-// ────────── Header Components ──────────
-import 'menu_row.dart';
-import 'dark_theme_row.dart';
-import 'expandable_menu_item.dart';
-import 'sub_menu_item.dart';
-
 // ────────── Header Widget ──────────
 class Header extends StatelessWidget {
   const Header({super.key});
@@ -82,74 +72,6 @@ class Header extends StatelessWidget {
                       ),
                       icon: Icon(LucideIcons.bell, size: 18.sp),
                     ),
-
-                    // ────────── Popup menu button ──────────
-                    PopupMenuButton<String>(
-                      icon: Icon(Icons.menu, size: 20.sp),
-                      offset: Offset(70.w, 50.h),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                          theme.colorScheme.surface,
-                        ),
-                        side: WidgetStatePropertyAll(
-                          BorderSide(color: theme.colorScheme.outlineVariant),
-                        ),
-                      ),
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        side: BorderSide(
-                          color: theme.colorScheme.outline,
-                        ),
-                      ),
-
-                      // Menu item selection handler
-                      onSelected: (String value) {
-                        if (value == 'edit_group') {
-                          showDialog(
-                            context: context,
-                            builder: (context) =>
-                                Dialog(child: EditGroupSgreen()),
-                          );
-                        } else if (value == 'about') {
-                          showDialog(
-                            context: context,
-                            builder: (context) => Dialog(child: AboutSgreen()),
-                          );
-                        }
-                      },
-
-                      // ────────── Menu items ──────────
-                      itemBuilder: (BuildContext context) => [
-                        // Edit Category
-                        PopupMenuItem<String>(
-                          value: 'edit_group',
-                          child: MenuRow(
-                            icon: Icons.edit,
-                            label: loc.editGroup,
-                          ),
-                        ),
-
-                        // Dark Theme
-                        PopupMenuItem<String>(
-                          enabled: false, // handled by Switch inside
-                          padding: EdgeInsets.zero,
-                          child: DarkThemeRow(label: loc.darkTheme),
-                        ),
-
-                        // Change Language
-                        _buildLanguageItem(context, loc, locProvider, theme),
-
-                        // Change Currency
-                        _buildCurrencyItem(context, loc, locProvider, theme),
-
-                        // About
-                        PopupMenuItem<String>(
-                          value: 'about',
-                          child: MenuRow(icon: Icons.info, label: loc.about),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ],
@@ -157,72 +79,6 @@ class Header extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  // ────────── Language submenu popup item ──────────
-  PopupMenuItem<String> _buildLanguageItem(
-    BuildContext context,
-    dynamic loc,
-    LocalizationProvider locProvider,
-    ThemeData theme,
-  ) {
-    return PopupMenuItem<String>(
-      enabled: false,
-      padding: EdgeInsets.zero,
-      child: ExpandableMenuItem(
-        icon: Icons.language,
-        label: loc.changeLanguage,
-        badge: '${locProvider.language.flag} ${locProvider.language.label}',
-        theme: theme,
-
-        // Language options
-        children: AppLanguage.values.map((lang) {
-          final isSelected = locProvider.language == lang;
-          return SubMenuItem(
-            flag: lang.flag,
-            label: lang.label,
-            isSelected: isSelected,
-            theme: theme,
-            onTap: () {
-              locProvider.setLanguage(lang);
-              Navigator.of(context).pop();
-            },
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  // ────────── Currency submenu popup item ──────────
-  PopupMenuItem<String> _buildCurrencyItem(
-    BuildContext context,
-    dynamic loc,
-    LocalizationProvider locProvider,
-    ThemeData theme,
-  ) {
-    return PopupMenuItem<String>(
-      enabled: false,
-      padding: EdgeInsets.zero,
-      child: ExpandableMenuItem(
-        icon: Icons.currency_exchange,
-        label: loc.changeCurrency,
-        badge: '${locProvider.currency.symbol} ${locProvider.currency.code}',
-        theme: theme,
-        children: AppCurrency.values.map((curr) {
-          final isSelected = locProvider.currency == curr;
-          return SubMenuItem(
-            flag: curr.symbol,
-            label: '${curr.label} (${curr.code})',
-            isSelected: isSelected,
-            theme: theme,
-            onTap: () {
-              locProvider.setCurrency(curr);
-              Navigator.of(context).pop();
-            },
-          );
-        }).toList(),
-      ),
     );
   }
 }

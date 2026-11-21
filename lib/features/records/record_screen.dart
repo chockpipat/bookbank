@@ -131,8 +131,7 @@ class _RecordScreenState extends State<RecordScreen> {
         ).toLowerCase();
         final groupName =
             groupProvider.getGroupSettings(item.moneyGroup)?.groupName ?? '';
-        return name.contains(query) ||
-            groupName.toLowerCase().contains(query);
+        return name.contains(query) || groupName.toLowerCase().contains(query);
       }).toList();
     }
 
@@ -208,10 +207,7 @@ class _RecordScreenState extends State<RecordScreen> {
 
   // ────────── Single Record Deletion ──────────
   Future<void> _deleteRecord(MyData item) async {
-    final loc = Provider.of<LocalizationProvider>(
-      context,
-      listen: false,
-    ).loc;
+    final loc = Provider.of<LocalizationProvider>(context, listen: false).loc;
 
     final confirmed = await showDialog<bool>(
       context: context,
@@ -460,7 +456,7 @@ class _RecordScreenState extends State<RecordScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 16.w),
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: theme.colorScheme.outline,
+                                  color: theme.colorScheme.outlineVariant,
                                 ),
                                 borderRadius: BorderRadius.circular(50.r),
                                 color: theme.colorScheme.surface,

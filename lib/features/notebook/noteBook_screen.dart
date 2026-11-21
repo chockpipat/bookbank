@@ -210,8 +210,8 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
       context: context,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
-          side: BorderSide(color: theme.colorScheme.onSurfaceVariant),
+          borderRadius: BorderRadius.circular(14.r),
+          side: BorderSide(color: theme.colorScheme.outline),
         ),
         child: Container(
           padding: EdgeInsets.all(20.w),
@@ -383,7 +383,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
       // ────────── Body Content ──────────
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+          padding: EdgeInsets.fromLTRB(20.w, 40.h, 20.w, 100.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -435,7 +435,9 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: theme.colorScheme.outline),
+                      border: Border.all(
+                        color: theme.colorScheme.outlineVariant,
+                      ),
                     ),
                     child: Text(
                       '${filteredNotes.length} ${loc.items}',

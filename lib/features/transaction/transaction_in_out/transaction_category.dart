@@ -10,11 +10,7 @@ class TransactionCategory extends StatefulWidget {
   final ValueChanged<String?>? onChanged;
   final String? initialCategory;
 
-  const TransactionCategory({
-    super.key,
-    this.onChanged,
-    this.initialCategory,
-  });
+  const TransactionCategory({super.key, this.onChanged, this.initialCategory});
 
   @override
   State<TransactionCategory> createState() => _TransactionCategoryState();
@@ -38,22 +34,33 @@ class _CategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: 44.w,
-        height: 44.h,
+        width: 100.w,
+        height: 70.h,
         decoration: BoxDecoration(
           color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(
-            color: isSelected ? color : theme.colorScheme.onSurfaceVariant,
+            color: isSelected ? color : Colors.transparent,
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: Icon(icon, color: color, size: 20.sp),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 20.sp),
+            SizedBox(height: 4.h),
+
+            Text(
+              categoryName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: color, fontSize: 12.sp),
+            ),
+          ],
+        ),
       ),
     );
   }
