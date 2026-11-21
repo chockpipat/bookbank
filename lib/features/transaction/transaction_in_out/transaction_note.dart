@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 import 'package:bookbank/data/database.dart';
 import 'package:bookbank/data/db_helper.dart';
-import 'package:bookbank/features/transaction/transaction_in_out/manage_notes_screen.dart';
+import 'package:bookbank/features/setting/widgets/manage_notes_screen.dart';
 
 // ────────── Transaction Note Widget ──────────
 class TransactionNote extends StatefulWidget {

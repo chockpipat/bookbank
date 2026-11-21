@@ -437,10 +437,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // Edit Category Button
                                 FilledButton.icon(
                                   onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          Dialog(child: EditGroupSgreen()),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const EditGroupSgreen(),
+                                      ),
                                     );
                                   },
                                   style: FilledButton.styleFrom(
@@ -455,7 +457,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     loc.editGroup,
                                     style: TextStyle(fontSize: 12.sp),
                                   ),
-                                  icon: Icon(LucideIcons.edit, size: 16.sp),
+                                  icon: Icon(
+                                    LucideIcons.folderEdit,
+                                    size: 16.sp,
+                                  ),
                                 ),
                               ],
                             ),
@@ -531,10 +536,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                     FilledButton.icon(
                                       onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              Dialog(child: EditGroupSgreen()),
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EditGroupSgreen(),
+                                          ),
                                         );
                                       },
                                       style: FilledButton.styleFrom(

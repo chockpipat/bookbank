@@ -1,10 +1,10 @@
 // ────────── Packages ──────────
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 // ────────── Theme & Localization ──────────
-import 'package:bookbank/core/theme/app_theme.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Database ──────────
@@ -124,139 +124,88 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = context.watch<LocalizationProvider>().loc;
-    return Container(
-      width: 400,
-      constraints: BoxConstraints(maxHeight: 500),
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: theme.colorScheme.surfaceDim),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ────────── Dialog Title ──────────
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.edit, size: AppSize.l),
-              SizedBox(width: 8),
-              Text(loc.editGroup, style: TextStyle(fontSize: 14.sp)),
-            ],
-          ),
-          SizedBox(height: 16),
 
-          // ────────── Category List ──────────
-          if (_isLoading)
-            Center(child: CircularProgressIndicator())
-          else if (_hasError)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 26.h),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: theme.colorScheme.surface,
+        foregroundColor: theme.colorScheme.onSurface,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(LucideIcons.chevronLeft, size: 28.sp),
+        ),
+        title: Text(
+          loc.editGroup,
+          style: TextStyle(fontSize: 14.sp),
+        ),
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _hasError
+          ? Center(
               child: Haserror(loadData: _loadGroupSettings),
             )
-          else
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _groupSettings.length,
-                itemBuilder: (context, index) {
-                  final group = _groupSettings[index];
-                  return Container(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border(
-                        bottom: index == _groupSettings.length - 1
-                            ? BorderSide.none
-                            : BorderSide(
-                                color: AppColors.grey.withValues(alpha: 0.3),
-                                width: 1,
-                              ),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        // Icon
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Color(group.colorValue)),
-                            color: Color(
-                              group.colorValue,
-                            ).withValues(alpha: 0.3),
-                          ),
-                          child: Icon(
-                            _getIconFromCodePoint(group.iconCodePoint),
-                            color: Color(group.colorValue),
-                            size: 18,
-                          ),
-                        ),
-                        SizedBox(width: 16),
-
-                        // Category Name
-                        Expanded(
-                          child: Text(
-                            group.groupName,
-                            style: TextStyle(
-                              fontSize: AppSize.m,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-
-                        // Edit Button
-                        IconButton(
-                          icon: Icon(Icons.edit, color: AppColors.grey),
-                          onPressed: () => _editGroup(group),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          const SizedBox(height: 16),
-
-          // ────────── Add Category Button ──────────
-          SizedBox(
-            width: double.infinity,
-            height: 50.h,
-            child: OutlinedButton.icon(
-              onPressed: _addGroup,
-              icon: Icon(Icons.add, size: 18.sp),
-              label: Text(loc.addCategory),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: theme.colorScheme.onSurface,
-                side: BorderSide(color: theme.colorScheme.onSurfaceVariant),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7.r),
+          : _groupSettings.isEmpty
+          ? Center(
+              child: Text(
+                loc.noCategory,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
+            )
+          : ListView.builder(
+              padding: EdgeInsets.fromLTRB(20.w, 15.h, 20.w, 100.h),
+              itemCount: _groupSettings.length,
+              itemBuilder: (context, index) {
+                final group = _groupSettings[index];
+                final groupColor = Color(group.colorValue);
+                return Container(
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                  margin: EdgeInsets.only(bottom: 8.h),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: groupColor),
+                        color: groupColor.withValues(alpha: 0.3),
+                      ),
+                      child: Icon(
+                        _getIconFromCodePoint(group.iconCodePoint),
+                        color: groupColor,
+                        size: 18,
+                      ),
+                    ),
+                    title: Text(
+                      group.groupName,
+                      style: TextStyle(fontSize: 12.sp),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () => _editGroup(group),
+                      icon: Icon(
+                        LucideIcons.pencil,
+                        size: 18.sp,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
-          const SizedBox(height: 8),
-
-          // ────────── Cancel Button ──────────
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: TextButton.styleFrom(
-              minimumSize: Size(double.infinity, 50.h),
-              foregroundColor: theme.scaffoldBackgroundColor,
-              backgroundColor: theme.colorScheme.onSurface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7.r),
-              ),
-            ),
-            child: Text(loc.cancel),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addGroup,
+        backgroundColor: theme.colorScheme.onSurface,
+        foregroundColor: theme.colorScheme.surface,
+        child: Icon(LucideIcons.plus, size: 24.sp),
       ),
     );
   }

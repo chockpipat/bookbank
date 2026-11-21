@@ -15,10 +15,10 @@ import 'package:bookbank/data/db_helper.dart';
 import 'package:bookbank/utils/calculations.dart';
 
 // ────────── Widgets ──────────
-import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_amount.dart';
-import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_note.dart';
-import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_wallwt.dart';
-import 'package:bookbank/features/transaction/transaction_in_out/widgets/transaction_category.dart';
+import 'package:bookbank/features/transaction/transaction_in_out/transaction_amount.dart';
+import 'package:bookbank/features/transaction/transaction_in_out/transaction_note.dart';
+import 'package:bookbank/features/transaction/transaction_in_out/transaction_wallwt.dart';
+import 'package:bookbank/features/transaction/transaction_in_out/transaction_category.dart';
 import 'package:bookbank/Widgets/hasError.dart';
 
 class TransactionScreen extends StatefulWidget {

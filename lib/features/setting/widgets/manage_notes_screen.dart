@@ -52,9 +52,7 @@ class _ManageNotesScreenState extends State<ManageNotesScreen> {
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: InputDecoration(
-            hintText: loc.enterQuickNote,
-          ),
+          decoration: InputDecoration(hintText: loc.enterQuickNote),
           onSubmitted: (_) => Navigator.pop(dialogContext, true),
         ),
         actions: [
@@ -105,10 +103,7 @@ class _ManageNotesScreenState extends State<ManageNotesScreen> {
           onPressed: () => Navigator.pop(context),
           icon: Icon(LucideIcons.chevronLeft, size: 28.sp),
         ),
-        title: Text(
-          loc.manageNotes,
-          style: TextStyle(fontSize: 14.sp),
-        ),
+        title: Text(loc.manageNotes, style: TextStyle(fontSize: 14.sp)),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -123,6 +118,7 @@ class _ManageNotesScreenState extends State<ManageNotesScreen> {
               ),
             )
           : ReorderableListView.builder(
+              buildDefaultDragHandles: false,
               padding: EdgeInsets.fromLTRB(20.w, 15.h, 20.w, 100.h),
               itemCount: _notes.length,
               onReorderItem: _onReorder,
@@ -130,23 +126,24 @@ class _ManageNotesScreenState extends State<ManageNotesScreen> {
                 final note = _notes[index];
                 return Container(
                   key: ValueKey(note.id),
+                  padding: EdgeInsets.symmetric(vertical: 8.h),
                   margin: EdgeInsets.only(bottom: 8.h),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: ListTile(
-                    leading: Icon(
-                      LucideIcons.gripVertical,
-                      size: 20.sp,
-                      color: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.5,
+                    leading: ReorderableDragStartListener(
+                      index: index,
+                      child: Icon(
+                        LucideIcons.gripVertical,
+                        size: 20.sp,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
                       ),
                     ),
-                    title: Text(
-                      note.note,
-                      style: TextStyle(fontSize: 12.sp),
-                    ),
+                    title: Text(note.note, style: TextStyle(fontSize: 12.sp)),
                     trailing: IconButton(
                       onPressed: () => _deleteNote(note.id!),
                       icon: Icon(
