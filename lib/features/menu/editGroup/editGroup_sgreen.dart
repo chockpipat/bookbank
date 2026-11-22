@@ -13,6 +13,7 @@ import 'package:bookbank/data/db_helper.dart';
 
 // ────────── Widgets ──────────
 import 'package:bookbank/features/menu/editGroup/group_edit_dialog.dart';
+import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
 import 'package:bookbank/Widgets/hasError.dart';
 class EditGroupSgreen extends StatefulWidget {
   const EditGroupSgreen({super.key});
@@ -97,6 +98,45 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
     }
   }
 
+  // ────────── Delete Group ──────────
+  Future<void> _deleteGroup(GroupSettings group) async {
+    final loc = Provider.of<LocalizationProvider>(context, listen: false).loc;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+        title: Text(loc.confirmDelete),
+        content: Text('${loc.delete} "${group.groupName}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(loc.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(loc.delete, style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      final groupProvider = Provider.of<GroupSettingsProvider>(
+        context,
+        listen: false,
+      );
+      await groupProvider.deleteGroupSettings(group);
+      if (!mounted) return;
+      await _loadGroupSettings();
+    }
+  }
+
   // ────────── Add Group ──────────
   Future<void> _addGroup() async {
     final result = await showDialog<bool>(
@@ -160,44 +200,12 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
               itemCount: _groupSettings.length,
               itemBuilder: (context, index) {
                 final group = _groupSettings[index];
-                final groupColor = Color(group.colorValue);
-                return Container(
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                  margin: EdgeInsets.only(bottom: 8.h),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: groupColor),
-                        color: groupColor.withValues(alpha: 0.3),
-                      ),
-                      child: Icon(
-                        _getIconFromCodePoint(group.iconCodePoint),
-                        color: groupColor,
-                        size: 18,
-                      ),
-                    ),
-                    title: Text(
-                      group.groupName,
-                      style: TextStyle(fontSize: 12.sp),
-                    ),
-                    trailing: IconButton(
-                      onPressed: () => _editGroup(group),
-                      icon: Icon(
-                        LucideIcons.pencil,
-                        size: 18.sp,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
-                    ),
-                  ),
+                return _SwipeableGroupTile(
+                  group: group,
+                  groupColor: Color(group.colorValue),
+                  icon: _getIconFromCodePoint(group.iconCodePoint),
+                  onEdit: () => _editGroup(group),
+                  onDelete: () => _deleteGroup(group),
                 );
               },
             ),
@@ -206,6 +214,176 @@ class _EditGroupSgreenState extends State<EditGroupSgreen> {
         backgroundColor: theme.colorScheme.onSurface,
         foregroundColor: theme.colorScheme.surface,
         child: Icon(LucideIcons.plus, size: 24.sp),
+      ),
+    );
+  }
+}
+
+// ────────── Swipeable Group Tile ──────────
+class _SwipeableGroupTile extends StatefulWidget {
+  const _SwipeableGroupTile({
+    required this.group,
+    required this.groupColor,
+    required this.icon,
+    this.onEdit,
+    this.onDelete,
+  });
+
+  final GroupSettings group;
+  final Color groupColor;
+  final IconData icon;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+
+  @override
+  State<_SwipeableGroupTile> createState() => _SwipeableGroupTileState();
+}
+
+class _SwipeableGroupTileState extends State<_SwipeableGroupTile> {
+  // 0 = closed, 1 = fully open
+  double _dragExtent = 0;
+  static const double _actionsWidth = 168;
+
+  // ────────── Drag Handlers ──────────
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    setState(() {
+      _dragExtent = (_dragExtent - details.delta.dx / _actionsWidth.w).clamp(
+        0.0,
+        1.0,
+      );
+    });
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    setState(() {
+      final velocity = details.velocity.pixelsPerSecond.dx;
+      _dragExtent = (_dragExtent > 0.5 || velocity < -300) ? 1.0 : 0.0;
+    });
+  }
+
+  void _close() {
+    if (_dragExtent != 0) {
+      setState(() => _dragExtent = 0);
+    }
+  }
+
+  // ────────── Action Button Builder ──────────
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback? onTap,
+  }) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          _close();
+          onTap?.call();
+        },
+        child: Container(
+          margin: EdgeInsets.only(bottom: 8.h),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: label == 'Delete'
+                ? BorderRadius.only(
+                    topRight: Radius.circular(14.r),
+                    bottomRight: Radius.circular(14.r),
+                  )
+                : null,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: 16.sp),
+              SizedBox(height: 4.h),
+              Text(
+                label,
+                style: TextStyle(fontSize: 12.sp, color: color),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final loc = context.watch<LocalizationProvider>().loc;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.r),
+      child: Stack(
+        children: [
+          // ────────── Background actions (revealed on swipe) ──────────
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: SizedBox(
+                width: _actionsWidth.w,
+                height: double.infinity,
+                child: Row(
+                  children: [
+                    _buildActionButton(
+                      icon: LucideIcons.pencil,
+                      label: loc.edit,
+                      color: theme.colorScheme.primary,
+                      onTap: widget.onEdit,
+                    ),
+                    _buildActionButton(
+                      icon: LucideIcons.trash2,
+                      label: loc.delete,
+                      color: Colors.red,
+                      onTap: widget.onDelete,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          GestureDetector(
+            onHorizontalDragUpdate: _onHorizontalDragUpdate,
+            onHorizontalDragEnd: _onHorizontalDragEnd,
+            onTap: _close,
+            child: Transform.translate(
+              offset: Offset(-_dragExtent * _actionsWidth.w, 0),
+              child: Container(
+                width: double.infinity,
+                height: 60.h,
+                alignment: Alignment.centerLeft,
+                margin: EdgeInsets.only(bottom: 8.h),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: widget.groupColor),
+                      color: widget.groupColor.withValues(alpha: 0.3),
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      color: widget.groupColor,
+                      size: 18,
+                    ),
+                  ),
+                  title: Text(
+                    widget.group.groupName,
+                    style: TextStyle(fontSize: 12.sp),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -226,6 +226,12 @@ class DatabaseHelper {
     );
   }
 
+  /// Delete group settings by id
+  Future<int> deleteGroupSettings(int id) async {
+    final db = await database;
+    return await db.delete('group_settings', where: 'id = ?', whereArgs: [id]);
+  }
+
   // ────────── Note Operations ──────────
 
   /// Insert new note

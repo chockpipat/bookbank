@@ -95,6 +95,16 @@ class GroupSettingsProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteGroupSettings(GroupSettings settings) async {
+    try {
+      if (settings.id == null) return;
+      await DatabaseHelper.instance.deleteGroupSettings(settings.id!);
+      await loadGroupSettings();
+    } catch (e) {
+      debugPrint('Error deleting group settings: $e');
+    }
+  }
+
   Future<void> refresh() async {
     await loadGroupSettings();
   }

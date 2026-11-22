@@ -153,7 +153,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.colorScheme.onSurfaceVariant),
+        border: Border.all(color: theme.colorScheme.outline),
       ),
       child: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -182,36 +182,39 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
               widget.isNew ? '${loc.add} ${loc.group}' : loc.editGroup,
               style: TextStyle(
                 fontSize: AppSize.l,
-                fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
             ),
             SizedBox(height: 8),
 
             // ────────── Category Name ──────────
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: theme.colorScheme.surface,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 12,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: theme.colorScheme.onSurfaceVariant,
+            Container(
+              width: double.infinity,
+              height: 50.h,
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(7.r),
+                border: Border.all(color: theme.colorScheme.outline),
+              ),
+              child: TextFormField(
+                style: TextStyle(fontSize: 12.sp, height: 2.5),
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: loc.addCategory,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  labelStyle: TextStyle(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    fontSize: 12.sp,
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: theme.colorScheme.onSurfaceVariant,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              style: TextStyle(height: 1.5, fontSize: AppSize.m),
             ),
             SizedBox(height: 16),
 
@@ -314,22 +317,16 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
                         _savingsGoalEnabled = value;
                       });
                     },
-                    activeThumbColor: _selectedColor,
+                    activeThumbColor: theme.colorScheme.onSurface.withValues(
+                      alpha: 0.5,
+                    ),
                     inactiveTrackColor: theme.colorScheme.surface,
-                    trackOutlineColor: WidgetStateProperty.resolveWith((
-                      states,
-                    ) {
-                      if (states.contains(WidgetState.selected)) {
-                        return _selectedColor;
-                      }
-                      return theme.colorScheme.onSurfaceVariant;
-                    }),
-                    thumbColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return _selectedColor;
-                      }
-                      return theme.colorScheme.onSurfaceVariant;
-                    }),
+                    trackOutlineColor: WidgetStateProperty.all(
+                      theme.colorScheme.onSurfaceVariant,
+                    ),
+                    thumbColor: WidgetStateProperty.all(
+                      theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ],
@@ -346,28 +343,43 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
                 ),
               ),
               SizedBox(height: 8),
-              TextField(
-                controller: _amountController,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  prefixText: '${locProvider.currencySymbol} ',
-                  prefixStyle: TextStyle(color: theme.colorScheme.onPrimary),
-                  filled: true,
-                  fillColor: theme.colorScheme.surface,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
+
+              Container(
+                width: double.infinity,
+                height: 50.h,
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(7.r),
+                  border: Border.all(color: theme.colorScheme.outline),
                 ),
-                style: TextStyle(fontSize: AppSize.m, height: 1.2),
+                child: TextField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: '0.00',
+                    prefixIcon: SizedBox(
+                      width: 24.w,
+                      child: Center(
+                        child: Text(
+                          locProvider.currencySymbol,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  style: TextStyle(fontSize: 12.sp, height: 1.2),
+                ),
               ),
               SizedBox(height: 16),
             ],
@@ -379,7 +391,7 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
               child: ElevatedButton(
                 onPressed: _saveSettings,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _selectedColor,
+                  backgroundColor: theme.colorScheme.onSurface,
                   padding: EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -388,9 +400,8 @@ class _GroupEditDialogState extends State<GroupEditDialog> {
                 child: Text(
                   loc.save,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: theme.colorScheme.onPrimary,
                     fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
