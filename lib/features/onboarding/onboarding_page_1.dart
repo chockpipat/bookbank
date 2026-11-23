@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 import 'package:bookbank/features/onboarding/providers/onboarding_provider.dart';
 import 'package:bookbank/Widgets/navigation_bar.dart';
-import 'package:bookbank/features/menu/about/privacy_policy_dialog.dart';
+import 'package:bookbank/features/setting/widgets/privacy_policy_dialog.dart';
 import 'onboarding_page_2.dart';
 
 // ─── Onboarding Wrapper ───────────────────────────────────────────────────────

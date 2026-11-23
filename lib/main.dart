@@ -14,7 +14,7 @@ import 'package:bookbank/core/theme/app_theme.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
 // ────────── Widgets ──────────
-import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/providers/group_settings_provider.dart';
 import 'package:bookbank/features/notebook/providers/note_provider.dart';
 import 'package:bookbank/features/onboarding/onboarding_page_1.dart';
 

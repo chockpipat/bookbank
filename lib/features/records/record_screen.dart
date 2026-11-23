@@ -22,7 +22,7 @@ import 'package:bookbank/features/transaction/transaction_screen.dart';
 import 'package:bookbank/features/records/widgets/record_list.dart';
 import 'package:bookbank/features/records/widgets/filter_bottom_sheet.dart';
 import 'package:bookbank/Widgets/select_date_time.dart';
-import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/providers/group_settings_provider.dart';
 import 'package:bookbank/Widgets/hasError.dart';
 
 class RecordScreen extends StatefulWidget {

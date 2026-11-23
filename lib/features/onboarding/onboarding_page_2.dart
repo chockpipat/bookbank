@@ -5,7 +5,7 @@ import 'package:bookbank/core/localization/localization_provider.dart';
 import 'package:bookbank/core/localization/app_localizations.dart';
 import 'package:bookbank/features/onboarding/providers/onboarding_provider.dart';
 import 'package:bookbank/Widgets/navigation_bar.dart';
-import 'package:bookbank/features/menu/about/privacy_policy_dialog.dart';
+import 'package:bookbank/features/setting/widgets/privacy_policy_dialog.dart';
 
 class OnboardingPage2 extends StatefulWidget {
   const OnboardingPage2({super.key});

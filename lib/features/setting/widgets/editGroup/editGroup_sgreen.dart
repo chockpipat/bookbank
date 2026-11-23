@@ -12,8 +12,8 @@ import 'package:bookbank/data/database.dart';
 import 'package:bookbank/data/db_helper.dart';
 
 // ────────── Widgets ──────────
-import 'package:bookbank/features/menu/editGroup/group_edit_dialog.dart';
-import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/group_edit_dialog.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/providers/group_settings_provider.dart';
 import 'package:bookbank/Widgets/hasError.dart';
 class EditGroupSgreen extends StatefulWidget {
   const EditGroupSgreen({super.key});

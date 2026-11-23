@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/providers/group_settings_provider.dart';
 
 // ────────── Theme & Localization ──────────
 import 'package:bookbank/core/theme/app_theme.dart';

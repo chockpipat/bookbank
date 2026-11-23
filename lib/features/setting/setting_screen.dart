@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
-import 'package:bookbank/features/menu/about/privacy_policy_dialog.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/providers/group_settings_provider.dart';
+import 'package:bookbank/features/setting/widgets/privacy_policy_dialog.dart';
 
 // ────────── Widgets ──────────
-import 'package:bookbank/features/menu/about/about_sgreen.dart';
-import 'package:bookbank/features/menu/editGroup/editGroup_sgreen.dart';
+import 'package:bookbank/features/setting/widgets/about_sgreen.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/editGroup_sgreen.dart';
 import 'package:bookbank/features/setting/widgets/manage_notes_screen.dart';
 import 'package:bookbank/features/setting/widgets/currency_setting_screen.dart';
 import 'package:bookbank/features/setting/widgets/language_setting_screen.dart';

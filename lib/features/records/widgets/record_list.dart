@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/localization/localization_provider.dart';
 import '../../../data/database.dart';
-import '../../menu/editGroup/providers/group_settings_provider.dart';
+import '../../setting/widgets/editGroup/providers/group_settings_provider.dart';
 import '../utils/record_utils.dart';
 
 // ────────── Record List Item (swipeable card) ──────────

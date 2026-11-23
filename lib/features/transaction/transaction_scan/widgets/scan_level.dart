@@ -9,7 +9,7 @@ class ScanLevel extends StatefulWidget {
 }
 
 class _ScanLevelState extends State<ScanLevel> {
-  String _selectedScanLevel = 'Low';
+  String _selectedScanLevel = 'Medium';
 
   @override
   Widget build(BuildContext context) {

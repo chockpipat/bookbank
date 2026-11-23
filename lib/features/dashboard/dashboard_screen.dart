@@ -5,7 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 // ────────── Widgets ──────────
-import 'package:bookbank/features/menu/editGroup/providers/group_settings_provider.dart';
+import 'package:bookbank/features/setting/widgets/editGroup/providers/group_settings_provider.dart';
 import 'package:bookbank/features/dashboard/widgets/dashboard.chart.dart';
 import 'package:bookbank/features/dashboard/widgets/contribution_graph.dart';
 

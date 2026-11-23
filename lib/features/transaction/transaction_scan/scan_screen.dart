@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 // ────────── Widgets ──────────
+import 'package:bookbank/features/transaction/transaction_scan/widgets/scan_authorization.dart';
 import 'package:bookbank/features/transaction/transaction_scan/widgets/scan_item.dart';
 import 'package:bookbank/features/transaction/transaction_scan/widgets/scan_level.dart';
 
@@ -18,7 +19,6 @@ class TransactionScan extends StatefulWidget {
 // ────────── Transaction scan state ──────────
 class _TransactionScanState extends State<TransactionScan> {
   bool _savingsGoalEnabled = false;
-  String _selectedScanTest = 'Low';
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,10 @@ class _TransactionScanState extends State<TransactionScan> {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 62.h,
+        actionsPadding: EdgeInsets.symmetric(horizontal: 20.w),
+
+        // ────────── Back button ──────────
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Icon(
@@ -34,12 +38,63 @@ class _TransactionScanState extends State<TransactionScan> {
             size: 28.sp,
           ),
         ),
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+
+        // ────────── Title ──────────
         title: Text(
           'Scan images',
           style: TextStyle(color: theme.colorScheme.onSurface, fontSize: 14.sp),
         ),
+
+        // ────────── Info button ──────────
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(
+                    'Scan images',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  content: Text(
+                    'Scan images to add them to your library',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Close',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                ),
+              );
+            },
+
+            // ────────── Info icon ──────────
+            icon: Icon(
+              LucideIcons.info,
+              color: theme.colorScheme.onSurface,
+              size: 18.sp,
+            ),
+          ),
+        ],
       ),
+
       body: Padding(
         padding: EdgeInsets.fromLTRB(20.w, 15.h, 20.w, 100.h),
         child: Column(
@@ -71,10 +126,10 @@ class _TransactionScanState extends State<TransactionScan> {
                     ),
                     inactiveTrackColor: theme.colorScheme.surface,
                     trackOutlineColor: WidgetStateProperty.all(
-                      theme.colorScheme.onSurfaceVariant,
+                      theme.colorScheme.onSurface,
                     ),
                     thumbColor: WidgetStateProperty.all(
-                      theme.colorScheme.onSurfaceVariant,
+                      theme.colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -92,78 +147,51 @@ class _TransactionScanState extends State<TransactionScan> {
                     'Scan Level',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(height: 8.h),
 
                   ScanLevel(),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 24.h),
 
+                  // ────────── Scan authorization ──────────
                   Text(
-                    'Recent Transactions',
+                    'Transaction permitted',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(height: 8.h),
 
-                  // ────────── Scan level options ──────────
-                  Row(
-                    children: [
-                      for (final level in ['Low', 'Medium']) ...[
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedScanTest = level;
-                              });
-                            },
-                            style: FilledButton.styleFrom(
-                              backgroundColor: _selectedScanTest == level
-                                  ? theme.colorScheme.onSurface
-                                  : theme.colorScheme.surface,
-                              foregroundColor: _selectedScanTest == level
-                                  ? theme.colorScheme.surface
-                                  : theme.colorScheme.onSurface,
-                              minimumSize: Size(double.infinity, 50.h),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7.r),
-                              ),
-                            ),
-                            child: Text(level),
-                          ),
-                        ),
-                        if (level != 'High') SizedBox(width: 12.w),
-                      ],
-                    ],
+                  ScanAuthorization(),
+                  SizedBox(height: 24.h),
+
+                  // ────────── Items detected by the scan ──────────
+                  Text(
+                    'Items detected by the scan',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+
+                  ScanItem(
+                    title: 'Income',
+                    amount: '\$ 100.00',
+                    date: '00-00-0000',
+                    image: 'lib/core/icons/BookBank_Logo 2.png',
+                  ),
+                  ScanItem(
+                    title: 'Expense',
+                    amount: '\$ 50.00',
+                    date: '00-00-0000',
+                    image: 'lib/core/icons/BookBank_Logo 2.png',
                   ),
                 ],
               ),
-            SizedBox(height: 16.h),
-
-            Text(
-              'Scan items',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            SizedBox(height: 8.h),
-
-            ScanItem(
-              title: 'Income',
-              amount: '\$ 100.00',
-              date: '00-00-0000',
-              image: 'lib/core/icons/BookBank_Logo 2.png',
-            ),
-            ScanItem(
-              title: 'Expense',
-              amount: '\$ 50.00',
-              date: '00-00-0000',
-              image: 'lib/core/icons/BookBank_Logo 2.png',
-            ),
           ],
         ),
       ),
