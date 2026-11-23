@@ -19,6 +19,7 @@ import 'package:bookbank/features/home/widgets/menu_items.dart';
 import 'package:bookbank/features/menu/editGroup/editGroup_sgreen.dart';
 import 'package:bookbank/features/transaction/transaction_screen.dart';
 import 'package:bookbank/Widgets/hasError.dart';
+import 'package:bookbank/features/transaction/transaction_scan/scan_screen.dart';
 
 // ────────── Database ──────────
 import 'package:bookbank/data/database.dart';
@@ -387,7 +388,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MenuItems(
                                   late: 'Scan',
                                   icon: LucideIcons.scan,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => TransactionScan(),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -415,7 +422,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   groupCount: 0,
                                   groupAmount: _unallocatedAmount,
                                   groupColor: Colors.amber,
-                                  groupIcon: Icons.savings_rounded,
+                                  groupIcon: LucideIcons.box,
                                   percentage: _unallocatedPercentage,
                                 ),
                               ),

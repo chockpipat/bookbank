@@ -302,7 +302,7 @@ class _CardContent extends StatelessWidget {
               Text(
                 locProvider.formatAmount(savingsGoalAmount),
                 style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
+                  color: theme.colorScheme.outline,
                   fontSize: 11.sp,
                 ),
               ),

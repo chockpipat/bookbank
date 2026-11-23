@@ -254,7 +254,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
           // ────────── Header ──────────
           Container(
             width: double.infinity,
-            height: 60.h,
+            height: 62.h,
             color: theme.colorScheme.surface,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
