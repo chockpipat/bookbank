@@ -34,6 +34,8 @@ class SettingMenuItem {
   final ValueChanged<bool>? onSwitchChanged;
   bool switchValue = false;
   String? showData;
+  bool segmentedButton = false;
+  ValueChanged<String>? onSegmentedChanged;
 
   SettingMenuItem({
     required this.title,
@@ -42,6 +44,8 @@ class SettingMenuItem {
     this.onSwitchChanged,
     this.switchValue = false,
     this.showData,
+    this.segmentedButton = false,
+    this.onSegmentedChanged,
   });
 
   Widget build(BuildContext context) {
@@ -65,14 +69,18 @@ class SettingMenuItem {
                 ),
                 Spacer(),
 
-                Transform.scale(
-                  scale: 0.6,
-                  child: Switch(
-                    value: switchValue,
-                    onChanged: onSwitchChanged,
-                    activeThumbColor: theme.colorScheme.primary,
+                if (!segmentedButton)
+                  Transform.scale(
+                    scale: 0.6,
+                    child: Switch(
+                      value: switchValue,
+                      onChanged: onSwitchChanged,
+                      activeThumbColor: theme.colorScheme.primary,
+                    ),
                   ),
-                ),
+
+                if (segmentedButton)
+                  _SettingSegmentedButton(onChanged: onSegmentedChanged),
               ],
             ),
           )
@@ -157,6 +165,58 @@ class SettingBackingClasses {
           child: child ?? const SizedBox.shrink(),
         ),
       ],
+    );
+  }
+}
+
+// ────────── Segmented Button ──────────
+class _SettingSegmentedButton extends StatefulWidget {
+  const _SettingSegmentedButton({this.onChanged});
+
+  final ValueChanged<String>? onChanged;
+
+  @override
+  State<_SettingSegmentedButton> createState() =>
+      _SettingSegmentedButtonState();
+}
+
+class _SettingSegmentedButtonState extends State<_SettingSegmentedButton> {
+  String _selected = 'off';
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final loc = context.read<LocalizationProvider>().loc;
+
+    return SegmentedButton<String>(
+      segments: [
+        ButtonSegment(value: 'all', label: Text(loc.all)),
+        ButtonSegment(value: 'pin', label: Text(loc.pin)),
+        ButtonSegment(value: 'off', label: Text(loc.off)),
+      ],
+      selected: {_selected},
+      showSelectedIcon: false,
+      onSelectionChanged: (selection) {
+        setState(() => _selected = selection.first);
+        widget.onChanged?.call(_selected);
+      },
+      style: ButtonStyle(
+        visualDensity: VisualDensity.compact,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textStyle: WidgetStatePropertyAll(
+          TextStyle(fontSize: 12.sp, color: theme.colorScheme.onSurface),
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? theme.colorScheme.primary
+              : theme.colorScheme.surface,
+        ),
+        foregroundColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? theme.colorScheme.onPrimary
+              : theme.colorScheme.onSurface,
+        ),
+      ),
     );
   }
 }
@@ -304,15 +364,26 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               SizedBox(height: 20.h),
 
-              // ────────── Test Scan Settings ──────────
+              // ────────── Advanced settings ──────────
               SettingBackingClasses.settingMenuItem(
                 context: context,
-                title: loc.scanSettings,
+                title: loc.advancedSettings,
                 child: Column(
                   children: [
                     SettingMenuItem(
-                      title: loc.scanSettingsTitle,
-                      icon: LucideIcons.scan,
+                      title: loc.negativeAmount,
+                      icon: LucideIcons.banknoteX,
+                      switchValue: context.watch<ThemeProvider>().isDarkMode,
+                      onSwitchChanged: (_) =>
+                          context.read<ThemeProvider>().toggleTheme(),
+                    ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.bankTransactionNotifications,
+                      icon: LucideIcons.scanEye,
+                      switchValue: context.watch<ThemeProvider>().isDarkMode,
+                      onSwitchChanged: (_) =>
+                          context.read<ThemeProvider>().toggleTheme(),
                     ).build(context),
 
                     SettingMenuItem(
@@ -322,12 +393,25 @@ class _SettingScreenState extends State<SettingScreen> {
                       onSwitchChanged: (_) =>
                           context.read<ThemeProvider>().toggleTheme(),
                     ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.scanSettingsTitle,
+                      icon: LucideIcons.scan,
+                    ).build(context),
+
+                    SettingMenuItem(
+                      title: loc.notificationsFromLogs,
+                      icon: LucideIcons.bookmark,
+                      segmentedButton: true,
+                      onSwitchChanged: (_) {},
+                      onSegmentedChanged: (value) {},
+                    ).build(context),
                   ],
                 ),
               ),
               SizedBox(height: 20.h),
 
-              // ────────── Info ──────────
+              // ────────── Additional Settings ──────────
               SettingBackingClasses.settingMenuItem(
                 context: context,
                 title: loc.additionalSettings,

@@ -140,6 +140,11 @@ class AppLocalizations {
       'additional_settings': 'Additional settings',
       'download_data': 'Download Data',
       'delete_data': 'Delete Data',
+      'advanced_settings': 'Advanced settings',
+      'negative_amount': 'Negative amount',
+      'bank_transaction_notifications': 'Bank transaction notifications',
+      'notifications_from_logs': 'Record notification',
+      'off': 'Off',
 
       // Group settings
       'icon': 'Icon',
@@ -356,6 +361,11 @@ If you have any questions about this privacy policy, please contact the develope
       'additional_settings': 'การตั้งค่าเพิ่มเติม',
       'download_data': 'ดาวน์โหลดข้อมูล',
       'delete_data': 'ลบข้อมูล',
+      'advanced_settings': 'การตั้งค่าขั้นสูง',
+      'negative_amount': 'จำนวนเงินติดลบ',
+      'bank_transaction_notifications': 'การแจ้งเตือนธุรกรรมธนาคาร',
+      'notifications_from_logs': 'แจ้งเตือนจากบันทึก',
+      'off': 'ปิด',
 
       // Group settings
       'icon': 'ไอคอน',
@@ -571,6 +581,11 @@ If you have any questions about this privacy policy, please contact the develope
       'additional_settings': '附加设置',
       'download_data': '下载数据',
       'delete_data': '删除数据',
+      'advanced_settings': '高级设置',
+      'negative_amount': '负数金额',
+      'bank_transaction_notifications': '银行交易通知',
+      'notifications_from_logs': '记录通知',
+      'off': '关闭',
 
       // Group settings
       'icon': '图标',
@@ -791,6 +806,12 @@ If you have any questions about this privacy policy, please contact the develope
   String get additionalSettings => translate('additional_settings');
   String get downloadData => translate('download_data');
   String get deleteData => translate('delete_data');
+  String get advancedSettings => translate('advanced_settings');
+  String get negativeAmount => translate('negative_amount');
+  String get bankTransactionNotifications =>
+      translate('bank_transaction_notifications');
+  String get notificationsFromLogs => translate('notifications_from_logs');
+  String get off => translate('off');
 
   // Group settings
   String get icon => translate('icon');
