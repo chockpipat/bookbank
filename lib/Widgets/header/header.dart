@@ -7,7 +7,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 // ────────── localization ──────────
 import 'package:bookbank/core/localization/localization_provider.dart';
 
-// ────────── Header Widget ──────────
+// ────────── Widget ──────────
+import 'package:bookbank/features/home/widgets/notifications.dart';
 class Header extends StatelessWidget {
   const Header({super.key});
 
@@ -62,8 +63,11 @@ class Header extends StatelessWidget {
                     // ────────── warn button ──────────
                     IconButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Not yet activated')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Notifications(),
+                          ),
                         );
                       },
                       style: IconButton.styleFrom(

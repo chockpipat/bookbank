@@ -1,13 +1,15 @@
-import 'package:bookbank/core/theme/app_theme.dart';
-import 'package:bookbank/Widgets/lieChart.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:bookbank/features/home/popup/popup_main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:bookbank/core/localization/localization_provider.dart';
 
-class DashboardSummary extends StatelessWidget {
+import 'package:bookbank/core/theme/app_theme.dart';
+import 'package:bookbank/Widgets/lieChart.dart';
+import 'package:bookbank/features/home/popup/popup_main.dart';
+
+class DashboardSummary extends StatefulWidget {
   final double totalBalance;
   final double bankBalance;
   final double cashBalance;
@@ -30,6 +32,13 @@ class DashboardSummary extends StatelessWidget {
   });
 
   @override
+  State<DashboardSummary> createState() => _DashboardSummaryState();
+}
+
+class _DashboardSummaryState extends State<DashboardSummary> {
+  bool isBalanceVisible = true;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final locProvider = Provider.of<LocalizationProvider>(context);
@@ -43,14 +52,14 @@ class DashboardSummary extends StatelessWidget {
           builder: (BuildContext context) {
             return Dialog(
               child: PopupMain(
-                totalBalance: totalBalance,
-                bankBalance: bankBalance,
-                cashBalance: cashBalance,
-                incomeTotal: incomeTotal,
-                expenseTotal: expenseTotal,
-                monthlyIncome: monthlyIncome,
-                monthlyExpense: monthlyExpense,
-                spots: spots,
+                totalBalance: widget.totalBalance,
+                bankBalance: widget.bankBalance,
+                cashBalance: widget.cashBalance,
+                incomeTotal: widget.incomeTotal,
+                expenseTotal: widget.expenseTotal,
+                monthlyIncome: widget.monthlyIncome,
+                monthlyExpense: widget.monthlyExpense,
+                spots: widget.spots,
               ),
             );
           },
@@ -79,9 +88,38 @@ class DashboardSummary extends StatelessWidget {
                       loc.totalBalance,
                       style: TextStyle(fontSize: AppSize.xs.sp),
                     ),
-                    Text(
-                      locProvider.formatAmount(totalBalance),
-                      style: TextStyle(fontSize: AppSize.l.sp),
+                    SizedBox(height: 8.h),
+
+                    Row(
+                      children: [
+                        Text(
+                          isBalanceVisible
+                              ? locProvider.formatAmount(widget.totalBalance)
+                              : '******',
+                          style: TextStyle(fontSize: AppSize.l.sp),
+                        ),
+                        SizedBox(width: 12.w),
+
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isBalanceVisible = !isBalanceVisible;
+                            });
+                          },
+                          style: IconButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          icon: Icon(
+                            isBalanceVisible
+                                ? LucideIcons.eye
+                                : LucideIcons.eyeOff,
+                            color: theme.colorScheme.onSurface,
+                            size: 18.w,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -92,7 +130,7 @@ class DashboardSummary extends StatelessWidget {
                   width: 160.w,
                   child: LineChart(
                     LineChartData(
-                      lineBarsData: createSegmentsWithArea(spots),
+                      lineBarsData: createSegmentsWithArea(widget.spots),
                       minY: -5000,
                       maxY: 5000,
                       gridData: const FlGridData(show: false),
@@ -120,7 +158,7 @@ class DashboardSummary extends StatelessWidget {
                   icon: null,
                   label: loc.validToday,
                   balance: 0,
-                  total: totalBalance,
+                  total: widget.totalBalance,
                   locProvider: locProvider,
                 ),
 
@@ -134,8 +172,8 @@ class DashboardSummary extends StatelessWidget {
                   context,
                   icon: Icons.account_balance_rounded,
                   label: loc.bank,
-                  balance: bankBalance,
-                  total: totalBalance,
+                  balance: widget.bankBalance,
+                  total: widget.totalBalance,
                   locProvider: locProvider,
                 ),
 
@@ -149,8 +187,8 @@ class DashboardSummary extends StatelessWidget {
                   context,
                   icon: Icons.account_balance_wallet_rounded,
                   label: loc.cash,
-                  balance: cashBalance,
-                  total: totalBalance,
+                  balance: widget.cashBalance,
+                  total: widget.totalBalance,
                   locProvider: locProvider,
                 ),
               ],
