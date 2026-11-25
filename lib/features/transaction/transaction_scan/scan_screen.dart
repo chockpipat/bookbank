@@ -113,7 +113,7 @@ class _TransactionScanState extends State<TransactionScan> {
                 ),
 
                 Transform.scale(
-                  scale: 0.8,
+                  scale: 0.6,
                   child: Switch(
                     value: _savingsGoalEnabled,
                     onChanged: (value) {

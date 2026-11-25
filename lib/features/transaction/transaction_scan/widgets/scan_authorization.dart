@@ -37,7 +37,7 @@ class _ScanAuthorizationState extends State<ScanAuthorization> {
                   borderRadius: BorderRadius.circular(7.r),
                 ),
               ),
-              child: Text(level),
+              child: Text(level, style: TextStyle(fontSize: 12.sp)),
             ),
           ),
           if (level != 'Custom') SizedBox(width: 12.w),

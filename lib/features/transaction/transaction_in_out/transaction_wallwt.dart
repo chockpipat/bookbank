@@ -48,7 +48,7 @@ class WalletPositionButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.r)),
       ),
       icon: Icon(icon),
-      label: Text(label),
+      label: Text(label, style: TextStyle(fontSize: 12.sp)),
     );
   }
 }

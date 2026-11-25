@@ -62,7 +62,6 @@ class _DateRangeButton extends StatelessWidget {
           foregroundColor: isSelected
               ? theme.colorScheme.surface
               : theme.colorScheme.onSurface,
-          minimumSize: Size(30.w, 30.h),
         ),
         icon: isEmpty
             ? Icon(LucideIcons.calendar, size: 18.w)
@@ -808,29 +807,23 @@ class _DashboardChartState extends State<DashboardChart> {
               SizedBox(width: 12.w),
 
               // ────────── Title and subtitle ──────────
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    loc.charts,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    _mode == DashboardPickMode.day
-                        ? loc.chartDay
-                        : _mode == DashboardPickMode.month
-                            ? loc.chartMonth
-                            : loc.chartYear,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
-                  ),
-                ],
-              ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     Text(loc.charts, style: TextStyle(fontSize: 12.sp)),
+              //     Text(
+              //       _mode == DashboardPickMode.day
+              //           ? loc.chartDay
+              //           : _mode == DashboardPickMode.month
+              //           ? loc.chartMonth
+              //           : loc.chartYear,
+              //       style: TextStyle(
+              //         fontSize: 12.sp,
+              //         color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const Spacer(),
 
               // ────────── Date range buttons ──────────

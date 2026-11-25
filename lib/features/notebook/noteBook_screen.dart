@@ -368,7 +368,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
     return Scaffold(
       // ────────── Floating Action Button ──────────
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 90.h, right: 20.w),
+        padding: EdgeInsets.only(bottom: 120.h, right: 10.w),
         child: IconButton(
           onPressed: () => NoteEditorDialog.show(context),
           style: IconButton.styleFrom(
@@ -383,7 +383,7 @@ class _NoteBookScreenState extends State<NoteBookScreen> {
       // ────────── Body Content ──────────
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20.w, 40.h, 20.w, 100.h),
+          padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 115.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
